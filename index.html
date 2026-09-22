@@ -1,327 +1,718 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SOB Combo Calculator</title>
-<style>
-*{box-sizing:border-box}body{margin:0;padding:15px;font-family:Arial,sans-serif;background:#f4f4f4;color:#222}.box{max-width:1000px;margin:auto;padding:20px;background:#fff;border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,.08)}h1{margin:0;font-size:2rem}.sub{margin:6px 0 16px;color:#666}.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px}.form>div{display:flex;flex-direction:column}.label,.section-title h2{font-weight:700}.login-box{margin:16px 0 18px;padding:14px;border:1px solid #ddd;border-radius:10px;background:#fafafa}.login-row{display:flex;flex-wrap:wrap;gap:12px;align-items:end;justify-content:space-between}.login-row>div{flex:1;min-width:220px}.login-actions{display:flex;gap:8px;flex-wrap:wrap}.user-status{margin-top:12px;font-size:.96rem}.user-status span{display:inline-block;padding:5px 10px;border-radius:999px;background:#e8f5e9;color:#1d6f3b;font-weight:700}.user-status span.guest{background:#f1f1f1;color:#555}.selected{display:flex;align-items:center;gap:8px;background:#f8f8f8;padding:12px 14px;border-radius:10px;margin:10px 0 18px;font-weight:700}.selected strong{color:#1d4d9b}.cards,.totals{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:18px}.card,.total{padding:18px;border-radius:10px;color:#fff}.card h3,.total h3{margin:0 0 10px;font-size:1rem}.card strong,.total strong{font-size:1.5rem}.card.adult{background:#1d4d9b}.card.child{background:#0a7d69}.total.tpu{background:#9c27b0}.total.oepl{background:#ff9800}.total.total{background:#3f51b5}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}.button,button{border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer}.wa{background:#25d366;color:#fff}.save{background:#2196f3;color:#fff}.print{background:#ff9800;color:#fff}.danger{background:#d32f2f;color:#fff}.secondary{background:#e0e0e0;color:#222}.scroll{overflow:auto;border:1px solid #e0e0e0;border-radius:10px}.table,table{width:100%;border-collapse:collapse}.thead,th{background:#f3f5f7}.th,td{padding:10px 12px;border-bottom:1px solid #eee;text-align:left}.td.center{text-align:center}.saved .section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.saved h2{margin:0}.muted{color:#666;font-style:italic}.input,select,input{padding:10px 12px;border-radius:8px;border:1px solid #cfcfcf;font-size:1rem;background:#fff}input:focus,select:focus{outline:2px solid rgba(33,150,243,.2);border-color:#2196f3}.small{padding:7px 10px;font-size:.8rem}.nowrap{white-space:nowrap}@media (max-width:640px){body{padding:10px}.box{padding:15px}.actions{flex-direction:column}.actions button{width:100%}.saved .section-title{display:block}.login-row{display:block}.login-actions{margin-top:10px}}</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOB Combo Calculator</title>
+  <style>
+    :root {
+      --bg: #f3f7ff;
+      --panel: rgba(255, 255, 255, 0.9);
+      --panel-strong: #ffffff;
+      --primary: #2d5bff;
+      --primary-dark: #1838b5;
+      --primary-soft: #eaf0ff;
+      --success: #1bbf88;
+      --warning: #ff9f43;
+      --danger: #ef476f;
+      --ink: #18212f;
+      --muted: #5d6783;
+      --line: #e4eaf6;
+      --shadow: 0 18px 45px rgba(25, 42, 93, 0.12);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #eef4ff 0%, #f6f8ff 40%, #edf7ff 100%);
+      color: var(--ink);
+    }
+
+    body {
+      min-height: 100vh;
+      padding: 32px 18px;
+    }
+
+    .app {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,0.7);
+      backdrop-filter: blur(8px);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .header {
+      padding: 28px 28px 18px;
+      background: linear-gradient(135deg, #0e1c41, #1838b5 35%, #2d5bff 100%);
+      color: white;
+    }
+
+    .header-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: clamp(2rem, 2.4vw, 2.8rem);
+      letter-spacing: -0.04em;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .sub {
+      margin: 10px 0 0;
+      color: rgba(255,255,255,0.8);
+      font-size: 1rem;
+    }
+
+    .content {
+      padding: 24px 28px 30px;
+    }
+
+    .login-panel,
+    .calculator-panel,
+    .saved-panel {
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+    }
+
+    .login-panel {
+      padding: 18px 20px;
+      margin-bottom: 24px;
+    }
+
+    .login-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: end;
+      justify-content: space-between;
+    }
+
+    .login-field {
+      flex: 1 1 280px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    label {
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.88rem;
+    }
+
+    input, select, button {
+      font: inherit;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #f8faff;
+      color: var(--ink);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: rgba(45, 91, 255, 0.65);
+      box-shadow: 0 0 0 4px rgba(45, 91, 255, 0.12);
+      background: white;
+    }
+
+    .login-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary { background: linear-gradient(135deg, var(--primary), #3e68ff); color: white; box-shadow: 0 12px 22px rgba(45,91,255,0.25); }
+    .btn-secondary { background: #edf1ff; color: var(--primary-dark); }
+    .btn-warning { background: linear-gradient(135deg, #ffae57, var(--warning)); color: white; }
+    .btn-success { background: linear-gradient(135deg, var(--success), #18a66d); color: white; }
+    .btn-danger { background: linear-gradient(135deg, #ff5c7a, var(--danger)); color: white; }
+
+    .user-status {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-weight: 600;
+      flex-wrap: wrap;
+    }
+
+    .user-status .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: #eafaf4;
+      color: #0e8a63;
+      border: 1px solid #cfeee1;
+      font-size: 0.88rem;
+      font-weight: 800;
+    }
+
+    .user-status .chip.guest {
+      background: #f3f5f9;
+      color: var(--muted);
+      border-color: var(--line);
+    }
+
+    .calculator-panel {
+      padding: 22px;
+    }
+
+    .inputs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .selected {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #eef3ff, #f8fbff);
+      border: 1px solid #dfe7ff;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .selected strong {
+      color: var(--primary-dark);
+      font-size: 1.08rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .stat {
+      padding: 18px 16px;
+      border-radius: 18px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 120px;
+      justify-content: center;
+    }
+
+    .stat h3 {
+      margin: 0;
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    .stat strong {
+      font-size: clamp(1.4rem, 2vw, 2rem);
+      letter-spacing: -0.04em;
+    }
+
+    .stat.adult { background: linear-gradient(135deg, #1f63ff, #3559db); }
+    .stat.child { background: linear-gradient(135deg, #16b08c, #0d9b7c); }
+    .stat.total { background: linear-gradient(135deg, #8d5cf6, #6f46d9); }
+    .stat.tpu { background: linear-gradient(135deg, #ff8b5e, #ef6d35); }
+    .stat.oepl { background: linear-gradient(135deg, #ffb142, #f59e0b); }
+    .stat.grand { background: linear-gradient(135deg, #00b4d8, #0077b6); }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .saved-panel {
+      margin-top: 24px;
+      overflow: hidden;
+    }
+
+    .saved-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 22px 22px 18px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(135deg, #f9fbff, #f4f8ff);
+    }
+
+    .saved-head h2 {
+      margin: 0;
+      font-size: clamp(1.25rem, 2vw, 1.8rem);
+    }
+
+    .table-wrap {
+      overflow: auto;
+      max-width: 100%;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 840px;
+    }
+
+    thead th {
+      background: #f5f8ff;
+      color: var(--ink);
+      font-size: 0.82rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      padding: 14px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+    }
+
+    tbody td {
+      padding: 14px 12px;
+      border-bottom: 1px solid #edf2ff;
+      color: var(--ink);
+    }
+
+    tbody tr:hover {
+      background: #fafcff;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-style: italic;
+      text-align: center;
+    }
+
+    .tiny {
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+    }
+
+    @media (max-width: 760px) {
+      body { padding: 18px 12px; }
+      .header, .content { padding-left: 18px; padding-right: 18px; }
+      .saved-head { display: block; }
+      .saved-head .actions { margin-top: 12px; }
+      .actions { flex-direction: column; }
+      .actions button { width: 100%; }
+      .login-row { display: block; }
+      .login-actions { margin-top: 12px; }
+      .login-actions button { flex: 1; }
+    }
+  </style>
 </head>
 <body>
-<main class="box">
-<h1>SOB Combo Calculator</h1>
-<div class="sub">Statue of Belief Combo Calculator</div>
+  <div class="app">
+    <header class="header">
+      <div class="header-top">
+        <h1>SOB Combo Calculator</h1>
+        <span class="badge">User wise saved SOBs</span>
+      </div>
+      <div class="sub">Statue of Belief Combo Calculator</div>
+    </header>
 
-<div class="login-box">
-  <div class="login-row">
-    <div>
-      <label for="username">User Name</label>
-      <input id="username" type="text" placeholder="Enter your name">
-    </div>
-    <div class="login-actions">
-      <button class="save" id="loginBtn">Login</button>
-      <button class="secondary" id="switchUserBtn">Switch User</button>
-    </div>
+    <main class="content">
+      <section class="login-panel">
+        <div class="login-row">
+          <div class="login-field">
+            <label for="username">User Name</label>
+            <input id="username" type="text" placeholder="Enter your name">
+          </div>
+
+          <div class="login-actions">
+            <button class="btn-primary" id="loginBtn">Login</button>
+            <button class="btn-secondary" id="switchUserBtn">Switch User</button>
+          </div>
+        </div>
+
+        <div class="user-status">
+          <span>Logged in as:</span>
+          <span id="userBadge" class="chip guest">Guest</span>
+        </div>
+      </section>
+
+      <section class="calculator-panel">
+        <div class="inputs">
+          <div>
+            <label for="combo">Select Combo</label>
+            <select id="combo"></select>
+          </div>
+          <div>
+            <label for="adults">Adult Count</label>
+            <input id="adults" type="number" min="0" value="2">
+          </div>
+          <div>
+            <label for="children">Child Count</label>
+            <input id="children" type="number" min="0" value="0">
+          </div>
+        </div>
+
+        <div class="selected">Selected Combo <strong id="name">-</strong></div>
+
+        <div class="stats">
+          <div class="stat adult">
+            <h3>Adult Price</h3>
+            <strong id="adultPrice">₹0</strong>
+          </div>
+          <div class="stat child">
+            <h3>Child Price</h3>
+            <strong id="childPrice">₹0</strong>
+          </div>
+          <div class="stat total">
+            <h3>Current Total</h3>
+            <strong id="currentTotal">₹0</strong>
+          </div>
+          <div class="stat tpu">
+            <h3>Total TPU</h3>
+            <strong id="tpuTotal">₹0</strong>
+          </div>
+          <div class="stat oepl">
+            <h3>Total OEPL</h3>
+            <strong id="oeplTotal">₹0</strong>
+          </div>
+          <div class="stat grand">
+            <h3>Grand Total</h3>
+            <strong id="grandTotal">₹0</strong>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-success" id="save">Save SOB</button>
+          <button class="btn-warning" id="share">Share on WhatsApp</button>
+          <button class="btn-secondary" onclick="window.print()">Print Saved SOBs</button>
+        </div>
+      </section>
+
+      <section class="saved-panel">
+        <div class="saved-head">
+          <h2>Saved SOB Combos</h2>
+          <div class="actions">
+            <button class="btn-danger" id="clear">Clear All Saved</button>
+            <button class="btn-secondary" id="exportCsv">Export CSV</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>SOB No.</th>
+                <th>Combo</th>
+                <th>Type</th>
+                <th>Adults</th>
+                <th>Children</th>
+                <th>TPU</th>
+                <th>OEPL</th>
+                <th>Total</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="savedList"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
   </div>
-  <div class="user-status"><strong>Logged in as:</strong> <span id="userBadge" class="guest">Guest</span></div>
-</div>
 
-<div class="form">
-  <div>
-    <label for="combo">Select Combo</label>
-    <select id="combo"></select>
-  </div>
-  <div>
-    <label for="adults">Adult Count</label>
-    <input id="adults" type="number" min="0" value="2">
-  </div>
-  <div>
-    <label for="children">Child Count</label>
-    <input id="children" type="number" min="0" value="0">
-  </div>
-</div>
+  <script>
+    const data = [
+      ['TU Explorer Combo', 'Combo 299/209', 170, 80, 70, 59, 299, 209],
+      ['Adventure Combo', 'Combo 397/307', 170, 80, 0, 227, 397, 307],
+      ['Eco Fun Combo', 'Combo 398/308', 170, 80, 28, 200, 398, 308],
+      ['Snow Adventure Combo', 'Combo 408/318', 170, 80, 0, 238, 408, 318],
+      ['Heritage Combo', 'Combo 499/399', 170, 80, 16, 310, 499, 399],
+      ['Family Combo', 'Combo 619/509', 170, 80, 0, 470, 619, 509],
+      ['Royal Combo', 'Combo 699/599', 170, 80, 0, 500, 699, 599],
+      ['Premium Combo', 'Combo 799/699', 170, 80, 0, 600, 799, 699],
+      ['Luxury Combo', 'Combo 899/799', 170, 80, 0, 700, 899, 799],
+      ['Ultimate Combo', 'Combo 999/899', 170, 80, 0, 800, 999, 899]
+    ];
 
-<div class="selected">Selected Combo<strong id="name">-</strong></div>
-<div class="cards">
-  <div class="card adult"><h3>Adult Price</h3><strong id="adultPrice">₹0</strong></div>
-  <div class="card child"><h3>Child Price</h3><strong id="childPrice">₹0</strong></div>
-  <div class="card total"><h3>Current Total</h3><strong id="currentTotal">₹0</strong></div>
-</div>
-<div class="totals">
-  <div class="total tpu"><h3>Total TPU</h3><strong id="tpuTotal">₹0</strong></div>
-  <div class="total oepl"><h3>Total OEPL</h3><strong id="oeplTotal">₹0</strong></div>
-  <div class="total total"><h3>Grand Total</h3><strong id="grandTotal">₹0</strong></div>
-</div>
-<div class="actions">
-  <button class="wa" id="share">Share on WhatsApp</button>
-  <button class="save" id="save">Save SOB</button>
-  <button class="print" onclick="window.print()">Print Saved SOBs</button>
-</div>
+    const $ = (id) => document.getElementById(id);
+    const money = (n) => n == null ? 'NA' : '₹' + Number(n).toLocaleString('en-IN');
+    const count = (el) => Math.max(0, parseInt(el.value) || 0);
+    const currentUserKey = 'sobCurrentUser';
 
-<div class="saved">
-  <div class="section-title">
-    <h2>Saved SOB Combos</h2>
-    <button class="danger" id="clear">Clear All Saved SOB</button>
-  </div>
-  <div class="scroll">
-    <table>
-      <thead>
-        <tr>
-          <th>SOB No.</th>
-          <th>Combo</th>
-          <th>Type</th>
-          <th>Adults</th>
-          <th>Children</th>
-          <th>TPU</th>
-          <th>OEPL</th>
-          <th>Total</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="savedList"></tbody>
-    </table>
-  </div>
-</div>
-</main>
-<script>
-const data = [
-  ['TU Explorer Combo','Combo 299/209',170,80,70,59,299,209],
-  ['Adventure Combo','Combo 397/307',170,80,0,227,397,307],
-  ['Eco Fun Combo','Combo 398/308',170,80,28,200,398,308],
-  ['Snow Adventure Combo','Combo 408/318',170,80,0,238,408,318],
-  ['Heritage Combo','Combo 499/399',170,80,16,310,499,399],
-  ['Family Combo','Combo 619/509',170,80,0,470,619,509],
-  ['Royal Combo','Combo 699/599',170,80,0,500,699,599],
-  ['Premium Combo','Combo 799/699',170,80,0,600,799,699],
-  ['Luxury Combo','Combo 899/799',170,80,0,700,899,799],
-  ['Ultimate Combo','Combo 999/899',170,80,0,800,999,899]
-];
+    function getCurrentUser() {
+      return (localStorage.getItem(currentUserKey) || '').trim();
+    }
 
-const $ = id => document.getElementById(id);
-const money = n => n == null ? 'NA' : '₹' + Number(n).toLocaleString('en-IN');
-const count = e => Math.max(0, parseInt(e.value) || 0);
-const currentUserKey = 'sobCurrentUser';
+    function getStoredUserKey(username) {
+      return 'sobSaved_' + (username || 'guest').trim().toLowerCase().replace(/[^a-z0-9]+/g, '_');
+    }
 
-function getCurrentUser() {
-  return (localStorage.getItem(currentUserKey) || '').trim();
-}
+    function getSaved() {
+      const user = getCurrentUser();
+      if (!user) return [];
+      try {
+        return JSON.parse(localStorage.getItem(getStoredUserKey(user))) || [];
+      } catch (e) {
+        return [];
+      }
+    }
 
-function getStoredUserKey(username) {
-  return 'sobSaved_' + (username || 'guest').trim().toLowerCase().replace(/[^a-z0-9]+/g, '_');
-}
+    function renderUserStatus() {
+      const user = getCurrentUser();
+      const badge = $('userBadge');
+      badge.textContent = user || 'Guest';
+      badge.classList.toggle('guest', !user);
+    }
 
-function getSaved() {
-  const user = getCurrentUser();
-  if (!user) return [];
-  try {
-    return JSON.parse(localStorage.getItem(getStoredUserKey(user))) || [];
-  } catch (e) {
-    return [];
-  }
-}
+    function updateCalculator() {
+      const index = Number(combo.value);
+      const item = data[index];
+      const adultCount = count(adults);
+      const childCount = item[7] == null ? 0 : count(children);
 
-function renderUserStatus() {
-  const user = getCurrentUser();
-  const badge = $('userBadge');
-  badge.textContent = user || 'Guest';
-  badge.classList.toggle('guest', !user);
-}
+      const adultAmount = adultCount * item[6];
+      const childAmount = childCount * (item[7] || 0);
+      const currentTotal = adultAmount + childAmount;
+      const tpu = adultCount * item[2] + childCount * item[3];
+      const oepl = adultCount * item[4] + childCount * item[5];
+      const grandTotal = tpu + oepl;
 
-function initializeComboList() {
-  data.forEach((x, i) => {
-    combo.add(new Option(`${x[0]} (${x[1]})`, i));
-  });
-  combo.value = '0';
-  calculate();
-}
+      $('name').textContent = item[0];
+      $('adultPrice').textContent = money(item[6]);
+      $('childPrice').textContent = money(item[7]);
+      $('currentTotal').textContent = money(currentTotal);
+      $('tpuTotal').textContent = money(tpu);
+      $('oeplTotal').textContent = money(oepl);
+      $('grandTotal').textContent = money(grandTotal);
+    }
 
-function calculate() {
-  const i = +combo.value;
-  const x = data[i];
-  const a = count(adults);
-  const c = x[7] == null ? 0 : count(children);
-  const adultAmount = a * x[6];
-  const childAmount = c * (x[7] || 0);
-  const total = adultAmount + childAmount;
-  const tpu = a * x[2] + c * x[3];
-  const oepl = a * x[4] + c * x[5];
-  const grandTotal = tpu + oepl;
+    function initSelect() {
+      data.forEach((row, i) => {
+        combo.add(new Option(`${row[0]} (${row[1]})`, i));
+      });
+      combo.value = '0';
+      updateCalculator();
+    }
 
-  $('name').textContent = x[0];
-  $('adultPrice').textContent = money(x[6]);
-  $('childPrice').textContent = money(x[7]);
-  $('currentTotal').textContent = money(total);
-  $('tpuTotal').textContent = money(tpu);
-  $('oeplTotal').textContent = money(oepl);
-  $('grandTotal').textContent = money(grandTotal);
-}
+    function nextNumber() {
+      const saved = getSaved();
+      return saved.reduce((max, item) => Math.max(max, Number(item.number) || 0), 0) + 1;
+    }
 
-function nextNumber() {
-  const saved = getSaved();
-  return saved.reduce((max, v) => Math.max(max, Number(v.number) || 0), 0) + 1;
-}
+    function renderSaved() {
+      renderUserStatus();
+      const tableBody = $('savedList');
+      tableBody.innerHTML = '';
 
-function renderSaved() {
-  renderUserStatus();
-  const savedList = $('savedList');
-  savedList.innerHTML = '';
-  const user = getCurrentUser();
+      const user = getCurrentUser();
+      if (!user) {
+        tableBody.innerHTML = '<tr><td colspan="9" class="muted">Please login with your name to save SOB combos.</td></tr>';
+        return;
+      }
 
-  if (!user) {
-    savedList.innerHTML = '<tr><td colspan="9" class="muted">Please login with your name to save SOB combos.</td></tr>';
-    return;
-  }
+      const saved = getSaved();
+      if (!saved.length) {
+        tableBody.innerHTML = `<tr><td colspan="9" class="muted">No saved SOB combos for ${user}.</td></tr>`;
+        return;
+      }
 
-  const saved = getSaved();
-  if (!saved.length) {
-    savedList.innerHTML = '<tr><td colspan="9" class="muted">No saved SOB combos for ' + user + '.</td></tr>';
-    return;
-  }
+      saved.forEach((row) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${row.sobNo}</td>
+          <td>${row.name}</td>
+          <td>${row.type}</td>
+          <td>${row.a}</td>
+          <td>${row.c}</td>
+          <td>${money(row.tpu)}</td>
+          <td>${money(row.oepl)}</td>
+          <td>${money(row.total)}</td>
+          <td><button class="btn-danger tiny" data-delete="${row.id}">Delete</button></td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
 
-  saved.forEach(v => {
-    savedList.insertAdjacentHTML('beforeend', `
-      <tr>
-        <td>${v.sobNo}</td>
-        <td>${v.name}</td>
-        <td>${v.type}</td>
-        <td>${v.a}</td>
-        <td>${v.c}</td>
-        <td>${money(v.tpu)}</td>
-        <td>${money(v.oepl)}</td>
-        <td>${money(v.total)}</td>
-        <td><button class="danger small" data-delete="${v.id}">Delete</button></td>
-      </tr>
-    `);
-  });
-}
+    function loginUser() {
+      const name = $('username').value.trim();
+      if (!name) {
+        alert('Please enter your name to continue.');
+        $('username').focus();
+        return;
+      }
 
-function loginUser() {
-  const name = $('username').value.trim();
-  if (!name) {
-    alert('Please enter your name to continue.');
-    $('username').focus();
-    return;
-  }
-  localStorage.setItem(currentUserKey, name);
-  renderSaved();
-}
+      localStorage.setItem(currentUserKey, name);
+      renderSaved();
+    }
 
-function switchUser() {
-  localStorage.removeItem(currentUserKey);
-  $('username').value = '';
-  renderSaved();
-}
+    function logoutUser() {
+      localStorage.removeItem(currentUserKey);
+      $('username').value = '';
+      renderSaved();
+    }
 
-$('loginBtn').onclick = loginUser;
-$('switchUserBtn').onclick = switchUser;
-$('username').addEventListener('keydown', e => {
-  if (e.key === 'Enter') loginUser();
-});
+    function saveCurrentSOB() {
+      const user = getCurrentUser();
+      if (!user) {
+        alert('Please login with your name first.');
+        $('username').focus();
+        return;
+      }
 
-combo.onchange = calculate;
-adults.oninput = calculate;
-children.oninput = calculate;
+      const index = Number(combo.value);
+      const item = data[index];
+      const adultCount = count(adults);
+      const childCount = item[7] == null ? 0 : count(children);
+      const number = nextNumber();
+      const tpu = adultCount * item[2] + childCount * item[3];
+      const oepl = adultCount * item[4] + childCount * item[5];
+      const total = adultCount * item[6] + childCount * (item[7] || 0);
 
-$('save').onclick = () => {
-  const user = getCurrentUser();
-  if (!user) {
-    alert('Please login with your name first.');
-    $('username').focus();
-    return;
-  }
+      const row = {
+        id: Date.now(),
+        number,
+        sobNo: `SOB-${String(number).padStart(3, '0')}`,
+        name: item[0],
+        type: item[1],
+        a: adultCount,
+        c: childCount,
+        tpu,
+        oepl,
+        total
+      };
 
-  const i = +combo.value;
-  const x = data[i];
-  const a = count(adults);
-  const c = x[7] == null ? 0 : count(children);
-  const tpu = a * x[2] + c * x[3];
-  const oepl = a * x[4] + c * x[5];
-  const total = a * x[6] + c * (x[7] || 0);
-  const number = nextNumber();
-  const v = {
-    id: Date.now(),
-    number,
-    sobNo: `SOB-${String(number).padStart(3, '0')}`,
-    name: x[0],
-    type: x[1],
-    a,
-    c,
-    tpu,
-    oepl,
-    total
-  };
+      const saved = getSaved();
+      saved.push(row);
+      localStorage.setItem(getStoredUserKey(user), JSON.stringify(saved));
+      renderSaved();
+    }
 
-  const saved = getSaved();
-  saved.push(v);
-  localStorage.setItem(getStoredUserKey(user), JSON.stringify(saved));
-  renderSaved();
-};
+    function clearSavedForUser() {
+      const user = getCurrentUser();
+      if (!user) {
+        alert('Please login with your name first.');
+        $('username').focus();
+        return;
+      }
 
-$('clear').onclick = () => {
-  const user = getCurrentUser();
-  if (!user) {
-    alert('Please login with your name first.');
-    $('username').focus();
-    return;
-  }
+      if (confirm(`Clear all saved SOB combos for ${user}?`)) {
+        localStorage.removeItem(getStoredUserKey(user));
+        renderSaved();
+      }
+    }
 
-  if (confirm('Clear all saved SOB combos for ' + user + '?')) {
-    localStorage.removeItem(getStoredUserKey(user));
+    function deleteSavedRow(id) {
+      const user = getCurrentUser();
+      if (!user) return;
+      const saved = getSaved().filter((row) => row.id !== id);
+      localStorage.setItem(getStoredUserKey(user), JSON.stringify(saved));
+      renderSaved();
+    }
+
+    function exportCsv() {
+      const user = getCurrentUser();
+      if (!user) {
+        alert('Please login with your name first.');
+        $('username').focus();
+        return;
+      }
+
+      const saved = getSaved();
+      if (!saved.length) {
+        alert('Save at least one SOB first.');
+        return;
+      }
+
+      const header = ['SOB No.', 'Combo', 'Adult Quantity', 'Child Quantity', 'TPU Total', 'OEPL Total', 'Grand Total'];
+      const rows = saved.map((row) => [row.sobNo, row.name, row.a, row.c, row.tpu, row.oepl, row.total]);
+      const csv = [header, ...rows].map((line) => line.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(',')).join('\n');
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.href = url;
+      link.download = `sob-${user.toLowerCase().replace(/\s+/g, '-')}.csv`;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function shareSOB() {
+      const user = getCurrentUser();
+      const index = Number(combo.value);
+      const item = data[index];
+      const text = `SOB ${item[0]}\nUser: ${user || 'Guest'}\nAdult Price: ${money(item[6])}\nChild Price: ${money(item[7])}\nTPU Total: ${$('tpuTotal').textContent}\nOEPL Total: ${$('oeplTotal').textContent}\nGrand Total: ${$('grandTotal').textContent}`;
+      window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+    }
+
+    combo.addEventListener('change', updateCalculator);
+    adults.addEventListener('input', updateCalculator);
+    children.addEventListener('input', updateCalculator);
+    $('loginBtn').addEventListener('click', loginUser);
+    $('switchUserBtn').addEventListener('click', logoutUser);
+    $('save').addEventListener('click', saveCurrentSOB);
+    $('clear').addEventListener('click', clearSavedForUser);
+    $('exportCsv').addEventListener('click', exportCsv);
+    $('share').addEventListener('click', shareSOB);
+    $('savedList').addEventListener('click', (event) => {
+      const button = event.target.closest('[data-delete]');
+      if (!button) return;
+      deleteSavedRow(Number(button.dataset.delete));
+    });
+
+    $('username').addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') loginUser();
+    });
+
+    const savedUser = getCurrentUser();
+    if (savedUser) {
+      $('username').value = savedUser;
+    }
+
+    initSelect();
     renderSaved();
-  }
-};
-
-$('savedList').addEventListener('click', e => {
-  const btn = e.target.closest('[data-delete]');
-  if (!btn) return;
-
-  const user = getCurrentUser();
-  if (!user) return;
-
-  const id = Number(btn.dataset.delete);
-  const saved = getSaved().filter(v => v.id !== id);
-  localStorage.setItem(getStoredUserKey(user), JSON.stringify(saved));
-  renderSaved();
-});
-
-$('share').onclick = () => {
-  const x = data[+combo.value];
-  const user = getCurrentUser();
-  const text = `SOB ${x[0]}\nUser: ${user || 'Guest'}\nAdult Price: ${money(x[6])}\nChild Price: ${money(x[7])}\nTPU Total: ${$('tpuTotal').textContent}\nOEPL Total: ${$('oeplTotal').textContent}\nGrand Total: ${$('grandTotal').textContent}`;
-  window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
-};
-
-$('exportExcel').onclick = () => {
-  const user = getCurrentUser();
-  if (!user) {
-    alert('Please login with your name first.');
-    $('username').focus();
-    return;
-  }
-
-  const rows = getSaved();
-  if (!rows.length) {
-    alert('Save at least one SOB first.');
-    return;
-  }
-
-  const header = ['SOB No.', 'Combo', 'Adult Quantity', 'Child Quantity', 'TPU Total', 'OEPL Total', 'Grand Total'];
-  const csv = [header.join(',')].concat(rows.map(r => [r.sobNo, r.name, r.a, r.c, r.tpu, r.oepl, r.total].map(v => '"' + String(v).replace(/"/g, '""') + '"').join(','))).join('\n');
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = 'sob-' + user.toLowerCase().replace(/\s+/g, '-') + '.csv';
-  link.click();
-  URL.revokeObjectURL(link.href);
-};
-
-const savedUser = getCurrentUser();
-if (savedUser) {
-  $('username').value = savedUser;
-}
-
-initializeComboList();
-renderSaved();
-</script>
+  </script>
 </body>
 </html>
