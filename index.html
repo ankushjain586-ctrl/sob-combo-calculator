@@ -465,16 +465,21 @@
 
   <script>
     const data = [
-      ['TU Explorer Combo', 'Combo 299/209', 170, 80, 70, 59, 299, 209],
-      ['Adventure Combo', 'Combo 397/307', 170, 80, 0, 227, 397, 307],
-      ['Eco Fun Combo', 'Combo 398/308', 170, 80, 28, 200, 398, 308],
-      ['Snow Adventure Combo', 'Combo 408/318', 170, 80, 0, 238, 408, 318],
-      ['Heritage Combo', 'Combo 499/399', 170, 80, 16, 310, 499, 399],
-      ['Family Combo', 'Combo 619/509', 170, 80, 0, 470, 619, 509],
-      ['Royal Combo', 'Combo 699/599', 170, 80, 0, 500, 699, 599],
-      ['Premium Combo', 'Combo 799/699', 170, 80, 0, 600, 799, 699],
-      ['Luxury Combo', 'Combo 899/799', 170, 80, 0, 700, 899, 799],
-      ['Ultimate Combo', 'Combo 999/899', 170, 80, 0, 800, 999, 899]
+      ['TU Explorer Combo', 'Combo 299/209', 299, 209],
+      ['Adventure Combo', 'Combo 397/307', 397, 307],
+      ['Eco Fun Combo', 'Combo 398/308', 398, 308],
+      ['Snow Adventure Combo', 'Combo 425/335', 425, 335],
+      ['Aastha Combo', 'Combo 600/500', 600, 500],
+      ['Shiv Ganesha Combo', 'Combo 699/NA', 699, null],
+      ['Namah Combo', 'Combo 700/525', 700, 525],
+      ['Viewing Fun Combo', 'Combo 775/585', 775, 585],
+      ['Ultimate Play Combo', 'Combo 769/579', 769, 579],
+      ['Symbolic Combo', 'Combo 925/835', 925, 835],
+      ['Mini Blast Combo', 'Combo 969/779', 969, 779],
+      ['All in fun Combo', 'Combo 1100/925', 1100, 925],
+      ['Divine Rush Combo', 'Combo 1550/975', 1550, 975],
+      ['Ultimate Mega Combo', 'Combo 4249/NA', 4249, null],
+      ['Ultimate Mega Combo', 'Combo 4249/NA', 4249, null]
     ];
 
     const $ = (id) => document.getElementById(id);
@@ -511,18 +516,22 @@
       const index = Number(combo.value);
       const item = data[index];
       const adultCount = count(adults);
-      const childCount = item[7] == null ? 0 : count(children);
+      const childCount = item[3] == null ? 0 : count(children);
 
-      const adultAmount = adultCount * item[6];
-      const childAmount = childCount * (item[7] || 0);
+      const adultPrice = Number(item[2] ?? 0);
+      const childPrice = item[3] == null ? null : Number(item[3]);
+
+      const adultAmount = adultCount * adultPrice;
+      const childAmount = childCount * (childPrice ?? 0);
       const currentTotal = adultAmount + childAmount;
-      const tpu = adultCount * item[2] + childCount * item[3];
-      const oepl = adultCount * item[4] + childCount * item[5];
-      const grandTotal = tpu + oepl;
+
+      const tpu = adultAmount;
+      const oepl = childAmount;
+      const grandTotal = currentTotal;
 
       $('name').textContent = item[0];
-      $('adultPrice').textContent = money(item[6]);
-      $('childPrice').textContent = money(item[7]);
+      $('adultPrice').textContent = money(adultPrice);
+      $('childPrice').textContent = money(childPrice);
       $('currentTotal').textContent = money(currentTotal);
       $('tpuTotal').textContent = money(tpu);
       $('oeplTotal').textContent = money(oepl);
@@ -605,11 +614,14 @@
       const index = Number(combo.value);
       const item = data[index];
       const adultCount = count(adults);
-      const childCount = item[7] == null ? 0 : count(children);
+      const childCount = item[3] == null ? 0 : count(children);
+      const adultPrice = Number(item[2] ?? 0);
+      const childPrice = item[3] == null ? null : Number(item[3]);
+
       const number = nextNumber();
-      const tpu = adultCount * item[2] + childCount * item[3];
-      const oepl = adultCount * item[4] + childCount * item[5];
-      const total = adultCount * item[6] + childCount * (item[7] || 0);
+      const tpu = adultCount * adultPrice;
+      const oepl = childCount * (childPrice ?? 0);
+      const total = adultCount * adultPrice + childCount * (childPrice ?? 0);
 
       const row = {
         id: Date.now(),
@@ -683,7 +695,7 @@
       const user = getCurrentUser();
       const index = Number(combo.value);
       const item = data[index];
-      const text = `SOB ${item[0]}\nUser: ${user || 'Guest'}\nAdult Price: ${money(item[6])}\nChild Price: ${money(item[7])}\nTPU Total: ${$('tpuTotal').textContent}\nOEPL Total: ${$('oeplTotal').textContent}\nGrand Total: ${$('grandTotal').textContent}`;
+      const text = `SOB ${item[0]}\nUser: ${user || 'Guest'}\nAdult Price: ${money(item[2])}\nChild Price: ${money(item[3])}\nTPU Total: ${$('tpuTotal').textContent}\nOEPL Total: ${$('oeplTotal').textContent}\nGrand Total: ${$('grandTotal').textContent}`;
       window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
     }
 
