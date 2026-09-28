@@ -232,7 +232,7 @@
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 16px;
       margin-bottom: 22px;
     }
@@ -259,12 +259,9 @@
       letter-spacing: -0.04em;
     }
 
-    .stat.adult { background: linear-gradient(135deg, #1f63ff, #3559db); }
-    .stat.child { background: linear-gradient(135deg, #16b08c, #0d9b7c); }
-    .stat.total { background: linear-gradient(135deg, #8d5cf6, #6f46d9); }
     .stat.tpu { background: linear-gradient(135deg, #ff8b5e, #ef6d35); }
     .stat.oepl { background: linear-gradient(135deg, #ffb142, #f59e0b); }
-    .stat.grand { background: linear-gradient(135deg, #00b4d8, #0077b6); }
+    .stat.peapl { background: linear-gradient(135deg, #00b4d8, #0077b6); }
 
     .actions {
       display: flex;
@@ -337,6 +334,14 @@
       font-size: 0.8rem;
     }
 
+    @media print {
+      body { padding: 0; background: white; }
+      .app { border: none; box-shadow: none; }
+      .header, .login-panel, .calculator-panel, .actions { display: none; }
+      .saved-panel { margin-top: 0; }
+      .saved-head { border-bottom: 2px solid black; }
+    }
+
     @media (max-width: 760px) {
       body { padding: 18px 12px; }
       .header, .content { padding-left: 18px; padding-right: 18px; }
@@ -399,18 +404,6 @@
         <div class="selected">Selected Combo <strong id="name">-</strong></div>
 
         <div class="stats">
-          <div class="stat adult">
-            <h3>Adult Price</h3>
-            <strong id="adultPrice">₹0</strong>
-          </div>
-          <div class="stat child">
-            <h3>Child Price</h3>
-            <strong id="childPrice">₹0</strong>
-          </div>
-          <div class="stat total">
-            <h3>Current Total</h3>
-            <strong id="currentTotal">₹0</strong>
-          </div>
           <div class="stat tpu">
             <h3>Total TPU</h3>
             <strong id="tpuTotal">₹0</strong>
@@ -419,9 +412,9 @@
             <h3>Total OEPL</h3>
             <strong id="oeplTotal">₹0</strong>
           </div>
-          <div class="stat grand">
-            <h3>Grand Total</h3>
-            <strong id="grandTotal">₹0</strong>
+          <div class="stat peapl">
+            <h3>Grand Total (PEAPL)</h3>
+            <strong id="peaplTotal">₹0</strong>
           </div>
         </div>
 
@@ -446,13 +439,13 @@
             <thead>
               <tr>
                 <th>SOB No.</th>
+                <th>User Name</th>
                 <th>Combo</th>
-                <th>Type</th>
                 <th>Adults</th>
                 <th>Children</th>
-                <th>TPU</th>
-                <th>OEPL</th>
-                <th>Total</th>
+                <th>Total TPU</th>
+                <th>Total OEPL</th>
+                <th>Grand Total</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -521,21 +514,14 @@
       const adultPrice = Number(item[2] ?? 0);
       const childPrice = item[3] == null ? null : Number(item[3]);
 
-      const adultAmount = adultCount * adultPrice;
-      const childAmount = childCount * (childPrice ?? 0);
-      const currentTotal = adultAmount + childAmount;
-
-      const tpu = adultAmount;
-      const oepl = childAmount;
-      const grandTotal = currentTotal;
+      const tpu = adultCount * adultPrice;
+      const oepl = childCount * (childPrice ?? 0);
+      const peapl = tpu + oepl;
 
       $('name').textContent = item[0];
-      $('adultPrice').textContent = money(adultPrice);
-      $('childPrice').textContent = money(childPrice);
-      $('currentTotal').textContent = money(currentTotal);
       $('tpuTotal').textContent = money(tpu);
       $('oeplTotal').textContent = money(oepl);
-      $('grandTotal').textContent = money(grandTotal);
+      $('peaplTotal').textContent = money(peapl);
     }
 
     function initSelect() {
@@ -549,6 +535,10 @@
     function nextNumber() {
       const saved = getSaved();
       return saved.reduce((max, item) => Math.max(max, Number(item.number) || 0), 0) + 1;
+    }
+
+    function generateSobNo(number) {
+      return `SOB-${String(number).padStart(6, '0')}`;
     }
 
     function renderSaved() {
@@ -572,13 +562,13 @@
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${row.sobNo}</td>
+          <td>${row.userName}</td>
           <td>${row.name}</td>
-          <td>${row.type}</td>
           <td>${row.a}</td>
           <td>${row.c}</td>
           <td>${money(row.tpu)}</td>
           <td>${money(row.oepl)}</td>
-          <td>${money(row.total)}</td>
+          <td>${money(row.peapl)}</td>
           <td><button class="btn-danger tiny" data-delete="${row.id}">Delete</button></td>
         `;
         tableBody.appendChild(tr);
@@ -621,19 +611,19 @@
       const number = nextNumber();
       const tpu = adultCount * adultPrice;
       const oepl = childCount * (childPrice ?? 0);
-      const total = adultCount * adultPrice + childCount * (childPrice ?? 0);
+      const peapl = tpu + oepl;
 
       const row = {
         id: Date.now(),
         number,
-        sobNo: `SOB-${String(number).padStart(3, '0')}`,
+        sobNo: generateSobNo(number),
+        userName: user,
         name: item[0],
-        type: item[1],
         a: adultCount,
         c: childCount,
         tpu,
         oepl,
-        total
+        peapl
       };
 
       const saved = getSaved();
@@ -678,8 +668,8 @@
         return;
       }
 
-      const header = ['SOB No.', 'Combo', 'Adult Quantity', 'Child Quantity', 'TPU Total', 'OEPL Total', 'Grand Total'];
-      const rows = saved.map((row) => [row.sobNo, row.name, row.a, row.c, row.tpu, row.oepl, row.total]);
+      const header = ['SOB No.', 'User Name', 'Combo', 'Adult Quantity', 'Child Quantity', 'Total TPU', 'Total OEPL', 'Grand Total'];
+      const rows = saved.map((row) => [row.sobNo, row.userName, row.name, row.a, row.c, row.tpu, row.oepl, row.peapl]);
       const csv = [header, ...rows].map((line) => line.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(',')).join('\n');
 
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -695,7 +685,7 @@
       const user = getCurrentUser();
       const index = Number(combo.value);
       const item = data[index];
-      const text = `SOB ${item[0]}\nUser: ${user || 'Guest'}\nAdult Price: ${money(item[2])}\nChild Price: ${money(item[3])}\nTPU Total: ${$('tpuTotal').textContent}\nOEPL Total: ${$('oeplTotal').textContent}\nGrand Total: ${$('grandTotal').textContent}`;
+      const text = `SOB ${item[0]}\nUser: ${user || 'Guest'}\nAdult Count: ${count(adults)}\nChild Count: ${count(children)}\nTotal TPU: ${$('tpuTotal').textContent}\nTotal OEPL: ${$('oeplTotal').textContent}\nGrand Total: ${$('peaplTotal').textContent}`;
       window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
     }
 
