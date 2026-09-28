@@ -230,6 +230,33 @@
       font-size: 1.08rem;
     }
 
+    .price-input-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+      padding: 16px;
+      background: #f9fbff;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+    }
+
+    .price-input-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .price-input-field label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+    }
+
+    .price-input-field input {
+      padding: 10px 12px;
+      font-size: 0.95rem;
+    }
+
     .stats {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -283,11 +310,18 @@
       padding: 22px 22px 18px;
       border-bottom: 1px solid var(--line);
       background: linear-gradient(135deg, #f9fbff, #f4f8ff);
+      flex-wrap: wrap;
     }
 
     .saved-head h2 {
       margin: 0;
       font-size: clamp(1.25rem, 2vw, 1.8rem);
+    }
+
+    .print-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
     .table-wrap {
@@ -334,12 +368,24 @@
       font-size: 0.8rem;
     }
 
+    .summary-row {
+      background: #eef3ff;
+      font-weight: 700;
+    }
+
+    .summary-row td {
+      padding: 14px 12px;
+      border-bottom: 2px solid var(--primary);
+    }
+
     @media print {
       body { padding: 0; background: white; }
       .app { border: none; box-shadow: none; }
       .header, .login-panel, .calculator-panel, .actions { display: none; }
       .saved-panel { margin-top: 0; }
-      .saved-head { border-bottom: 2px solid black; }
+      .saved-head { border-bottom: 2px solid black; display: block; }
+      .print-buttons { display: none; }
+      .btn-danger { display: none; }
     }
 
     @media (max-width: 760px) {
@@ -352,6 +398,9 @@
       .login-row { display: block; }
       .login-actions { margin-top: 12px; }
       .login-actions button { flex: 1; }
+      .price-input-row { grid-template-columns: 1fr; }
+      .print-buttons { flex-direction: column; }
+      .print-buttons button { width: 100%; }
     }
   </style>
 </head>
@@ -403,6 +452,21 @@
 
         <div class="selected">Selected Combo <strong id="name">-</strong></div>
 
+        <div class="price-input-row">
+          <div class="price-input-field">
+            <label>TPU Price per Unit</label>
+            <input id="tpuPrice" type="number" min="0" value="0" placeholder="Enter TPU price">
+          </div>
+          <div class="price-input-field">
+            <label>OEPL Price per Unit</label>
+            <input id="oeplPrice" type="number" min="0" value="0" placeholder="Enter OEPL price">
+          </div>
+          <div class="price-input-field">
+            <label>PEAPL Price per Unit</label>
+            <input id="peaplPrice" type="number" min="0" value="0" placeholder="Enter PEAPL price">
+          </div>
+        </div>
+
         <div class="stats">
           <div class="stat tpu">
             <h3>Total TPU</h3>
@@ -413,7 +477,7 @@
             <strong id="oeplTotal">₹0</strong>
           </div>
           <div class="stat peapl">
-            <h3>Grand Total (PEAPL)</h3>
+            <h3>Total PEAPL</h3>
             <strong id="peaplTotal">₹0</strong>
           </div>
         </div>
@@ -421,14 +485,15 @@
         <div class="actions">
           <button class="btn-success" id="save">Save SOB</button>
           <button class="btn-warning" id="share">Share on WhatsApp</button>
-          <button class="btn-secondary" onclick="window.print()">Print Saved SOBs</button>
         </div>
       </section>
 
       <section class="saved-panel">
         <div class="saved-head">
           <h2>Saved SOB Combos</h2>
-          <div class="actions">
+          <div class="print-buttons">
+            <button class="btn-secondary" id="printUser">Print User SOBs</button>
+            <button class="btn-secondary" id="printAll">Print All SOBs</button>
             <button class="btn-danger" id="clear">Clear All Saved</button>
             <button class="btn-secondary" id="exportCsv">Export CSV</button>
           </div>
@@ -443,8 +508,9 @@
                 <th>Combo</th>
                 <th>Adults</th>
                 <th>Children</th>
-                <th>Total TPU</th>
-                <th>Total OEPL</th>
+                <th>TPU</th>
+                <th>OEPL</th>
+                <th>PEAPL</th>
                 <th>Grand Total</th>
                 <th>Action</th>
               </tr>
@@ -488,6 +554,15 @@
       return 'sobSaved_' + (username || 'guest').trim().toLowerCase().replace(/[^a-z0-9]+/g, '_');
     }
 
+    function getAllSaved() {
+      try {
+        const allSaved = localStorage.getItem('sobSavedAll') || '[]';
+        return JSON.parse(allSaved);
+      } catch (e) {
+        return [];
+      }
+    }
+
     function getSaved() {
       const user = getCurrentUser();
       if (!user) return [];
@@ -511,12 +586,13 @@
       const adultCount = count(adults);
       const childCount = item[3] == null ? 0 : count(children);
 
-      const adultPrice = Number(item[2] ?? 0);
-      const childPrice = item[3] == null ? null : Number(item[3]);
+      const tpuPrice = parseFloat($('tpuPrice').value) || 0;
+      const oeplPrice = parseFloat($('oeplPrice').value) || 0;
+      const peaplPrice = parseFloat($('peaplPrice').value) || 0;
 
-      const tpu = adultCount * adultPrice;
-      const oepl = childCount * (childPrice ?? 0);
-      const peapl = tpu + oepl;
+      const tpu = adultCount * tpuPrice;
+      const oepl = childCount * oeplPrice;
+      const peapl = (adultCount + childCount) * peaplPrice;
 
       $('name').textContent = item[0];
       $('tpuTotal').textContent = money(tpu);
@@ -533,33 +609,44 @@
     }
 
     function nextNumber() {
-      const saved = getSaved();
-      return saved.reduce((max, item) => Math.max(max, Number(item.number) || 0), 0) + 1;
+      const allSaved = getAllSaved();
+      return allSaved.reduce((max, item) => Math.max(max, Number(item.number) || 0), 0) + 1;
     }
 
     function generateSobNo(number) {
       return `SOB-${String(number).padStart(6, '0')}`;
     }
 
-    function renderSaved() {
+    function renderSaved(filterByUser = true) {
       renderUserStatus();
       const tableBody = $('savedList');
       tableBody.innerHTML = '';
 
       const user = getCurrentUser();
       if (!user) {
-        tableBody.innerHTML = '<tr><td colspan="9" class="muted">Please login with your name to save SOB combos.</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="10" class="muted">Please login with your name to save SOB combos.</td></tr>';
         return;
       }
 
-      const saved = getSaved();
+      const allSaved = getAllSaved();
+      const saved = filterByUser ? allSaved.filter(item => item.userName === user) : allSaved;
+
       if (!saved.length) {
-        tableBody.innerHTML = `<tr><td colspan="9" class="muted">No saved SOB combos for ${user}.</td></tr>`;
+        const msg = filterByUser ? `No saved SOB combos for ${user}.` : 'No saved SOB combos yet.';
+        tableBody.innerHTML = `<tr><td colspan="10" class="muted">${msg}</td></tr>`;
         return;
       }
+
+      let tpuSum = 0, oeplSum = 0, peaplSum = 0, grandSum = 0;
 
       saved.forEach((row) => {
         const tr = document.createElement('tr');
+        const grandTotal = row.tpu + row.oepl + row.peapl;
+        tpuSum += row.tpu;
+        oeplSum += row.oepl;
+        peaplSum += row.peapl;
+        grandSum += grandTotal;
+
         tr.innerHTML = `
           <td>${row.sobNo}</td>
           <td>${row.userName}</td>
@@ -569,10 +656,24 @@
           <td>${money(row.tpu)}</td>
           <td>${money(row.oepl)}</td>
           <td>${money(row.peapl)}</td>
+          <td>${money(grandTotal)}</td>
           <td><button class="btn-danger tiny" data-delete="${row.id}">Delete</button></td>
         `;
         tableBody.appendChild(tr);
       });
+
+      // Add summary row
+      const summaryRow = document.createElement('tr');
+      summaryRow.className = 'summary-row';
+      summaryRow.innerHTML = `
+        <td colspan="5"><strong>TOTAL</strong></td>
+        <td><strong>${money(tpuSum)}</strong></td>
+        <td><strong>${money(oeplSum)}</strong></td>
+        <td><strong>${money(peaplSum)}</strong></td>
+        <td><strong>${money(grandSum)}</strong></td>
+        <td></td>
+      `;
+      tableBody.appendChild(summaryRow);
     }
 
     function loginUser() {
@@ -584,13 +685,13 @@
       }
 
       localStorage.setItem(currentUserKey, name);
-      renderSaved();
+      renderSaved(true);
     }
 
     function logoutUser() {
       localStorage.removeItem(currentUserKey);
       $('username').value = '';
-      renderSaved();
+      renderSaved(true);
     }
 
     function saveCurrentSOB() {
@@ -605,13 +706,20 @@
       const item = data[index];
       const adultCount = count(adults);
       const childCount = item[3] == null ? 0 : count(children);
-      const adultPrice = Number(item[2] ?? 0);
-      const childPrice = item[3] == null ? null : Number(item[3]);
+
+      const tpuPrice = parseFloat($('tpuPrice').value) || 0;
+      const oeplPrice = parseFloat($('oeplPrice').value) || 0;
+      const peaplPrice = parseFloat($('peaplPrice').value) || 0;
+
+      if (tpuPrice === 0 && oeplPrice === 0 && peaplPrice === 0) {
+        alert('Please enter at least one price (TPU, OEPL, or PEAPL).');
+        return;
+      }
 
       const number = nextNumber();
-      const tpu = adultCount * adultPrice;
-      const oepl = childCount * (childPrice ?? 0);
-      const peapl = tpu + oepl;
+      const tpu = adultCount * tpuPrice;
+      const oepl = childCount * oeplPrice;
+      const peapl = (adultCount + childCount) * peaplPrice;
 
       const row = {
         id: Date.now(),
@@ -626,10 +734,11 @@
         peapl
       };
 
-      const saved = getSaved();
-      saved.push(row);
-      localStorage.setItem(getStoredUserKey(user), JSON.stringify(saved));
-      renderSaved();
+      const allSaved = getAllSaved();
+      allSaved.push(row);
+      localStorage.setItem('sobSavedAll', JSON.stringify(allSaved));
+      renderSaved(true);
+      alert('SOB saved successfully!');
     }
 
     function clearSavedForUser() {
@@ -641,17 +750,18 @@
       }
 
       if (confirm(`Clear all saved SOB combos for ${user}?`)) {
-        localStorage.removeItem(getStoredUserKey(user));
-        renderSaved();
+        const allSaved = getAllSaved();
+        const filtered = allSaved.filter(item => item.userName !== user);
+        localStorage.setItem('sobSavedAll', JSON.stringify(filtered));
+        renderSaved(true);
       }
     }
 
     function deleteSavedRow(id) {
-      const user = getCurrentUser();
-      if (!user) return;
-      const saved = getSaved().filter((row) => row.id !== id);
-      localStorage.setItem(getStoredUserKey(user), JSON.stringify(saved));
-      renderSaved();
+      const allSaved = getAllSaved();
+      const filtered = allSaved.filter((row) => row.id !== id);
+      localStorage.setItem('sobSavedAll', JSON.stringify(filtered));
+      renderSaved(true);
     }
 
     function exportCsv() {
@@ -662,14 +772,15 @@
         return;
       }
 
-      const saved = getSaved();
+      const allSaved = getAllSaved();
+      const saved = allSaved.filter(item => item.userName === user);
       if (!saved.length) {
         alert('Save at least one SOB first.');
         return;
       }
 
-      const header = ['SOB No.', 'User Name', 'Combo', 'Adult Quantity', 'Child Quantity', 'Total TPU', 'Total OEPL', 'Grand Total'];
-      const rows = saved.map((row) => [row.sobNo, row.userName, row.name, row.a, row.c, row.tpu, row.oepl, row.peapl]);
+      const header = ['SOB No.', 'User Name', 'Combo', 'Adult Quantity', 'Child Quantity', 'Total TPU', 'Total OEPL', 'Total PEAPL', 'Grand Total'];
+      const rows = saved.map((row) => [row.sobNo, row.userName, row.name, row.a, row.c, row.tpu, row.oepl, row.peapl, row.tpu + row.oepl + row.peapl]);
       const csv = [header, ...rows].map((line) => line.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(',')).join('\n');
 
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -685,19 +796,34 @@
       const user = getCurrentUser();
       const index = Number(combo.value);
       const item = data[index];
-      const text = `SOB ${item[0]}\nUser: ${user || 'Guest'}\nAdult Count: ${count(adults)}\nChild Count: ${count(children)}\nTotal TPU: ${$('tpuTotal').textContent}\nTotal OEPL: ${$('oeplTotal').textContent}\nGrand Total: ${$('peaplTotal').textContent}`;
+      const text = `SOB ${item[0]}\nUser: ${user || 'Guest'}\nAdult Count: ${count(adults)}\nChild Count: ${count(children)}\nTotal TPU: ${$('tpuTotal').textContent}\nTotal OEPL: ${$('oeplTotal').textContent}\nTotal PEAPL: ${$('peaplTotal').textContent}`;
       window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
     }
 
     combo.addEventListener('change', updateCalculator);
     adults.addEventListener('input', updateCalculator);
     children.addEventListener('input', updateCalculator);
+    $('tpuPrice').addEventListener('input', updateCalculator);
+    $('oeplPrice').addEventListener('input', updateCalculator);
+    $('peaplPrice').addEventListener('input', updateCalculator);
+    
     $('loginBtn').addEventListener('click', loginUser);
     $('switchUserBtn').addEventListener('click', logoutUser);
     $('save').addEventListener('click', saveCurrentSOB);
     $('clear').addEventListener('click', clearSavedForUser);
     $('exportCsv').addEventListener('click', exportCsv);
     $('share').addEventListener('click', shareSOB);
+    
+    $('printUser').addEventListener('click', () => {
+      renderSaved(true);
+      setTimeout(() => window.print(), 100);
+    });
+    
+    $('printAll').addEventListener('click', () => {
+      renderSaved(false);
+      setTimeout(() => window.print(), 100);
+    });
+    
     $('savedList').addEventListener('click', (event) => {
       const button = event.target.closest('[data-delete]');
       if (!button) return;
@@ -714,7 +840,7 @@
     }
 
     initSelect();
-    renderSaved();
+    renderSaved(true);
   </script>
 </body>
 </html>
