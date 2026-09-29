@@ -164,14 +164,14 @@
       -webkit-appearance: none;
       text-align: left;
       text-align-last: left;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M1 3l5 5 5-5' fill='none' stroke='%23000000' stroke-width='2'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M1 3l5 5 5-5' fill='none' stroke='%23000000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 12px center;
       background-size: 12px;
     }
 
     body.dark select {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M1 3l5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M1 3l5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     }
 
     input {
@@ -563,6 +563,11 @@
       <option value="550,375,250,599">1399/1224 All in Fun Combo</option>
       <option value="1350,775,0,150">1500/925 Divine Rush Combo</option>
       <option value="1400,1400,449,2350,NA">4199/NA Ultimate Mega Combo</option>
+      <option value="520,350,0,180">799/599 Royal Family Combo</option>
+      <option value="600,420,0,200">899/699 Golden Celebration Combo</option>
+      <option value="700,500,0,229">999/799 Dream Adventure Combo</option>
+      <option value="850,600,250,299">1299/999 Festival Deluxe Combo</option>
+      <option value="1200,900,0,350">1999/1499 Grand Ultimate Combo</option>
     </select>
 
     <br />
@@ -673,7 +678,12 @@
       ['Mini Blast Combo', '1299/1109', 370, 180, 355, 574],
       ['All in Fun Combo', '1399/1224', 550, 375, 250, 599],
       ['Divine Rush Combo', '1500/925', 1350, 775, 0, 150],
-      ['Ultimate Mega Combo', '4199/NA', 1400, 1400, 449, 2350]
+      ['Ultimate Mega Combo', '4199/NA', 1400, 1400, 449, 2350],
+      ['Royal Family Combo', '799/599', 520, 350, 0, 180],
+      ['Golden Celebration Combo', '899/699', 600, 420, 0, 200],
+      ['Dream Adventure Combo', '999/799', 700, 500, 0, 229],
+      ['Festival Deluxe Combo', '1299/999', 850, 600, 250, 299],
+      ['Grand Ultimate Combo', '1999/1499', 1200, 900, 0, 350]
     ];
 
     const storageKey = 'sobSavedAll';
@@ -1000,21 +1010,15 @@
         document.getElementById('adults').value = entry.adults || '';
         document.getElementById('children').value = entry.children || '';
         document.getElementById('sobInput').value = entry.sobId || '';
+        document.getElementById('warning').textContent = '';
         calc();
       }
     });
 
-    document.getElementById('usernameInput').addEventListener('keydown', function (event) {
-      if (event.key === 'Enter') restoreTodayData();
-    });
-
-    initTheme();
-    const savedUser = getCurrentUser();
-    if (savedUser) {
-      document.getElementById('usernameInput').value = savedUser;
-      renderTable();
-    }
+    document.getElementById('usernameInput').value = getCurrentUser();
+    renderTable();
     renderPrintMenu();
+    initTheme();
     calc();
   </script>
 </body>
