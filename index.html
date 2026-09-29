@@ -488,66 +488,6 @@
       font-size: 15px;
     }
 
-    .comboInfoPanel {
-      max-width: 980px;
-      margin: 18px auto 0;
-      border: 3px solid rgba(103, 27, 53, 0.8);
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: 0 12px 24px rgba(88, 18, 33, 0.15);
-      background: var(--ticket-panel);
-      font-size: 14px;
-    }
-
-    .comboTableHead,
-    .comboTableRow {
-      display: grid;
-      grid-template-columns: 1.3fr 1.9fr 0.95fr;
-      align-items: stretch;
-    }
-
-    .comboTableHead {
-      background: #760d2a;
-      color: #fff;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-    }
-
-    .comboTableHead > div,
-    .comboTableRow > div {
-      padding: 14px 12px;
-      border-right: 1px solid rgba(101, 24, 52, 0.8);
-      border-bottom: 1px solid rgba(101, 24, 52, 0.8);
-      text-align: center;
-    }
-
-    .comboTableHead > div:last-child,
-    .comboTableRow > div:last-child {
-      border-right: none;
-    }
-
-    .comboTableRow:nth-child(odd) {
-      background: var(--ticket-row-1);
-    }
-
-    .comboTableRow:nth-child(even) {
-      background: var(--ticket-row-2);
-    }
-
-    .comboTableRow strong {
-      display: block;
-      color: var(--ticket-accent);
-      font-size: 15px;
-      margin-bottom: 4px;
-    }
-
-    .comboPrice {
-      font-weight: 700;
-      color: #4d1123;
-      font-size: 13px;
-    }
-
     .comboDetailBox {
       max-width: 980px;
       margin: 16px auto 0;
@@ -592,11 +532,6 @@
 
       .container {
         max-width: 100%;
-      }
-
-      .comboTableHead,
-      .comboTableRow {
-        grid-template-columns: 1.2fr 1.6fr 0.9fr;
       }
     }
 
@@ -671,8 +606,7 @@
       <option value="19">Grand Ultimate Combo</option>
     </select>
 
-    <div id="comboDetailBox" class="comboDetailBox"></div>
-    <div id="comboListTable" class="comboInfoPanel"></div>
+    <div id="comboDetailBox" class="comboDetailBox" style="display:none;"></div>
 
     <br />
 
@@ -838,33 +772,13 @@
       document.querySelector('.hiText').textContent = document.body.classList.contains('dark') ? '🌙 Hi,' : '🌞 Hi,';
     }
 
-    function renderComboList() {
-      const target = document.getElementById('comboListTable');
-      target.innerHTML = `
-        <div class="comboTableHead">
-          <div>Combo Name</div>
-          <div>What You Get</div>
-          <div>Price Adult / Child</div>
-        </div>
-        ${comboData.map((combo, index) => `
-          <div class="comboTableRow">
-            <div>
-              <strong>${index + 1}. ${combo.name}</strong>
-            </div>
-            <div>${combo.activities.join(' + ')}</div>
-            <div class="comboPrice">${combo.price}</div>
-          </div>
-        `).join('')}
-      `;
-    }
-
     function updateSelectedComboDetails() {
       const combo = document.getElementById('combo');
       const selected = comboData[Number(combo.value) - 1];
       const target = document.getElementById('comboDetailBox');
 
       if (!selected) {
-        target.innerHTML = '';
+        target.style.display = 'none';
         return;
       }
 
@@ -873,6 +787,7 @@
         <div class="detail-activities"><strong>Included activities:</strong> ${selected.activities.join(' • ')}</div>
         <div class="detail-price">Adult: ₹${selected.adult} / Child: ₹${selected.child ?? 'NA'}</div>
       `;
+      target.style.display = 'block';
     }
 
     function calc() {
@@ -1009,6 +924,7 @@
       document.getElementById('children').value = '';
       document.getElementById('sobInput').value = '';
       document.getElementById('warning').textContent = '';
+      document.getElementById('comboDetailBox').style.display = 'none';
       calc();
     }
 
@@ -1157,7 +1073,6 @@
     });
 
     document.getElementById('usernameInput').value = getCurrentUser();
-    renderComboList();
     renderTable();
     renderPrintMenu();
     initTheme();
