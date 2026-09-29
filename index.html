@@ -585,25 +585,6 @@
 
     <select id="combo" onchange="calc()">
       <option value="">Select Combo</option>
-      <option value="1">TU Explorer Combo</option>
-      <option value="2">Adventure Combo</option>
-      <option value="3">Eco Fun Combo</option>
-      <option value="4">Snow Adventure Combo</option>
-      <option value="5">Aastha Combo</option>
-      <option value="6">Shiv Ganesha Combo</option>
-      <option value="7">Namah Combo</option>
-      <option value="8">Viewing Fun Combo</option>
-      <option value="9">Ultimate Play Combo</option>
-      <option value="10">Symbolic Combo</option>
-      <option value="11">Mini Blast Combo</option>
-      <option value="12">All in Fun Combo</option>
-      <option value="13">Divine Rush Combo</option>
-      <option value="14">Ultimate Mega Combo</option>
-      <option value="15">Royal Family Combo</option>
-      <option value="16">Golden Celebration Combo</option>
-      <option value="17">Dream Adventure Combo</option>
-      <option value="18">Festival Deluxe Combo</option>
-      <option value="19">Grand Ultimate Combo</option>
     </select>
 
     <div id="comboDetailBox" class="comboDetailBox" style="display:none;"></div>
@@ -715,12 +696,7 @@
       { name: 'Mini Blast Combo', price: '969 / 779', adult: 969, child: 779, activities: ['PE + VG + NAM + WoG + 1P&1D', 'Wax Museum + WoK + Food Rs.55', 'Souvenir Rs.110 + 1 Pick-up & 1 Drop'] },
       { name: 'All in Fun Combo', price: '1100 / 925', adult: 1100, child: 925, activities: ['PE + View Gallery + Snow Park', 'Any 4 Rides + 1 Pick/Drop', 'WoG + WoK + 12D', 'Mirror Maze + Horror House'] },
       { name: 'Divine Rush Combo', price: '1550 / 975', adult: 1550, child: 975, activities: ['PE + VG + NAM + NAA + 3 Times Pick/Drop', 'WoG + WoK + Complimentary Wax Museum'] },
-      { name: 'Ultimate Mega Combo', price: '4249 / NA', adult: 4249, child: null, activities: ['PE + VG + NAM + NAA + Snow Park', 'Wax Museum + Eyelusion + Any 10 Rides + Go Kart', 'Cricket + VR Zone + Bungee Jumping + Food Rs.110', '3 Pick/Drop + WoG + WoK + 12D', 'Mirror Maze + Horror House'] },
-      { name: 'Royal Family Combo', price: '799 / 599', adult: 799, child: 599, activities: ['PE + Wax Museum', 'Snow Park + Family Rides', '1 Time Pick-up'] },
-      { name: 'Golden Celebration Combo', price: '899 / 699', adult: 899, child: 699, activities: ['PE + NAM + VG', '2 Rides + 1 Drop', 'Family Photo Zone'] },
-      { name: 'Dream Adventure Combo', price: '999 / 799', adult: 999, child: 799, activities: ['PE + Go Kart', 'Snow Park + Mirror Maze', '1 Pick-up & 1 Drop'] },
-      { name: 'Festival Deluxe Combo', price: '1299 / 999', adult: 1299, child: 999, activities: ['PE + VG + NAM + 2D Cinema', 'Snow Park + 1 Pick-up', 'Food Coupon + Souvenir'] },
-      { name: 'Grand Ultimate Combo', price: '1999 / 1499', adult: 1999, child: 1499, activities: ['PE + VG + NAM + NAA + Snow Park', 'Eyelusion + Go Kart + VR Zone', 'Food + Pick-up & Drop + Wax Museum'] }
+      { name: 'Ultimate Mega Combo', price: '4249 / NA', adult: 4249, child: null, activities: ['PE + VG + NAM + NAA + Snow Park', 'Wax Museum + Eyelusion + Any 10 Rides + Go Kart', 'Cricket + VR Zone + Bungee Jumping + Food Rs.110', '3 Pick/Drop + WoG + WoK + 12D', 'Mirror Maze + Horror House'] }
     ];
 
     const storageKey = 'sobSavedAll';
@@ -770,6 +746,17 @@
       const theme = localStorage.getItem(themeKey) || 'light';
       if (theme === 'dark') document.body.classList.add('dark');
       document.querySelector('.hiText').textContent = document.body.classList.contains('dark') ? '🌙 Hi,' : '🌞 Hi,';
+    }
+
+    function populateComboDropdown() {
+      const select = document.getElementById('combo');
+      select.innerHTML = '<option value="">Select Combo</option>';
+      comboData.forEach((combo, index) => {
+        const option = document.createElement('option');
+        option.value = String(index + 1);
+        option.textContent = `${combo.name} - A: ₹${combo.adult}${combo.child ? ` / C: ₹${combo.child}` : ' / C: NA'}`;
+        select.appendChild(option);
+      });
     }
 
     function updateSelectedComboDetails() {
@@ -1073,6 +1060,7 @@
     });
 
     document.getElementById('usernameInput').value = getCurrentUser();
+    populateComboDropdown();
     renderTable();
     renderPrintMenu();
     initTheme();
