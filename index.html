@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Combo Price Calculator</title>
+    <style>
+      :root {
+        --bg: #f5f7fa;
+        --card: #ffffff;
+        --panel: #f8f9fb;
+        --text: #171a22;
+        --muted: #68707f;
+        --line: #e8ebf1;
+        --primary: #b31838;
+        --primary-dark: #8a0e2a;
+        --green: #1da66d;
+        --shadow: 0 18px 35px rgba(14, 17, 28, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: linear-gradient(180deg, #f0f2f5 0%, #eef2f7 100%);
+        color: var(--text);
+      }
+
+      .page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 32px 18px;
+      }
+
+      .calculator {
+        width: min(960px, 100%);
+        background: var(--card);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        border: 1px solid rgba(18, 20, 30, 0.04);
+      }
+
+      .topbar {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        padding: 22px 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .brand-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.16);
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: white;
+      }
+
+      .brand h1 {
+        margin: 0;
+        color: #fff;
+        font-size: clamp(1.4rem, 2vw, 2.1rem);
+        letter-spacing: 0.2px;
+      }
+
+      .pill {
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 999px;
+        padding: 8px 14px;
+        color: white;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+      }
+
+      .left {
+        padding: 28px 26px 22px;
+        border-right: 1px solid var(--line);
+        background: #fff;
+      }
+
+      .right {
+        padding: 28px 26px 22px;
+        background: var(--panel);
+      }
+
+      .field {
+        margin-bottom: 18px;
+      }
+
+      .label {
+        display: block;
+        font-weight: 700;
+        color: #222733;
+        margin-bottom: 8px;
+        font-size: 14px;
+      }
+
+      .input {
+        width: 100%;
+        height: 48px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        background: #fff;
+        padding: 0 14px;
+        font-size: 16px;
+        color: var(--text);
+        outline: none;
+        transition: 0.2s ease;
+      }
+
+      .input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(179, 24, 56, 0.09);
+      }
+
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .btn {
+        flex: 1;
+        border: none;
+        height: 48px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 15px;
+        cursor: pointer;
+        transition: 0.2s ease;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: #fff;
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-dark);
+      }
+
+      .btn-secondary {
+        background: #edf1f5;
+        color: #1d2430;
+      }
+
+      .btn-secondary:hover {
+        background: #e4e9ef;
+      }
+
+      .note {
+        margin-top: 18px;
+        font-size: 13px;
+        line-height: 1.5;
+        color: var(--muted);
+      }
+
+      .result-box {
+        background: linear-gradient(180deg, #fff, #fff8fa);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 20px 18px;
+      }
+
+      .result-label {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.7px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+
+      .total {
+        font-size: clamp(2.2rem, 4vw, 3rem);
+        font-weight: 800;
+        color: var(--primary);
+        line-height: 1;
+        margin-bottom: 18px;
+      }
+
+      .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-top: 1px solid var(--line);
+        font-size: 14px;
+        color: #333b4d;
+      }
+
+      .row:first-of-type {
+        border-top: none;
+      }
+
+      .row strong {
+        font-weight: 700;
+        color: #171b24;
+      }
+
+      @media (max-width: 760px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+
+        .left {
+          border-right: none;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .two-col {
+          grid-template-columns: 1fr;
+        }
+
+        .topbar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="calculator">
+        <div class="topbar">
+          <div class="brand">
+            <div class="brand-icon">C</div>
+            <h1>Combo Price Calculator</h1>
+          </div>
+          <div class="pill">New Combo Price</div>
+        </div>
+
+        <div class="layout">
+          <div class="left">
+            <div class="field">
+              <label class="label" for="basePrice">Base Price</label>
+              <input class="input" id="basePrice" type="number" value="299" min="0" step="0.01" />
+            </div>
+
+            <div class="two-col">
+              <div class="field">
+                <label class="label" for="quantity">Quantity</label>
+                <input class="input" id="quantity" type="number" value="2" min="1" step="1" />
+              </div>
+
+              <div class="field">
+                <label class="label" for="discount">Discount (%)</label>
+                <input class="input" id="discount" type="number" value="10" min="0" max="100" step="0.01" />
+              </div>
+            </div>
+
+            <div class="two-col">
+              <div class="field">
+                <label class="label" for="tax">Tax (%)</label>
+                <input class="input" id="tax" type="number" value="5" min="0" max="100" step="0.01" />
+              </div>
+
+              <div class="field">
+                <label class="label" for="service">Service Fee</label>
+                <input class="input" id="service" type="number" value="25" min="0" step="0.01" />
+              </div>
+            </div>
+
+            <div class="buttons">
+              <button id="calculateBtn" class="btn btn-primary">Calculate</button>
+              <button id="resetBtn" class="btn btn-secondary">Reset</button>
+            </div>
+
+            <div class="note">
+              Use this calculator to estimate the updated combo total using the latest pricing rules.
+            </div>
+          </div>
+
+          <div class="right">
+            <div class="result-box">
+              <div class="result-label">New Combo Price</div>
+              <div class="total" id="totalPrice">$0.00</div>
+
+              <div class="row">
+                <span>Subtotal</span>
+                <strong id="subtotalValue">$0.00</strong>
+              </div>
+
+              <div class="row">
+                <span>Discount</span>
+                <strong id="discountValue">-$0.00</strong>
+              </div>
+
+              <div class="row">
+                <span>Service Fee</span>
+                <strong id="serviceValue">$0.00</strong>
+              </div>
+
+              <div class="row">
+                <span>Tax</span>
+                <strong id="taxValue">$0.00</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const basePriceInput = document.getElementById('basePrice');
+      const quantityInput = document.getElementById('quantity');
+      const discountInput = document.getElementById('discount');
+      const taxInput = document.getElementById('tax');
+      const serviceInput = document.getElementById('service');
+
+      const subtotalValue = document.getElementById('subtotalValue');
+      const discountValue = document.getElementById('discountValue');
+      const serviceValue = document.getElementById('serviceValue');
+      const taxValue = document.getElementById('taxValue');
+      const totalPrice = document.getElementById('totalPrice');
+
+      function formatMoney(value) {
+        return new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD'
+        }).format(value);
+      }
+
+      function calculateComboPrice() {
+        const basePrice = Number(basePriceInput.value || 0);
+        const quantity = Number(quantityInput.value || 1);
+        const discountPercent = Number(discountInput.value || 0);
+        const taxPercent = Number(taxInput.value || 0);
+        const serviceFee = Number(serviceInput.value || 0);
+
+        const subtotal = basePrice * quantity;
+        const discountAmount = subtotal * (discountPercent / 100);
+        const discountedSubtotal = subtotal - discountAmount;
+        const taxAmount = discountedSubtotal * (taxPercent / 100);
+        const finalTotal = discountedSubtotal + serviceFee + taxAmount;
+
+        subtotalValue.textContent = formatMoney(subtotal);
+        discountValue.textContent = `-${formatMoney(discountAmount)}`;
+        serviceValue.textContent = formatMoney(serviceFee);
+        taxValue.textContent = formatMoney(taxAmount);
+        totalPrice.textContent = formatMoney(finalTotal);
+      }
+
+      document.getElementById('calculateBtn').addEventListener('click', calculateComboPrice);
+      document.getElementById('resetBtn').addEventListener('click', () => {
+        basePriceInput.value = 299;
+        quantityInput.value = 2;
+        discountInput.value = 10;
+        taxInput.value = 5;
+        serviceInput.value = 25;
+        calculateComboPrice();
+      });
+
+      calculateComboPrice();
+    </script>
+  </body>
+</html>
