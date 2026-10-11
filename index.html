@@ -3,413 +3,255 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOB Combo - Final 15 Combos</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<title>SOB coMboS calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
-:root{--gold:#d4a017;--dark:#111;--bg:#fdf8ec}
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
-body{background:var(--bg)}
-.header{background:var(--dark);color:#fff;padding:20px;text-align:center}
-.header h1{color:var(--gold);font-size:22px}
-.header p{font-size:12px;opacity:.7;margin-top:4px}
-.container{max-width:1100px;margin:auto;padding:15px;display:grid;grid-template-columns:1fr 360px;gap:15px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;align-content:start}
-.card{background:#fff;border-radius:14px;padding:14px;border:2px solid transparent;box-shadow:0 4px 12px rgba(0,0,0,.05);cursor:pointer;transition:.2s}
-.card:hover{transform:translateY(-3px);border-color:var(--gold)}
-.card.active{border-color:var(--gold);background:#fff8d6}
-.card h3{font-size:13px;line-height:1.3;min-height:32px}
-.price{margin-top:8px}
-.badge{display:inline-block;background:var(--dark);color:#fff;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600}
-.badge.child{background:var(--gold);color:var(--dark);margin-left:5px}
-.split{margin-top:8px;background:#f7f7f7;padding:6px 8px;border-radius:8px;font-size:10px;color:#555;display:flex;justify-content:space-between}
-.calc{position:sticky;top:15px;background:#fff;border-radius:18px;padding:18px;box-shadow:0 8px 25px rgba(0,0,0,.12);height:fit-content}
-.calc h2{font-size:16px;margin-bottom:10px}
-.row{display:flex;justify-content:space-between;margin:8px 0;font-size<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Combo Price Calculator</title>
-    <style>
-      :root {
-        --bg: #f5f7fa;
-        --card: #ffffff;
-        --panel: #f8f9fb;
-        --text: #171a22;
-        --muted: #68707f;
-        --line: #e8ebf1;
-        --primary: #b31838;
-        --primary-dark: #8a0e2a;
-        --green: #1da66d;
-        --shadow: 0 18px 35px rgba(14, 17, 28, 0.08);
-      }
+*{
+    box-sizing:border-box;
+    font-family:'Arimo',sans-serif;
+}
 
-      * {
-        box-sizing: border-box;
-      }
+:root{
+    --text:#000;
+    --card:#fff;
+    --input:#fff;
+    --table:#fff;
+    --border:#ddd;
+}
 
-      body {
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-        background: linear-gradient(180deg, #f0f2f5 0%, #eef2f7 100%);
-        color: var(--text);
-      }
+body{
+    margin:0;
+    text-align:center;
+    color:var(--text);
+    background:
+        radial-gradient(circle at top left,#fff,transparent 40%),
+        radial-gradient(circle at bottom right,#dfefff,transparent 35%),
+        linear-gradient(180deg,#f7fbff,#edf4fb);
+}
 
-      .page {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 32px 18px;
-      }
+body.dark{
+    --text:#f2f2f2;
+    --card:#242424;
+    --input:#2f2f2f;
+    --table:#202020;
+    --border:#555;
+    background:#151515;
+}
 
-      .calculator {
-        width: min(960px, 100%);
-        background: var(--card);
-        border-radius: 18px;
-        box-shadow: var(--shadow);
-        overflow: hidden;
-        border: 1px solid rgba(18, 20, 30, 0.04);
-      }
-
-      .topbar {
-        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-        padding: 22px 28px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-      }
-
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-      }
-
-      .brand-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(255, 255, 255, 0.16);
-        font-weight: 700;
-        font-size: 1.2rem;
-        color: white;
-      }
-
-      .brand h1 {
-        margin: 0;
-        color: #fff;
-        font-size: clamp(1.4rem, 2vw, 2.1rem);
-        letter-spacing: 0.2px;
-      }
-
-      .pill {
-        background: rgba(255, 255, 255, 0.12);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        border-radius: 999px;
-        padding: 8px 14px;
-        color: white;
-        font-size: 12px;
-        font-weight: 700;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-      }
-
-      .layout {
-        display: grid;
-        grid-template-columns: 1.2fr 0.8fr;
-      }
-
-      .left {
-        padding: 28px 26px 22px;
-        border-right: 1px solid var(--line);
-        background: #fff;
-      }
-
-      .right {
-        padding: 28px 26px 22px;
-        background: var(--panel);
-      }
-
-      .field {
-        margin-bottom: 18px;
-      }
-
-      .label {
-        display: block;
-        font-weight: 700;
-        color: #222733;
-        margin-bottom: 8px;
-        font-size: 14px;
-      }
-
-      .input {
-        width: 100%;
-        height: 48px;
-        border-radius: 12px;
-        border: 1px solid var(--line);
-        background: #fff;
-        padding: 0 14px;
-        font-size: 16px;
-        color: var(--text);
-        outline: none;
-        transition: 0.2s ease;
-      }
-
-      .input:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 4px rgba(179, 24, 56, 0.09);
-      }
-
-      .two-col {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
-      }
-
-      .buttons {
-        display: flex;
-        gap: 12px;
-        margin-top: 20px;
-      }
-
-      .btn {
-        flex: 1;
-        border: none;
-        height: 48px;
-        border-radius: 12px;
-        font-weight: 700;
-        font-size: 15px;
-        cursor: pointer;
-        transition: 0.2s ease;
-      }
-
-      .btn-primary {
-        background: var(--primary);
-        color: #fff;
-      }
-
-      .btn-primary:hover {
-        background: var(--primary-dark);
-      }
-
-      .btn-secondary {
-        background: #edf1f5;
-        color: #1d2430;
-      }
-
-      .btn-secondary:hover {
-        background: #e4e9ef;
-      }
-
-      .note {
-        margin-top: 18px;
-        font-size: 13px;
-        line-height: 1.5;
-        color: var(--muted);
-      }
-
-      .result-box {
-        background: linear-gradient(180deg, #fff, #fff8fa);
-        border: 1px solid var(--line);
-        border-radius: 16px;
-        padding: 20px 18px;
-      }
-
-      .result-label {
-        color: var(--muted);
-        font-size: 12px;
-        font-weight: 700;
-        letter-spacing: 0.7px;
-        text-transform: uppercase;
-        margin-bottom: 10px;
-      }
-
-      .total {
-        font-size: clamp(2.2rem, 4vw, 3rem);
-        font-weight: 800;
-        color: var(--primary);
-        line-height: 1;
-        margin-bottom: 18px;
-      }
-
-      .row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px 0;
-        border-top: 1px solid var(--line);
-        font-size: 14px;
-        color: #333b4d;
-      }
-
-      .row:first-of-type {
-        border-top: none;
-      }
-
-      .row strong {
-        font-weight: 700;
-        color: #171b24;
-      }
-
-      @media (max-width: 760px) {
-        .layout {
-          grid-template-columns: 1fr;
-        }
-
-        .left {
-          border-right: none;
-          border-bottom: 1px solid var(--line);
-        }
-
-        .two-col {
-          grid-template-columns: 1fr;
-        }
-
-        .topbar {
-          flex-direction: column;
-          align-items: flex-start;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="page">
-      <div class="calculator">
-        <div class="topbar">
-          <div class="brand">
-            <div class="brand-icon">C</div>
-            <h1>Combo Price Calculator</h1>
-          </div>
-          <div class="pill">New Combo Price</div>
-        </div>
-
-        <div class="layout">
-          <div class="left">
-            <div class="field">
-              <label class="label" for="basePrice">Base Price</label>
-              <input class="input" id="basePrice" type="number" value="299" min="0" step="0.01" />
-            </div>
-
-            <div class="two-col">
-              <div class="field">
-                <label class="label" for="quantity">Quantity</label>
-                <input class="input" id="quantity" type="number" value="2" min="1" step="1" />
-              </div>
-
-              <div class="field">
-                <label class="label" for="discount">Discount (%)</label>
-                <input class="input" id="discount" type="number" value="10" min="0" max="100" step="0.01" />
-              </div>
-            </div>
-
-            <div class="two-col">
-              <div class="field">
-                <label class="label" for="tax">Tax (%)</label>
-                <input class="input" id="tax" type="number" value="5" min="0" max="100" step="0.01" />
-              </div>
-
-              <div class="field">
-                <label class="label" for="service">Service Fee</label>
-                <input class="input" id="service" type="number" value="25" min="0" step="0.01" />
-              </div>
-            </div>
-
-            <div class="buttons">
-              <button id="calculateBtn" class="btn btn-primary">Calculate</button>
-              <button id="resetBtn" class="btn btn-secondary">Reset</button>
-            </div>
-
-            <div class="note">
-              Use this calculator to estimate the updated combo total using the latest pricing rules.
-            </div>
-          </div>
-
-          <div class="right">
-            <div class="result-box">
-              <div class="result-label">New Combo Price</div>
-              <div class="total" id="totalPrice">$0.00</div>
-
-              <div class="row">
-                <span>Subtotal</span>
-                <strong id="subtotalValue">$0.00</strong>
-              </div>
-
-              <div class="row">
-                <span>Discount</span>
-                <strong id="discountValue">-$0.00</strong>
-              </div>
-
-              <div class="row">
-                <span>Service Fee</span>
-                <strong id="serviceValue">$0.00</strong>
-              </div>
-
-              <div class="row">
-                <span>Tax</span>
-                <strong id="taxValue">$0.00</strong>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+.container{margin-top:20px}
+.top-buttons{display:flex;justify-content:space-between;align-items:center;padding:10px 12px 0}
+.switch-btn{display:inline-block;padding:6px 10px;border-radius:6px;color:#fff;text-decoration:none;font-size:12px;font-weight:bold;box-shadow:4px 4px 0 #0b3a82,6px 8px 14px #0003}
+.reverse-btn{background:linear-gradient(135deg,#00c853,#009624);box-shadow:3px 3px 0 #00701a,5px 6px 10px #0003}
+.report-btn{background:linear-gradient(135deg,#8e24aa,#5e35b1);box-shadow:3px 3px 0 #4527a0,5px 6px 10px #0003}
+.userLoginBox{display:flex;justify-content:center;align-items:center;gap:8px;margin:12px auto}
+.hiText{font-size:12px;font-weight:bold;cursor:pointer}
+#usernameInput{width:100px;margin:0;padding:7px 10px;font-size:12px;font-weight:bold}
+#loadBtn{margin:0 0 0 4px;padding:5px 10px;color:#fff;font-size:12px;border-radius:100px;background:linear-gradient(135deg,#1976d2,#0d47a1);box-shadow:4px 4px 0 #0b3a82,6px 8px 14px #0003}
+input,select{width:90%;max-width:340px;margin:8px;padding:12px;padding-right:35px;border:0;border-radius:14px;font-size:16px;background:var(--input);color:var(--text);box-shadow:inset 2px 2px 5px #00000014,4px 4px 10px #0000001f}
+select{appearance:none;-webkit-appearance:none;text-align:left;text-align-last:left;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath d='M1 3l5 5 5-5' fill='none' stroke='%23000000' stroke-width='2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+button{margin:6px;padding:12px 18px;border:0;border-radius:28px;cursor:pointer;font-size:14px;font-weight:bold;background:linear-gradient(to bottom,#fff,#e8e8e8);box-shadow:4px 4px 0 #bdbdbd,6px 8px 14px #0003;transition:all .15s ease}
+button:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 #bdbdbd,8px 10px 16px #0004}
+button:active{transform:translateY(3px)}
+body.dark button:not(.saveBtn):not(.cancelBtn){color:#fff;background:linear-gradient(#444,#2c2c2c);box-shadow:4px 4px 0 #111,6px 8px 14px #0007}
+.box{max-width:340px;margin:auto;padding:15px;border-radius:18px;background:var(--card);box-shadow:8px 8px 20px #0002}
+.row{display:flex;justify-content:space-between;font-size:18px}
+.highlight-total{display:inline-block;padding:4px 10px;border:3px solid #ffd700;border-radius:10px;background:#fff8dc;color:#000;animation:goldGlow 1.5s infinite alternate}
+body.dark .highlight-total{background:#302b00;color:#fff}
+@keyframes goldGlow{from{box-shadow:0 0 5px #ffd700,0 0 10px #ffd700}to{box-shadow:0 0 15px #ffea00,0 0 25px #ffb300,0 0 35px #ff6f00}}
+.sobField{display:flex;align-items:center;width:90%;max-width:340px;margin:auto;overflow:hidden;border-radius:14px;background:var(--input);box-shadow:inset 2px 2px 5px #00000014,4px 4px 10px #0000001f}
+.sobField input{flex:1;width:auto;margin:0;padding:12px 14px;outline:0;background:transparent;box-shadow:none}
+#scanBtn{display:flex;align-items:center;justify-content:center;width:46px;height:46px;margin:0;padding:0;border-left:1px solid #ddd;border-radius:0;background:transparent;box-shadow:none}
+#scanBtn svg{width:22px;height:22px;fill:#222}
+body.dark #scanBtn svg{fill:#fff}
+.table-wrapper{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;min-width:700px;border-collapse:collapse;border:1px solid #000;background:var(--table);font-size:12px}
+th,td{padding:2px 4px;border:1px solid #000;text-align:center;vertical-align:middle;line-height:14px}
+body.dark th,body.dark td{border-color:#555;color:#fff}body.dark th{background:#303030}body.dark td{background:#252525}
+.header{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;width:100%;gap:6px;margin-bottom:10px;font-size:13px;overflow:visible}
+.header-left,.header-center,.header-right{display:flex;align-items:center;gap:4px;min-width:0}.header-left{justify-content:flex-start}.header-center{justify-content:center;white-space:nowrap}.header-right{justify-content:flex-end;white-space:nowrap}
+.headerText{white-space:nowrap;font-weight:bold}.headerLine{display:inline-flex;align-items:flex-end;justify-content:center;width:max-content;min-width:120px;max-width:none;height:16px;padding:0 6px;border-bottom:1.5px solid #000;white-space:nowrap;font-weight:bold;line-height:16px}.header-right span{font-weight:normal}
+.activityCell{padding:6px 6px 6px 12px;background:transparent;font-size:10px;font-weight:bold;text-align:left!important;vertical-align:top}.activityCell pre{margin:0;font:inherit;line-height:12px;white-space:pre-wrap}
+.activityTotalsCell{padding:6px 6px 6px 12px;background:#eaeaea;font-size:10px;font-weight:bold;text-align:left!important;vertical-align:top}
+body.dark .activityCell{background:#2a2a2a}body.dark .activityTotalsCell{background:#333}
+.editBtn,.deleteBtn{min-width:auto;margin:0;padding:2px 6px;font-size:11px;line-height:1;box-shadow:3px 3px 0 #9e9e9e,5px 6px 12px #0004}
+.print-all-wrap{position:relative;display:inline-block}.print-split{display:inline-flex;align-items:center;overflow:hidden;border-radius:28px;vertical-align:middle;box-shadow:4px 4px 0 #bdbdbd,6px 8px 14px #0003}.print-split button{margin:0;border-radius:0;padding:12px 18px;background:linear-gradient(to bottom,#fff,#e8e8e8);box-shadow:none}.print-print-btn{border-radius:28px 0 0 28px!important;border-right:1px solid #bdbdbd!important}.print-all-btn{min-width:75px;padding-right:14px!important;padding-left:12px!important;border-radius:0 28px 28px 0!important}
+body.dark .print-split button{color:#fff;background:linear-gradient(#444,#2c2c2c)}
+.print-dropdown{display:none;position:absolute;top:100%;right:0;z-index:9999;width:200px;margin-top:6px;padding:8px;border:1px solid var(--border);border-radius:10px;background:var(--card);box-shadow:0 8px 20px #0003;text-align:left}.print-dropdown.show{display:block}.print-user-list{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow:auto}.print-user-item{display:flex;align-items:center;gap:8px;font-size:13px;line-height:1.2}.print-user-item input{width:auto;margin:0;padding:0;box-shadow:none}
+.editModal{display:none;position:fixed;inset:0;z-index:10000;align-items:center;justify-content:center;background:#0009;backdrop-filter:blur(4px)}.editModal.show{display:flex}.editCard{width:95%;max-width:360px;max-height:85vh;overflow-y:auto;padding:14px;border:1px solid #ffffffcc;border-radius:20px;background:var(--card);color:var(--text);box-shadow:10px 14px 40px #0004}.editTitle{margin-bottom:15px;color:#1565c0;font-size:20px;font-weight:bold}.editField{width:100%;margin:8px 0;padding:12px;border:2px solid #e0e0e0;border-radius:12px;font-size:15px}.timeField{width:100%;min-width:0}.editActions{display:flex;justify-content:center;gap:10px;margin-top:15px}.saveBtn{min-width:120px;color:#fff;background:linear-gradient(135deg,#00c853,#009624)}.cancelBtn{min-width:120px;color:#fff;background:linear-gradient(135deg,#ff5252,#c62828)}
+.footer-left{position:fixed;bottom:5px;left:10px;z-index:3;font-size:12px}#cloudStatus{margin-left:5px;font-size:15px}
+.scannerOverlay{display:none;position:fixed;inset:0;z-index:99999;flex-direction:column;background:#000e}.scannerOverlay.show{display:flex}.scannerTopBar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px;background:#0006}.scannerActionBtn{margin:0;padding:8px 14px;color:#000;background:#fff;box-shadow:3px 3px 0 #999,5px 6px 12px #0003}.scannerBox{flex:1;min-height:0;width:100%;background:#111}#reader{width:100%;height:100%;min-height:0}#reader video{display:block;width:100%!important;height:100%!important;min-height:100vh;object-fit:cover}#reader{position:relative;width:100%;height:100%;min-height:100%;overflow:hidden}#reader video{display:block;width:100%!important;height:100%!important;min-height:100%;object-fit:cover}#reader__dashboard_section{display:none!important}#reader__scan_region{width:100%!important;height:100%!important}
+@keyframes popIn{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+@media print{@page{size:A4 portrait;margin:8mm}html,body{width:100%;height:auto;margin:0;padding:0;overflow:visible;color:#000!important;background:#fff!important;font-family:'Arimo',sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}.container,.top-buttons,.footer-left,.editModal,.scannerOverlay,button,.editColumn,.deleteColumn{display:none!important}#printArea{display:block!important;width:100%;margin:0;padding:0}table{width:100%;min-width:0;table-layout:auto;font-size:10px;background:#fff!important}th,td{padding:3px;border:1px solid #000!important;color:#000!important;background:#fff!important;white-space:nowrap}.activityCell{font-size:9px;line-height:11px}.activityTotalsCell{color:#000!important;background:#eaeaea!important}.header{display:grid!important;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)!important;width:100%!important;margin-bottom:8px;font-size:11px;overflow:visible!important}.header-left{display:flex!important}.header-center{display:flex!important;justify-content:center!important;white-space:nowrap!important}.header-right{display:flex!important;justify-content:flex-end!important;white-space:nowrap!important}.headerLine{width:max-content!important;min-width:100px!important;max-width:none!important;white-space:nowrap!important;overflow:visible!important}.header-right span{font-weight:normal!important}}
+@media(max-width:768px){table{min-width:700px}}
+body.dark .print-split{box-shadow:4px 4px 0 #111,6px 8px 14px #0007}body.dark .print-split button{color:#fff;background:linear-gradient(#444,#2c2c2c);border-color:#666!important}body.dark .print-dropdown{border-color:#666;background:#242424;color:#fff;box-shadow:0 8px 20px #0009}.body.dark .print-user-item{color:#fff}.body.dark .editCard{border-color:#666;background:#242424;color:#fff;box-shadow:10px 14px 40px #0009}.body.dark .editField{border-color:#666;background:#2f2f2f;color:#fff}.body.dark .editField option{background:#2f2f2f;color:#fff}.body.dark .table-wrapper{scrollbar-color:#777 #222}.body.dark .table-wrapper::-webkit-scrollbar{height:10px}.body.dark .table-wrapper::-webkit-scrollbar-track{background:#222}.body.dark .table-wrapper::-webkit-scrollbar-thumb{background:#777;border-radius:10px}.body.dark .print-dropdown,.body.dark .editCard{scrollbar-color:#777 #222}.body.dark .print-dropdown::-webkit-scrollbar,.body.dark .editCard::-webkit-scrollbar{width:9px}.body.dark .print-dropdown::-webkit-scrollbar-track,.body.dark .editCard::-webkit-scrollbar-track{background:#222}.body.dark .print-dropdown::-webkit-scrollbar-thumb,.body.dark .editCard::-webkit-scrollbar-thumb{background:#777;border-radius:10px}
+@media print{html,body,#printArea,#a4,.table-wrapper{width:100%!important;max-width:none!important;height:auto!important;overflow:visible!important}.table-wrapper{display:block!important;overflow-x:visible!important;overflow-y:visible!important}#printArea table{width:100%!important;min-width:0!important}}
+</style>
+</head>
+<body>
+<div class="top-buttons">
+    <a class="switch-btn reverse-btn" href="https://sobcombo.github.io/reverse/" target="_blank">Reverse Combo Finder</a>
+    <a class="switch-btn report-btn" href="https://sobcombo.github.io/r/" target="_blank">Daily Report Generator</a>
+</div>
+<div class="container">
+    <div class="userLoginBox">
+        <span class="hiText" onclick="toggleTheme()">🌞 Hi,</span>
+        <input id="usernameInput" type="text" placeholder="Enter Username" autocomplete="off">
+        <button id="loadBtn" onclick="restoreTodayData()">Load</button>
     </div>
-
-    <script>
-      const basePriceInput = document.getElementById('basePrice');
-      const quantityInput = document.getElementById('quantity');
-      const discountInput = document.getElementById('discount');
-      const taxInput = document.getElementById('tax');
-      const serviceInput = document.getElementById('service');
-
-      const subtotalValue = document.getElementById('subtotalValue');
-      const discountValue = document.getElementById('discountValue');
-      const serviceValue = document.getElementById('serviceValue');
-      const taxValue = document.getElementById('taxValue');
-      const totalPrice = document.getElementById('totalPrice');
-
-      function formatMoney(value) {
-        return new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD'
-        }).format(value);
-      }
-
-      function calculateComboPrice() {
-        const basePrice = Number(basePriceInput.value || 0);
-        const quantity = Number(quantityInput.value || 1);
-        const discountPercent = Number(discountInput.value || 0);
-        const taxPercent = Number(taxInput.value || 0);
-        const serviceFee = Number(serviceInput.value || 0);
-
-        const subtotal = basePrice * quantity;
-        const discountAmount = subtotal * (discountPercent / 100);
-        const discountedSubtotal = subtotal - discountAmount;
-        const taxAmount = discountedSubtotal * (taxPercent / 100);
-        const finalTotal = discountedSubtotal + serviceFee + taxAmount;
-
-        subtotalValue.textContent = formatMoney(subtotal);
-        discountValue.textContent = `-${formatMoney(discountAmount)}`;
-        serviceValue.textContent = formatMoney(serviceFee);
-        taxValue.textContent = formatMoney(taxAmount);
-        totalPrice.textContent = formatMoney(finalTotal);
-      }
-
-      document.getElementById('calculateBtn').addEventListener('click', calculateComboPrice);
-      document.getElementById('resetBtn').addEventListener('click', () => {
-        basePriceInput.value = 299;
-        quantityInput.value = 2;
-        discountInput.value = 10;
-        taxInput.value = 5;
-        serviceInput.value = 25;
-        calculateComboPrice();
-      });
-
-      calculateComboPrice();
-    </script>
-  </body>
+    <h2>SOB coMboS calculator</h2>
+    <select id="combo" onchange="calc()">
+        <option value="">Select Combo</option>
+        <option value="170,80,70,150">390/300 TU Explorer Combo</option>
+        <option value="170,80,0,227">397/307 Adventure Combo</option>
+        <option value="170,80,28,200">398/308 ECO FUN Combo</option>
+        <option value="170,80,255,0">425/335 Snow Adventure Combo</option>
+        <option value="400,300,0,99">499/399 Aastha Combo</option>
+        <option value="370,180,0,175">545/355 Shiv Ganesha Combo</option>
+        <option value="550,375,0,50">600/425 Namah Combo</option>
+        <option value="170,170,0,529,NA">699/NA Ultimate Play Combo</option>
+        <option value="370,180,325,50">745/555 Viewing Fun Combo</option>
+        <option value="550,375,249,170">969/794 Symbolic Combo</option>
+        <option value="170,80,355,574">1099/1009 Delight Combo</option>
+        <option value="370,180,355,574">1299/1109 Mini Blast Combo</option>
+        <option value="550,375,250,599">1399/1224 All in Fun Combo</option>
+        <option value="1350,775,0,150">1500/925 Divine Rush Combo</option>
+        <option value="1400,1400,449,2350,NA">4199/NA Ultimate Mega Combo</option>
+    </select>
+    <br>
+    <input id="adults" type="tel" inputmode="numeric" maxlength="3" placeholder="No. of Adults" oninput="limitPax(this);calc()">
+    <br>
+    <input id="children" type="tel" inputmode="numeric" maxlength="3" placeholder="No. of Children" oninput="limitPax(this);calc()">
+    <p id="warning" style="color:red"></p>
+    <div class="box">
+        <div class="row"><span>TPU</span><span>₹ <span id="tpu">0</span></span></div>
+        <div class="row"><span>OEPL</span><span>₹ <span id="oepl">0</span></span></div>
+        <div class="row"><span>PAEPL</span><span>₹ <span id="paepl">0</span></span></div>
+        <hr>
+        <div class="row"><b style="font-size:14px">TOTAL</b><span id="totalBox" class="highlight-total">₹ <span id="total">0</span></span></div>
+    </div>
+    <br>
+    <div class="sobField">
+        <input id="sobInput" type="tel" inputmode="numeric" maxlength="6" placeholder="Enter 6-digit SOB ID" autocomplete="off">
+        <button id="scanBtn" type="button" onclick="startScanner()" aria-label="Scan QR code">
+            <svg viewBox="0 0 24 24"><path d="M9 4L7.5 6H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-3.5L15 4H9zm3 4a5 5 0 1 1 0 10a5 5 0 0 1 0-10zm0 2.2a2.8 2.8 0 1 0 0 5.6a2.8 2.8 0 0 0 0-5.6z"/></svg>
+        </button>
+    </div>
+    <br>
+    <button onclick="saveEntry()" style="background:linear-gradient(135deg,#1976d2,#0d47a1);color:#fff">Save SOB</button>
+    <button onclick="resetForm()" style="background:linear-gradient(135deg,#ff9800,#ef6c00);color:#fff">Reset Calculator</button>
+    <br>
+    <button onclick="printA4()">📄 Print My A4</button>
+    <div class="print-all-wrap">
+        <div class="print-split">
+            <button class="print-print-btn" onclick="printSelectedUsers()">📑 Print</button>
+            <button class="print-all-btn" id="allPrintBtn" onclick="togglePrintMenu(event)">ALL ▼</button>
+        </div>
+        <div id="printMenu" class="print-dropdown"><div id="printUserList" class="print-user-list"></div></div>
+    </div>
+</div>
+<div id="printArea">
+    <div id="a4">
+        <div class="header">
+            <div class="header-left"></div>
+            <div class="header-center"><span class="headerText">USERNAME.<b>S</b> :</span><span id="username" class="headerLine"></span></div>
+            <div class="header-right"><b class="headerText">DATE :</b><span id="date"></span></div>
+        </div>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="editColumn" style="width:40px">EDIT</th>
+                        <th class="deleteColumn" style="width:40px">DEL</th>
+                        <th>SR</th>
+                        <th>SOB ID</th>
+                        <th>TPU</th>
+                        <th>OEPL</th>
+                        <th>PAEPL</th>
+                        <th>TOTAL</th>
+                        <th>ACTIVITIES' AMOUNTS</th>
+                        <th>TIME</th>
+                    </tr>
+                </thead>
+                <tbody id="dataBody"></tbody>
+                <tfoot>
+                    <tr>
+                        <td class="editColumn"></td>
+                        <td class="deleteColumn"></td>
+                        <td colspan="2"><b>TOTAL</b></td>
+                        <td id="tpuT"><b>0</b></td>
+                        <td id="oeplT"><b>0</b></td>
+                        <td id="paeplT"><b>0</b></td>
+                        <td id="totalT"><b>0</b></td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="editModal" class="editModal">
+    <div class="editCard">
+        <div class="editTitle">Edit Entry</div>
+        <input type="text" id="editSobId" class="editField" placeholder="SOB ID">
+        <input type="number" id="editTpu" class="editField" placeholder="TPU">
+        <input type="number" id="editOepl" class="editField" placeholder="OEPL">
+        <input type="number" id="editPaepl" class="editField" placeholder="PAEPL">
+        <input type="text" id="editActivities" class="editField" placeholder="Activities (comma-separated)">
+        <input type="time" id="editTime" class="editField timeField">
+        <div class="editActions">
+            <button class="saveBtn" onclick="saveEdit()">Save</button>
+            <button class="cancelBtn" onclick="closeEditModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+<div id="scannerOverlay" class="scannerOverlay">
+    <div class="scannerTopBar"><span style="color:#fff">📸 Scan SOB QR Code</span><button class="scannerActionBtn" onclick="closeScanner()">✕ Close</button></div>
+    <div class="scannerBox"><div id="reader"></div></div>
+</div>
+<div class="footer-left">✓ Data saved locally<span id="cloudStatus"></span></div>
+<script src="https://unpkg.com/html5-qrcode"></script>
+<script>
+let data = {};
+let editingIndex = null;
+let scanner = null;
+const COMBOS = {
+    "170,80,70,150": {name: "390/300 TU Explorer Combo", prices: [170,80,70,150]},
+    "170,80,0,227": {name: "397/307 Adventure Combo", prices: [170,80,0,227]},
+    "170,80,28,200": {name: "398/308 ECO FUN Combo", prices: [170,80,28,200]},
+    "170,80,255,0": {name: "425/335 Snow Adventure Combo", prices: [170,80,255,0]},
+    "400,300,0,99": {name: "499/399 Aastha Combo", prices: [400,300,0,99]},
+    "370,180,0,175": {name: "545/355 Shiv Ganesha Combo", prices: [370,180,0,175]},
+    "550,375,0,50": {name: "600/425 Namah Combo", prices: [550,375,0,50]},
+    "170,170,0,529,NA": {name: "699/NA Ultimate Play Combo", prices: [170,170,0,529]},
+    "370,180,325,50": {name: "745/555 Viewing Fun Combo", prices: [370,180,325,50]},
+    "550,375,249,170": {name: "969/794 Symbolic Combo", prices: [550,375,249,170]},
+    "170,80,355,574": {name: "1099/1009 Delight Combo", prices: [170,80,355,574]},
+    "370,180,355,574": {name: "1299/1109 Mini Blast Combo", prices: [370,180,355,574]},
+    "550,375,250,599": {name: "1399/1224 All in Fun Combo", prices: [550,375,250,599]},
+    "1350,775,0,150": {name: "1500/925 Divine Rush Combo", prices: [1350,775,0,150]},
+    "1400,1400,449,2350,NA": {name: "4199/NA Ultimate Mega Combo", prices: [1400,1400,449,2350]}
+};
+function toggleTheme(){document.body.classList.toggle('dark');localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');}
+function restoreTodayData(){const username=document.getElementById('usernameInput').value.trim();if(!username)return alert('Enter username');const key='sob_'+username+'_'+new Date().toISOString().split('T')[0];const saved=localStorage.getItem(key);if(saved){data[username]=JSON.parse(saved);renderTable();alert('Data restored!');}else alert('No data found for today');}
+function saveEntry(){const combo=document.getElementById('combo').value;const adults=parseInt(document.getElementById('adults').value)||0;const children=parseInt(document.getElementById('children').value)||0;const sobId=document.getElementById('sobInput').value.trim();if(!combo||!sobId)return alert('Select combo and enter SOB ID');const prices=COMBOS[combo].prices;const username=document.getElementById('usernameInput').value.trim()||'Anonymous';const tpu=prices[0]*(adults+children);const oepl=prices[1]*(adults+children);const paepl=prices[2]*(adults+children);if(!data[username])data[username]=[];data[username].push({sobId,tpu,oepl,paepl,activities:`${adults} adults, ${children} children`,time:new Date().toLocaleTimeString()});saveData(username);resetForm();renderTable();}
+function saveData(username){const key='sob_'+username+'_'+new Date().toISOString().split('T')[0];localStorage.setItem(key,JSON.stringify(data[username]||[]));}
+function resetForm(){document.getElementById('combo').value='';document.getElementById('adults').value='';document.getElementById('children').value='';document.getElementById('sobInput').value='';document.getElementById('tpu').textContent='0';document.getElementById('oepl').textContent='0';document.getElementById('paepl').textContent='0';document.getElementById('total').textContent='0';}
+function calc(){const combo=document.getElementById('combo').value;const adults=parseInt(document.getElementById('adults').value)||0;const children=parseInt(document.getElementById('children').value)||0;if(!combo)return;const prices=COMBOS[combo].prices;const tpu=prices[0]*(adults+children);const oepl=prices[1]*(adults+children);const paepl=prices[2]*(adults+children);const total=tpu+oepl+paepl;document.getElementById('tpu').textContent=tpu;document.getElementById('oepl').textContent=oepl;document.getElementById('paepl').textContent=paepl;document.getElementById('total').textContent=total;}
+function limitPax(el){if(el.value.length>3)el.value=el.value.slice(0,3);}
+function renderTable(){const username=document.getElementById('usernameInput').value.trim()||'Anonymous';const entries=data[username]||[];const tbody=document.getElementById('dataBody');document.getElementById('date').textContent=new Date().toLocaleDateString();document.getElementById('username').textContent=username;tbody.innerHTML='';let tpuSum=0,oeplSum=0,paeplSum=0,totalSum=0;entries.forEach((entry,idx)=>{const row=document.createElement('tr');row.innerHTML=`<td class="editColumn"><button class="editBtn" onclick="openEditModal(${idx})">✏</button></td><td class="deleteColumn"><button class="deleteBtn" onclick="deleteEntry(${idx})">✕</button></td><td>${idx+1}</td><td>${entry.sobId}</td><td>${entry.tpu}</td><td>${entry.oepl}</td><td>${entry.paepl}</td><td>${entry.tpu+entry.oepl+entry.paepl}</td><td class="activityCell"><pre>${entry.activities}</pre></td><td>${entry.time}</td>`;tbody.appendChild(row);tpuSum+=entry.tpu;oeplSum+=entry.oepl;paeplSum+=entry.paepl;totalSum+=entry.tpu+entry.oepl+entry.paepl;});document.getElementById('tpuT').textContent=tpuSum;document.getElementById('oeplT').textContent=oeplSum;document.getElementById('paeplT').textContent=paeplSum;document.getElementById('totalT').textContent=totalSum;}
+function deleteEntry(idx){if(!confirm('Delete this entry?'))return;const username=document.getElementById('usernameInput').value.trim()||'Anonymous';data[username].splice(idx,1);saveData(username);renderTable();}
+function openEditModal(idx){editingIndex=idx;const username=document.getElementById('usernameInput').value.trim()||'Anonymous';const entry=data[username][idx];document.getElementById('editSobId').value=entry.sobId;document.getElementById('editTpu').value=entry.tpu;document.getElementById('editOepl').value=entry.oepl;document.getElementById('editPaepl').value=entry.paepl;document.getElementById('editActivities').value=entry.activities;document.getElementById('editTime').value=entry.time;document.getElementById('editModal').classList.add('show');}
+function closeEditModal(){document.getElementById('editModal').classList.remove('show');editingIndex=null;}
+function saveEdit(){const username=document.getElementById('usernameInput').value.trim()||'Anonymous';const entry=data[username][editingIndex];entry.sobId=document.getElementById('editSobId').value;entry.tpu=parseInt(document.getElementById('editTpu').value)||0;entry.oepl=parseInt(document.getElementById('editOepl').value)||0;entry.paepl=parseInt(document.getElementById('editPaepl').value)||0;entry.activities=document.getElementById('editActivities').value;entry.time=document.getElementById('editTime').value;saveData(username);renderTable();closeEditModal();}
+function startScanner(){document.getElementById('scannerOverlay').classList.add('show');if(!scanner)scanner=new Html5Qrcode('reader');scanner.start({facingMode:'environment'},{fps:10,qrbox:250},onScanSuccess,onScanError);}
+function onScanSuccess(decodedText){const match=decodedText.match(/\d{6}/);if(match){document.getElementById('sobInput').value=match[0];closeScanner();}}
+function onScanError(){}
+function closeScanner(){if(scanner){scanner.stop();scanner=null;}document.getElementById('scannerOverlay').classList.remove('show');}
+function printA4(){window.print();}
+function printSelectedUsers(){const checkboxes=document.querySelectorAll('#printUserList input:checked');if(!checkboxes.length)return alert('Select users to print');window.print();}
+function togglePrintMenu(e){e.stopPropagation();const menu=document.getElementById('printMenu');menu.classList.toggle('show');if(menu.classList.contains('show')){const userList=document.getElementById('printUserList');userList.innerHTML=Object.keys(data).map(user=>`<div class="print-user-item"><input type="checkbox" value="${user}"><label>${user}</label></div>`).join('');}}
+document.addEventListener('click',()=>document.getElementById('printMenu').classList.remove('show'));if(localStorage.getItem('theme')==='dark')document.body.classList.add('dark');
+</script>
+</body>
 </html>
