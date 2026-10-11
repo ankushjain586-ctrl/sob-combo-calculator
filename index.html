@@ -5,12 +5,122 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SOB coMboS calculator</title>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
-*{box-sizing:border-box;font-family:'Arimo',sans-serif}
-:root{--text:#000;--card:#fff;--input:#fff;--table:#fff;--border:#ddd}
-body{margin:0;text-align:center;color:var(--text);background:radial-gradient(circle at top left,#fff,transparent 40%),radial-gradient(circle at bottom right,#dfefff,transparent 35%),linear-gradient(180deg,#f7fbff,#edf4fb)}
-body.dark{--text:#f2f2f2;--card:#242424;--input:#2f2f2f;--table:#202020;--border:#555;background:#151515}
-.container{margin-top:20px}.top-buttons{display:flex;justify-content:space-between;align-items:center;padding:10px 12px 0}.switch-btn{display:inline-block;padding:6px 10px;border-radius:6px;color:#fff;text-decoration:none;font-size:12px;font-weight:bold;box-shadow:4px 4px 0 #0b3a82,6px 8px 14px #0003}.reverse-btn{background:linear-gradient(135deg,#00c853,#009624);box-shadow:3px 3px 0 #00701a,5px 6px 10px #0003}.report-btn{background:linear-gradient(135deg,#8e24aa,#5e35b1);box-shadow:3px 3px 0 #4527a0,5px 6px 10px #0003}.userLoginBox{display:flex;justify-content:center;align-items:center;gap:8px;margin:12px auto}.hiText{font-size:12px;font-weight:bold;cursor:pointer}#usernameInput{width:100px;margin:0;padding:7px 10px;font-size:12px;font-weight:bold}#loadBtn{margin:0 0 0 4px;padding:5px 10px;color:#fff;font-size:12px;border-radius:100px;background:linear-gradient(135deg,#1976d2,#0d47a1);box-shadow:4px 4px 0 #0b3a82,6px 8px 14px #0003}input,select{width:90%;max-width:340px;margin:8px;padding:12px;padding-right:35px;border:0;border-radius:14px;font-size:16px;background:var(--input);color:var(--text);box-shadow:inset 2px 2px 5px #00000014,4px 4px 10px #0000001f}select{appearance:none;-webkit-appearance:none;text-align:left;text-align-last:left;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath d='M1 3l5 5 5-5' fill='none' stroke='%23000000' stroke-width='2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}button{margin:6px;padding:12px 18px;border:0;border-radius:28px;cursor:pointer;font-size:14px;font-weight:bold;background:linear-gradient(to bottom,#fff,#e8e8e8);box-shadow:4px 4px 0 #bdbdbd,6px 8px 14px #0003;transition:all .15s ease}button:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 #bdbdbd,8px 10px 16px #0004}button:active{transform:translateY(3px)}body.dark button:not(.saveBtn):not(.cancelBtn){color:#fff;background:linear-gradient(#444,#2c2c2c);box-shadow:4px 4px 0 #111,6px 8px 14px #0007}.box{max-width:340px;margin:auto;padding:15px;border-radius:18px;background:var(--card);box-shadow:8px 8px 20px #0002}.row{display:flex;justify-content:space-between;font-size:18px}.highlight-total{display:inline-block;padding:4px 10px;border:3px solid #ffd700;border-radius:10px;background:#fff8dc;color:#000;animation:goldGlow 1.5s infinite alternate}body.dark .highlight-total{background:#302b00;color:#fff}@keyframes goldGlow{from{box-shadow:0 0 5px #ffd700,0 0 10px #ffd700}to{box-shadow:0 0 15px #ffea00,0 0 25px #ffb300,0 0 35px #ff6f00}}.sobField{display:flex;align-items:center;width:90%;max-width:340px;margin:auto;overflow:hidden;border-radius:14px;background:var(--input);box-shadow:inset 2px 2px 5px #00000014,4px 4px 10px #0000001f}.sobField input{flex:1;width:auto;margin:0;padding:12px 14px;outline:0;background:transparent;box-shadow:none}#scanBtn{display:flex;align-items:center;justify-content:center;width:46px;height:46px;margin:0;padding:0;border-left:1px solid #ddd;border-radius:0;background:transparent;box-shadow:none}#scanBtn svg{width:22px;height:22px;fill:#222}body.dark #scanBtn svg{fill:#fff}.table-wrapper{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}table{width:100%;min-width:700px;border-collapse:collapse;border:1px solid #000;background:var(--table);font-size:12px}th,td{padding:2px 4px;border:1px solid #000;text-align:center;vertical-align:middle;line-height:14px}body.dark th,body.dark td{border-color:#555;color:#fff}body.dark th{background:#303030}body.dark td{background:#252525}.header{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;width:100%;gap:6px;margin-bottom:10px;font-size:13px;overflow:visible}.header-left,.header-center,.header-right{display:flex;align-items:center;gap:4px;min-width:0}.header-left{justify-content:flex-start}.header-center{justify-content:center;white-space:nowrap}.header-right{justify-content:flex-end;white-space:nowrap}.headerText{white-space:nowrap;font-weight:bold}.headerLine{display:inline-flex;align-items:flex-end;justify-content:center;width:max-content;min-width:120px;max-width:none;height:16px;padding:0 6px;border-bottom:1.5px solid #000;white-space:nowrap;font-weight:bold;line-height:16px}.header-right span{font-weight:normal}.activityCell{padding:6px 6px 6px 12px;background:transparent;font-size:10px;font-weight:bold;text-align:left!important;vertical-align:top}.activityCell pre{margin:0;font:inherit;line-height:12px;white-space:pre-wrap}.activityTotalsCell{padding:6px 6px 6px 12px;background:#eaeaea;font-size:10px;font-weight:bold;text-align:left!important;vertical-align:top}body.dark .activityCell{background:#2a2a2a}body.dark .activityTotalsCell{background:#333}.editBtn,.deleteBtn{min-width:auto;margin:0;padding:2px 6px;font-size:11px;line-height:1;box-shadow:3px 3px 0 #9e9e9e,5px 6px 12px #0004}.print-all-wrap{position:relative;display:inline-block}.print-split{display:inline-flex;align-items:center;overflow:hidden;border-radius:28px;vertical-align:middle;box-shadow:4px 4px 0 #bdbdbd,6px 8px 14px #0003}.print-split button{margin:0;border-radius:0;padding:12px 18px;background:linear-gradient(to bottom,#fff,#e8e8e8);box-shadow:none}.print-print-btn{border-radius:28px 0 0 28px!important;border-right:1px solid #bdbdbd!important}.print-all-btn{min-width:75px;padding-right:14px!important;padding-left:12px!important;border-radius:0 28px 28px 0!important}body.dark .print-split button{color:#fff;background:linear-gradient(#444,#2c2c2c)}.print-dropdown{display:none;position:absolute;top:100%;right:0;z-index:9999;width:200px;margin-top:6px;padding:8px;border:1px solid var(--border);border-radius:10px;background:var(--card);box-shadow:0 8px 20px #0003;text-align:left}.print-dropdown.show{display:block}.print-user-list{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow:auto}.print-user-item{display:flex;align-items:center;gap:8px;font-size:13px;line-height:1.2}.print-user-item input{width:auto;margin:0;padding:0;box-shadow:none}.editModal{display:none;position:fixed;inset:0;z-index:10000;align-items:center;justify-content:center;background:#0009;backdrop-filter:blur(4px)}.editModal.show{display:flex}.editCard{width:95%;max-width:360px;max-height:85vh;overflow-y:auto;padding:14px;border:1px solid #ffffffcc;border-radius:20px;background:var(--card);color:var(--text);box-shadow:10px 14px 40px #0004}.editTitle{margin-bottom:15px;color:#1565c0;font-size:20px;font-weight:bold}.editField{width:100%;margin:8px 0;padding:12px;border:2px solid #e0e0e0;border-radius:12px;font-size:15px}.timeField{width:100%;min-width:0}.editActions{display:flex;justify-content:center;gap:10px;margin-top:15px}.saveBtn{min-width:120px;color:#fff;background:linear-gradient(135deg,#00c853,#009624)}.cancelBtn{min-width:120px;color:#fff;background:linear-gradient(135deg,#ff5252,#c62828)}.footer-left{position:fixed;bottom:5px;left:10px;z-index:3;font-size:12px}#cloudStatus{margin-left:5px;font-size:15px}.scannerOverlay{display:none;position:fixed;inset:0;z-index:99999;flex-direction:column;background:#000e}.scannerOverlay.show{display:flex}.scannerTopBar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px;background:#0006}.scannerActionBtn{margin:0;padding:8px 14px;color:#000;background:#fff;box-shadow:3px 3px 0 #999,5px 6px 12px #0003}.scannerBox{flex:1;min-height:0;width:100%;background:#111}#reader{width:100%;height:100%;min-height:0}#reader video{display:block;width:100%!important;height:100%!important;min-height:100vh;object-fit:cover}#reader{position:relative;width:100%;height:100%;min-height:100%;overflow:hidden}#reader video{display:block;width:100%!important;height:100%!important;min-height:100%;object-fit:cover}#reader__dashboard_section{display:none!important}#reader__scan_region{width:100%!important;height:100%!important}@keyframes popIn{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}@media print{@page{size:A4 portrait;margin:8mm}html,body{width:100%;height:auto;margin:0;padding:0;overflow:visible;color:#000!important;background:#fff!important;font-family:'Arimo',sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}.container,.top-buttons,.footer-left,.editModal,.scannerOverlay,button,.editColumn,.deleteColumn{display:none!important}#printArea{display:block!important;width:100%;margin:0;padding:0}table{width:100%;min-width:0;table-layout:auto;font-size:10px;background:#fff!important}th,td{padding:3px;border:1px solid #000!important;color:#000!important;background:#fff!important;white-space:nowrap}.activityCell{font-size:9px;line-height:11px}.activityTotalsCell{color:#000!important;background:#eaeaea!important}.header{display:grid!important;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)!important;width:100%!important;margin-bottom:8px;font-size:11px;overflow:visible!important}.header-left{display:flex!important}.header-center{display:flex!important;justify-content:center!important;white-space:nowrap!important}.header-right{display:flex!important;justify-content:flex-end!important;white-space:nowrap!important}.headerLine{width:max-content!important;min-width:100px!important;max-width:none!important;white-space:nowrap!important;overflow:visible!important}.header-right span{font-weight:normal!important}}@media(max-width:768px){table{min-width:700px}}body.dark .print-split{box-shadow:4px 4px 0 #111,6px 8px 14px #0007}body.dark .print-split button{color:#fff;background:linear-gradient(#444,#2c2c2c);border-color:#666!important}body.dark .print-dropdown{border-color:#666;background:#242424;color:#fff;box-shadow:0 8px 20px #0009}.body.dark .print-user-item{color:#fff}.body.dark .editCard{border-color:#666;background:#242424;color:#fff;box-shadow:10px 14px 40px #0009}.body.dark .editField{border-color:#666;background:#2f2f2f;color:#fff}.body.dark .editField option{background:#2f2f2f;color:#fff}.body.dark .table-wrapper{scrollbar-color:#777 #222}.body.dark .table-wrapper::-webkit-scrollbar{height:10px}.body.dark .table-wrapper::-webkit-scrollbar-track{background:#222}.body.dark .table-wrapper::-webkit-scrollbar-thumb{background:#777;border-radius:10px}.body.dark .print-dropdown,.body.dark .editCard{scrollbar-color:#777 #222}.body.dark .print-dropdown::-webkit-scrollbar,.body.dark .editCard::-webkit-scrollbar{width:9px}.body.dark .print-dropdown::-webkit-scrollbar-track,.body.dark .editCard::-webkit-scrollbar-track{background:#222}.body.dark .print-dropdown::-webkit-scrollbar-thumb,.body.dark .editCard::-webkit-scrollbar-thumb{background:#777;border-radius:10px}@media print{html,body,#printArea,#a4,.table-wrapper{width:100%!important;max-width:none!important;height:auto!important;overflow:visible!important}.table-wrapper{display:block!important;overflow-x:visible!important;overflow-y:visible!important}#printArea table{width:100%!important;min-width:0!important}}</style>
+*{
+    box-sizing:border-box;
+    font-family:'Arimo',sans-serif;
+}
+
+:root{
+    --text:#000;
+    --card:#fff;
+    --input:#fff;
+    --table:#fff;
+    --border:#ddd;
+}
+
+body{
+    margin:0;
+    text-align:center;
+    color:var(--text);
+    background:
+        radial-gradient(circle at top left,#fff,transparent 40%),
+        radial-gradient(circle at bottom right,#dfefff,transparent 35%),
+        linear-gradient(180deg,#f7fbff,#edf4fb);
+}
+
+body.dark{
+    --text:#f2f2f2;
+    --card:#242424;
+    --input:#2f2f2f;
+    --table:#202020;
+    --border:#555;
+    background:#151515;
+}
+
+.container{margin-top:20px}
+.top-buttons{display:flex;justify-content:space-between;align-items:center;padding:10px 12px 0}
+.switch-btn{display:inline-block;padding:6px 10px;border-radius:6px;color:#fff;text-decoration:none;font-size:12px;font-weight:bold;box-shadow:4px 4px 0 #0b3a82,6px 8px 14px #0003}
+.reverse-btn{background:linear-gradient(135deg,#00c853,#009624);box-shadow:3px 3px 0 #00701a,5px 6px 10px #0003}
+.report-btn{background:linear-gradient(135deg,#8e24aa,#5e35b1);box-shadow:3px 3px 0 #4527a0,5px 6px 10px #0003}
+.userLoginBox{display:flex;justify-content:center;align-items:center;gap:8px;margin:12px auto}
+.hiText{font-size:12px;font-weight:bold;cursor:pointer}
+#usernameInput{width:100px;margin:0;padding:7px 10px;font-size:12px;font-weight:bold}
+#loadBtn{margin:0 0 0 4px;padding:5px 10px;color:#fff;font-size:12px;border-radius:100px;background:linear-gradient(135deg,#1976d2,#0d47a1);box-shadow:4px 4px 0 #0b3a82,6px 8px 14px #0003}
+input,select{width:90%;max-width:340px;margin:8px;padding:12px;padding-right:35px;border:0;border-radius:14px;font-size:16px;background:var(--input);color:var(--text);box-shadow:inset 2px 2px 5px #00000014,4px 4px 10px #0000001f}
+select{appearance:none;-webkit-appearance:none;text-align:left;text-align-last:left;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath d='M1 3l5 5 5-5' fill='none' stroke='%23000000' stroke-width='2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+button{margin:6px;padding:12px 18px;border:0;border-radius:28px;cursor:pointer;font-size:14px;font-weight:bold;background:linear-gradient(to bottom,#fff,#e8e8e8);box-shadow:4px 4px 0 #bdbdbd,6px 8px 14px #0003;transition:all .15s ease}
+button:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 #bdbdbd,8px 10px 16px #0004}
+button:active{transform:translateY(3px)}
+body.dark button:not(.saveBtn):not(.cancelBtn){color:#fff;background:linear-gradient(#444,#2c2c2c);box-shadow:4px 4px 0 #111,6px 8px 14px #0007}
+.box{max-width:340px;margin:auto;padding:15px;border-radius:18px;background:var(--card);box-shadow:8px 8px 20px #0002}
+.row{display:flex;justify-content:space-between;font-size:18px}
+.highlight-total{display:inline-block;padding:4px 10px;border:3px solid #ffd700;border-radius:10px;background:#fff8dc;color:#000;animation:goldGlow 1.5s infinite alternate}
+body.dark .highlight-total{background:#302b00;color:#fff}
+@keyframes goldGlow{from{box-shadow:0 0 5px #ffd700,0 0 10px #ffd700}to{box-shadow:0 0 15px #ffea00,0 0 25px #ffb300,0 0 35px #ff6f00}}
+.sobField{display:flex;align-items:center;width:90%;max-width:340px;margin:auto;overflow:hidden;border-radius:14px;background:var(--input);box-shadow:inset 2px 2px 5px #00000014,4px 4px 10px #0000001f}
+.sobField input{flex:1;width:auto;margin:0;padding:12px 14px;outline:0;background:transparent;box-shadow:none}
+#scanBtn{display:flex;align-items:center;justify-content:center;width:46px;height:46px;margin:0;padding:0;border-left:1px solid #ddd;border-radius:0;background:transparent;box-shadow:none}
+#scanBtn svg{width:22px;height:22px;fill:#222}
+body.dark #scanBtn svg{fill:#fff}
+.table-wrapper{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;min-width:700px;border-collapse:collapse;border:1px solid #000;background:var(--table);font-size:12px}
+th,td{padding:2px 4px;border:1px solid #000;text-align:center;vertical-align:middle;line-height:14px}
+body.dark th,body.dark td{border-color:#555;color:#fff}body.dark th{background:#303030}body.dark td{background:#252525}
+.header{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;width:100%;gap:6px;margin-bottom:10px;font-size:13px;overflow:visible}
+.header-left,.header-center,.header-right{display:flex;align-items:center;gap:4px;min-width:0}.header-left{justify-content:flex-start}.header-center{justify-content:center;white-space:nowrap}.header-right{justify-content:flex-end;white-space:nowrap}
+.headerText{white-space:nowrap;font-weight:bold}.headerLine{display:inline-flex;align-items:flex-end;justify-content:center;width:max-content;min-width:120px;max-width:none;height:16px;padding:0 6px;border-bottom:1.5px solid #000;white-space:nowrap;font-weight:bold;line-height:16px}
+.header-right span{font-weight:normal}
+.activityCell{padding:6px 6px 6px 12px;background:transparent;font-size:10px;font-weight:bold;text-align:left!important;vertical-align:top}.activityCell pre{margin:0;font:inherit;line-height:12px;white-space:pre-wrap}
+.activityTotalsCell{padding:6px 6px 6px 12px;background:#eaeaea;font-size:10px;font-weight:bold;text-align:left!important;vertical-align:top}
+body.dark .activityCell{background:#2a2a2a}body.dark .activityTotalsCell{background:#333}
+.editBtn,.deleteBtn{min-width:auto;margin:0;padding:2px 6px;font-size:11px;line-height:1;box-shadow:3px 3px 0 #9e9e9e,5px 6px 12px #0004}
+.print-all-wrap{position:relative;display:inline-block}.print-split{display:inline-flex;align-items:center;overflow:hidden;border-radius:28px;vertical-align:middle;box-shadow:4px 4px 0 #bdbdbd,6px 8px 14px #0003}
+.print-split button{margin:0;border-radius:0;padding:12px 18px;background:linear-gradient(to bottom,#fff,#e8e8e8);box-shadow:none}
+.print-print-btn{border-radius:28px 0 0 28px!important;border-right:1px solid #bdbdbd!important}
+.print-all-btn{min-width:75px;padding-right:14px!important;padding-left:12px!important;border-radius:0 28px 28px 0!important}
+body.dark .print-split button{color:#fff;background:linear-gradient(#444,#2c2c2c)}
+.print-dropdown{display:none;position:absolute;top:100%;right:0;z-index:9999;width:200px;margin-top:6px;padding:8px;border:1px solid var(--border);border-radius:10px;background:var(--card);box-shadow:0 8px 20px #0003;text-align:left}
+.print-dropdown.show{display:block}
+.print-user-list{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow:auto}
+.print-user-item{display:flex;align-items:center;gap:8px;font-size:13px;line-height:1.2}
+.print-user-item input{width:auto;margin:0;padding:0;box-shadow:none}
+.editModal{display:none;position:fixed;inset:0;z-index:10000;align-items:center;justify-content:center;background:#0009;backdrop-filter:blur(4px)}.editModal.show{display:flex}.editCard{width:95%;max-width:360px;max-height:85vh;overflow-y:auto;padding:14px;border:1px solid #ffffffcc;border-radius:20px;background:var(--card);color:var(--text);box-shadow:10px 14px 40px #0004}
+.editTitle{margin-bottom:15px;color:#1565c0;font-size:20px;font-weight:bold}
+.editField{width:100%;margin:8px 0;padding:12px;border:2px solid #e0e0e0;border-radius:12px;font-size:15px}
+.timeField{width:100%;min-width:0}
+.editActions{display:flex;justify-content:center;gap:10px;margin-top:15px}
+.saveBtn{min-width:120px;color:#fff;background:linear-gradient(135deg,#00c853,#009624)}
+.cancelBtn{min-width:120px;color:#fff;background:linear-gradient(135deg,#ff5252,#c62828)}
+.footer-left{position:fixed;bottom:5px;left:10px;z-index:3;font-size:12px}#cloudStatus{margin-left:5px;font-size:15px}
+.scannerOverlay{display:none;position:fixed;inset:0;z-index:99999;flex-direction:column;background:#000e}.scannerOverlay.show{display:flex}.scannerTopBar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px;background:#0006}
+.scannerActionBtn{margin:0;padding:8px 14px;color:#000;background:#fff;box-shadow:3px 3px 0 #999,5px 6px 12px #0003}
+.scannerBox{flex:1;min-height:0;width:100%;background:#111}
+#reader{width:100%;height:100%;min-height:0}
+#reader video{display:block;width:100%!important;height:100%!important;min-height:100vh;object-fit:cover}
+#reader{position:relative;width:100%;height:100%;min-height:100%;overflow:hidden}
+#reader video{display:block;width:100%!important;height:100%!important;min-height:100%;object-fit:cover}
+#reader__dashboard_section{display:none!important}
+#reader__scan_region{width:100%!important;height:100%!important}
+@keyframes popIn{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+@media print{@page{size:A4 portrait;margin:8mm}html,body{width:100%;height:auto;margin:0;padding:0;overflow:visible;color:#000!important;background:#fff!important;font-family:'Arimo',sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}.container,.top-buttons,.footer-left,.editModal,.scannerOverlay,button,.editColumn,.deleteColumn{display:none!important}#printArea{display:block!important;width:100%;margin:0;padding:0}table{width:100%;min-width:0;table-layout:auto;font-size:10px;background:#fff!important}th,td{padding:3px;border:1px solid #000!important;color:#000!important;background:#fff!important;white-space:nowrap}.activityCell{font-size:9px;line-height:11px}.activityTotalsCell{color:#000!important;background:#eaeaea!important}.header{display:grid!important;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)!important;width:100%!important;margin-bottom:8px;font-size:11px;overflow:visible!important}.header-left{display:flex!important}.header-center{display:flex!important;justify-content:center!important;white-space:nowrap!important}.header-right{display:flex!important;justify-content:flex-end!important;white-space:nowrap!important}.headerLine{width:max-content!important;min-width:100px!important;max-width:none!important;white-space:nowrap!important;overflow:visible!important}.header-right span{font-weight:normal!important}}
+@media(max-width:768px){table{min-width:700px}}
+body.dark .print-split{box-shadow:4px 4px 0 #111,6px 8px 14px #0007}body.dark .print-split button{color:#fff;background:linear-gradient(#444,#2c2c2c);border-color:#666!important}body.dark .print-dropdown{border-color:#666;background:#242424;color:#fff;box-shadow:0 8px 20px #0009}
+body.dark .print-user-item{color:#fff}
+body.dark .editCard{border-color:#666;background:#242424;color:#fff;box-shadow:10px 14px 40px #0009}
+body.dark .editField{border-color:#666;background:#2f2f2f;color:#fff}
+body.dark .editField option{background:#2f2f2f;color:#fff}
+body.dark .table-wrapper{scrollbar-color:#777 #222}
+body.dark .table-wrapper::-webkit-scrollbar{height:10px}
+body.dark .table-wrapper::-webkit-scrollbar-track{background:#222}
+body.dark .table-wrapper::-webkit-scrollbar-thumb{background:#777;border-radius:10px}
+body.dark .print-dropdown,body.dark .editCard{scrollbar-color:#777 #222}
+body.dark .print-dropdown::-webkit-scrollbar,body.dark .editCard::-webkit-scrollbar{width:9px}
+body.dark .print-dropdown::-webkit-scrollbar-track,body.dark .editCard::-webkit-scrollbar-track{background:#222}
+body.dark .print-dropdown::-webkit-scrollbar-thumb,body.dark .editCard::-webkit-scrollbar-thumb{background:#777;border-radius:10px}
+@media print{html,body,#printArea,#a4,.table-wrapper{width:100%!important;max-width:none!important;height:auto!important;overflow:visible!important}.table-wrapper{display:block!important;overflow-x:visible!important;overflow-y:visible!important}#printArea table{width:100%!important;min-width:0!important}}
+</style>
 </head>
 <body>
 <div class="top-buttons">
@@ -18,28 +128,33 @@ body.dark{--text:#f2f2f2;--card:#242424;--input:#2f2f2f;--table:#202020;--border
     <a class="switch-btn report-btn" href="https://sobcombo.github.io/r/" target="_blank">Daily Report Generator</a>
 </div>
 <div class="container">
-    <div class="userLoginBox"><span class="hiText" onclick="toggleTheme()">🌞 Hi,</span><input id="usernameInput" type="text" placeholder="Enter Username" autocomplete="off"><button id="loadBtn" onclick="restoreTodayData()">Load</button></div>
+    <div class="userLoginBox">
+        <span class="hiText" onclick="toggleTheme()">🌞 Hi,</span>
+        <input id="usernameInput" type="text" placeholder="Enter Username" autocomplete="off">
+        <button id="loadBtn" onclick="restoreTodayData()">Load</button>
+    </div>
     <h2>SOB coMboS calculator</h2>
     <select id="combo" onchange="calc()">
         <option value="">Select Combo</option>
-        <option value="170,80,40,89">390/300 TU Explorer Combo</option>
-        <option value="170,80,0,227">397/307 Adventure Combo</option>
-        <option value="170,80,28,200">398/308 ECO FUN Combo</option>
-        <option value="170,80,255,0">425/335 Snow Adventure Combo</option>
-        <option value="470,400,0,100">499/399 Aastha Combo</option>
-        <option value="170,0,0,529">545/355 Shiv Ganesha Combo</option>
-        <option value="650,475,0,50">600/425 Namah Combo</option>
-        <option value="170,80,199,520">699/NA Ultimate Play Combo</option>
-        <option value="470,280,155,150">745/555 Viewing Fun Combo</option>
-        <option value="470,280,249,50">969/794 Symbolic Combo</option>
-        <option value="470,380,105,350">1099/1009 Delight Combo</option>
-        <option value="670,480,199,100">1299/1109 Mini Blast Combo</option>
-        <option value="450,275,200,450">1399/1224 All in Fun Combo</option>
-        <option value="1450,875,0,100">1500/925 Divine Rush Combo</option>
-        <option value="1500,300,449,2300">4199/NA Ultimate Mega Combo</option>
+        <option value="1">₹390 (TPU:170, OEPL:40, PAEPL:180) - TU Explorer</option>
+        <option value="2">₹397 (TPU:170, OEPL:0, PAEPL:227) - Adventure</option>
+        <option value="3">₹398 (TPU:170, OEPL:28, PAEPL:200) - ECO FUN</option>
+        <option value="4">₹425 (TPU:170, OEPL:255, PAEPL:0) - Snow Adventure</option>
+        <option value="5">₹499 (TPU:470, OEPL:0, PAEPL:100) - Aastha</option>
+        <option value="6">₹545 (TPU:170, OEPL:0, PAEPL:529) - Shiv Ganesha</option>
+        <option value="7">₹600 (TPU:650, OEPL:0, PAEPL:50) - Namah</option>
+        <option value="8">₹699 (TPU:170, OEPL:199, PAEPL:520) - Ultimate Play</option>
+        <option value="9">₹745 (TPU:470, OEPL:155, PAEPL:150) - Viewing Fun</option>
+        <option value="10">₹969 (TPU:470, OEPL:249, PAEPL:50) - Symbolic</option>
+        <option value="11">₹1099 (TPU:470, OEPL:105, PAEPL:350) - Delight</option>
+        <option value="12">₹1299 (TPU:670, OEPL:199, PAEPL:100) - Mini Blast</option>
+        <option value="13">₹1399 (TPU:450, OEPL:200, PAEPL:450) - All in Fun</option>
+        <option value="14">₹1500 (TPU:1450, OEPL:0, PAEPL:100) - Divine Rush</option>
+        <option value="15">₹4199 (TPU:1500, OEPL:449, PAEPL:2300) - Ultimate Mega</option>
     </select>
     <br>
-    <input id="adults" type="tel" inputmode="numeric" maxlength="3" placeholder="No. of Adults" oninput="limitPax(this);calc()"><br>
+    <input id="adults" type="tel" inputmode="numeric" maxlength="3" placeholder="No. of Adults" oninput="limitPax(this);calc()">
+    <br>
     <input id="children" type="tel" inputmode="numeric" maxlength="3" placeholder="No. of Children" oninput="limitPax(this);calc()">
     <p id="warning" style="color:red"></p>
     <div class="box">
@@ -52,7 +167,9 @@ body.dark{--text:#f2f2f2;--card:#242424;--input:#2f2f2f;--table:#202020;--border
     <br>
     <div class="sobField">
         <input id="sobInput" type="tel" inputmode="numeric" maxlength="6" placeholder="Enter 6-digit SOB ID" autocomplete="off">
-        <button id="scanBtn" type="button" onclick="startScanner()" aria-label="Scan QR code"><svg viewBox="0 0 24 24"><path d="M9 4L7.5 6H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-3.5L15 4H9zm3 4a5 5 0 1 1 0 10a5 5 0 0 1 0-10zm0 2.2a2.8 2.8 0 1 0 0 5.6a2.8 2.8 0 0 0 0-5.6z"/></svg></button>
+        <button id="scanBtn" type="button" onclick="startScanner()" aria-label="Scan QR code">
+            <svg viewBox="0 0 24 24"><path d="M9 4L7.5 6H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-3.5L15 4H9zm3 4a5 5 0 1 1 0 10a5 5 0 0 1 0-10zm0 2.2a2.8 2.8 0 1 0 0 5.6a2.8 2.8 0 0 0 0-5.6z"/></svg>
+        </button>
     </div>
     <br>
     <button onclick="saveEntry()" style="background:linear-gradient(135deg,#1976d2,#0d47a1);color:#fff">Save SOB</button>
@@ -60,13 +177,72 @@ body.dark{--text:#f2f2f2;--card:#242424;--input:#2f2f2f;--table:#202020;--border
     <br>
     <button onclick="printA4()">📄 Print My A4</button>
     <div class="print-all-wrap">
-        <div class="print-split"><button class="print-print-btn" onclick="printSelectedUsers()">📑 Print</button><button class="print-all-btn" id="allPrintBtn" onclick="togglePrintMenu(event)">ALL ▼</button></div>
+        <div class="print-split">
+            <button class="print-print-btn" onclick="printSelectedUsers()">📑 Print</button>
+            <button class="print-all-btn" id="allPrintBtn" onclick="togglePrintMenu(event)">ALL ▼</button>
+        </div>
         <div id="printMenu" class="print-dropdown"><div id="printUserList" class="print-user-list"></div></div>
     </div>
 </div>
-<div id="printArea"><div id="a4"><div class="header"><div class="header-left"></div><div class="header-center"><span class="headerText">USERNAME.<b>S</b> :</span><span id="username" class="headerLine"></span></div><div class="header-right"><b class="headerText">DATE :</b><span id="date"></span></div></div><div class="table-wrapper"><table><thead><tr><th class="editColumn" style="width:40px">EDIT</th><th class="deleteColumn" style="width:40px">DEL</th><th>SR</th><th>SOB ID</th><th>TPU</th><th>OEPL</th><th>PAEPL</th><th>TOTAL</th><th>ACTIVITIES' AMOUNTS</th><th>TIME</th></tr></thead><tbody id="dataBody"></tbody><tfoot><tr><td class="editColumn"></td><td class="deleteColumn"></td><td colspan="2"><b>TOTAL</b></td><td id="tpuT"><b>0</b></td><td id="oeplT"><b>0</b></td><td id="paeplT"><b>0</b></td><td id="totalT"><b>0</b></td><td colspan="2"></td></tr></tfoot></table></div></div></div>
-<div id="editModal" class="editModal"><div class="editCard"><div class="editTitle">Edit Entry</div><input type="text" id="editSobId" class="editField" placeholder="SOB ID"><input type="number" id="editTpu" class="editField" placeholder="TPU"><input type="number" id="editOepl" class="editField" placeholder="OEPL"><input type="number" id="editPaepl" class="editField" placeholder="PAEPL"><input type="text" id="editActivities" class="editField" placeholder="Activities (comma-separated)"><input type="time" id="editTime" class="editField timeField"><div class="editActions"><button class="saveBtn" onclick="saveEdit()">Save</button><button class="cancelBtn" onclick="closeEditModal()">Cancel</button></div></div></div>
-<div id="scannerOverlay" class="scannerOverlay"><div class="scannerTopBar"><span style="color:#fff">📸 Scan SOB QR Code</span><button class="scannerActionBtn" onclick="closeScanner()">✕ Close</button></div><div class="scannerBox"><div id="reader"></div></div></div>
+<div id="printArea">
+    <div id="a4">
+        <div class="header">
+            <div class="header-left"></div>
+            <div class="header-center"><span class="headerText">USERNAME.<b>S</b> :</span><span id="username" class="headerLine"></span></div>
+            <div class="header-right"><b class="headerText">DATE :</b><span id="date"></span></div>
+        </div>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="editColumn" style="width:40px">EDIT</th>
+                        <th class="deleteColumn" style="width:40px">DEL</th>
+                        <th>SR</th>
+                        <th>SOB ID</th>
+                        <th>TPU</th>
+                        <th>OEPL</th>
+                        <th>PAEPL</th>
+                        <th>TOTAL</th>
+                        <th>ACTIVITIES' AMOUNTS</th>
+                        <th>TIME</th>
+                    </tr>
+                </thead>
+                <tbody id="dataBody"></tbody>
+                <tfoot>
+                    <tr>
+                        <td class="editColumn"></td>
+                        <td class="deleteColumn"></td>
+                        <td colspan="2"><b>TOTAL</b></td>
+                        <td id="tpuT"><b>0</b></td>
+                        <td id="oeplT"><b>0</b></td>
+                        <td id="paeplT"><b>0</b></td>
+                        <td id="totalT"><b>0</b></td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="editModal" class="editModal">
+    <div class="editCard">
+        <div class="editTitle">Edit Entry</div>
+        <input type="text" id="editSobId" class="editField" placeholder="SOB ID">
+        <input type="number" id="editTpu" class="editField" placeholder="TPU">
+        <input type="number" id="editOepl" class="editField" placeholder="OEPL">
+        <input type="number" id="editPaepl" class="editField" placeholder="PAEPL">
+        <input type="text" id="editActivities" class="editField" placeholder="Activities (comma-separated)">
+        <input type="time" id="editTime" class="editField timeField">
+        <div class="editActions">
+            <button class="saveBtn" onclick="saveEdit()">Save</button>
+            <button class="cancelBtn" onclick="closeEditModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+<div id="scannerOverlay" class="scannerOverlay">
+    <div class="scannerTopBar"><span style="color:#fff">📸 Scan SOB QR Code</span><button class="scannerActionBtn" onclick="closeScanner()">✕ Close</button></div>
+    <div class="scannerBox"><div id="reader"></div></div>
+</div>
 <div class="footer-left">✓ Data saved locally<span id="cloudStatus"></span></div>
 <script src="https://unpkg.com/html5-qrcode"></script>
 <script>
@@ -74,28 +250,28 @@ let data = {};
 let editingIndex = null;
 let scanner = null;
 const COMBOS = {
-    "170,80,40,89": { adult: 170, child: 80, offspring: 40, pinnacle: 89 },
-    "170,80,0,227": { adult: 170, child: 80, offspring: 0, pinnacle: 227 },
-    "170,80,28,200": { adult: 170, child: 80, offspring: 28, pinnacle: 200 },
-    "170,80,255,0": { adult: 170, child: 80, offspring: 255, pinnacle: 0 },
-    "470,400,0,100": { adult: 470, child: 400, offspring: 0, pinnacle: 100 },
-    "170,0,0,529": { adult: 170, child: 0, offspring: 0, pinnacle: 529 },
-    "650,475,0,50": { adult: 650, child: 475, offspring: 0, pinnacle: 50 },
-    "170,80,199,520": { adult: 170, child: 80, offspring: 199, pinnacle: 520 },
-    "470,280,155,150": { adult: 470, child: 280, offspring: 155, pinnacle: 150 },
-    "470,280,249,50": { adult: 470, child: 280, offspring: 249, pinnacle: 50 },
-    "470,380,105,350": { adult: 470, child: 380, offspring: 105, pinnacle: 350 },
-    "670,480,199,100": { adult: 670, child: 480, offspring: 199, pinnacle: 100 },
-    "450,275,200,450": { adult: 450, child: 275, offspring: 200, pinnacle: 450 },
-    "1450,875,0,100": { adult: 1450, child: 875, offspring: 0, pinnacle: 100 },
-    "1500,300,449,2300": { adult: 1500, child: 300, offspring: 449, pinnacle: 2300 }
+    "1": { name: "TU Explorer", tpu: 170, oepl: 40, paepl: 180 },
+    "2": { name: "Adventure", tpu: 170, oepl: 0, paepl: 227 },
+    "3": { name: "ECO FUN", tpu: 170, oepl: 28, paepl: 200 },
+    "4": { name: "Snow Adventure", tpu: 170, oepl: 255, paepl: 0 },
+    "5": { name: "Aastha", tpu: 470, oepl: 0, paepl: 100 },
+    "6": { name: "Shiv Ganesha", tpu: 170, oepl: 0, paepl: 529 },
+    "7": { name: "Namah", tpu: 650, oepl: 0, paepl: 50 },
+    "8": { name: "Ultimate Play", tpu: 170, oepl: 199, paepl: 520 },
+    "9": { name: "Viewing Fun", tpu: 470, oepl: 155, paepl: 150 },
+    "10": { name: "Symbolic", tpu: 470, oepl: 249, paepl: 50 },
+    "11": { name: "Delight", tpu: 470, oepl: 105, paepl: 350 },
+    "12": { name: "Mini Blast", tpu: 670, oepl: 199, paepl: 100 },
+    "13": { name: "All in Fun", tpu: 450, oepl: 200, paepl: 450 },
+    "14": { name: "Divine Rush", tpu: 1450, oepl: 0, paepl: 100 },
+    "15": { name: "Ultimate Mega", tpu: 1500, oepl: 449, paepl: 2300 }
 };
 function toggleTheme(){document.body.classList.toggle('dark');localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');}
 function restoreTodayData(){const username=document.getElementById('usernameInput').value.trim();if(!username)return alert('Enter username');const key='sob_'+username+'_'+new Date().toISOString().split('T')[0];const saved=localStorage.getItem(key);if(saved){data[username]=JSON.parse(saved);renderTable();alert('Data restored!');}else alert('No data found for today');}
-function saveEntry(){const combo=document.getElementById('combo').value;const adults=parseInt(document.getElementById('adults').value)||0;const children=parseInt(document.getElementById('children').value)||0;const sobId=document.getElementById('sobInput').value.trim();if(!combo||!sobId)return alert('Select combo and enter SOB ID');const rates=COMBOS[combo];const username=document.getElementById('usernameInput').value.trim()||'Anonymous';const tpu=(rates.adult*adults)+(rates.child*children);const oepl=rates.offspring*(adults+children);const paepl=rates.pinnacle*(adults+children);if(!data[username])data[username]=[];data[username].push({sobId,tpu,oepl,paepl,activities:`${adults} adults, ${children} children`,time:new Date().toLocaleTimeString()});saveData(username);resetForm();renderTable();}
+function saveEntry(){const comboId=document.getElementById('combo').value;const adults=parseInt(document.getElementById('adults').value)||0;const children=parseInt(document.getElementById('children').value)||0;const sobId=document.getElementById('sobInput').value.trim();if(!comboId||!sobId)return alert('Select combo and enter SOB ID');const combo=COMBOS[comboId];const username=document.getElementById('usernameInput').value.trim()||'Anonymous';const tpu=combo.tpu*(adults+children);const oepl=combo.oepl*(adults+children);const paepl=combo.paepl*(adults+children);if(!data[username])data[username]=[];data[username].push({sobId,tpu,oepl,paepl,activities:`${adults} adults, ${children} children`,time:new Date().toLocaleTimeString()});saveData(username);resetForm();renderTable();}
 function saveData(username){const key='sob_'+username+'_'+new Date().toISOString().split('T')[0];localStorage.setItem(key,JSON.stringify(data[username]||[]));}
 function resetForm(){document.getElementById('combo').value='';document.getElementById('adults').value='';document.getElementById('children').value='';document.getElementById('sobInput').value='';document.getElementById('tpu').textContent='0';document.getElementById('oepl').textContent='0';document.getElementById('paepl').textContent='0';document.getElementById('total').textContent='0';}
-function calc(){const combo=document.getElementById('combo').value;const adults=parseInt(document.getElementById('adults').value)||0;const children=parseInt(document.getElementById('children').value)||0;if(!combo)return;const rates=COMBOS[combo];const tpu=(rates.adult*adults)+(rates.child*children);const oepl=rates.offspring*(adults+children);const paepl=rates.pinnacle*(adults+children);const total=tpu+oepl+paepl;document.getElementById('tpu').textContent=tpu;document.getElementById('oepl').textContent=oepl;document.getElementById('paepl').textContent=paepl;document.getElementById('total').textContent=total;}
+function calc(){const comboId=document.getElementById('combo').value;const adults=parseInt(document.getElementById('adults').value)||0;const children=parseInt(document.getElementById('children').value)||0;if(!comboId)return;const combo=COMBOS[comboId];const tpu=combo.tpu*(adults+children);const oepl=combo.oepl*(adults+children);const paepl=combo.paepl*(adults+children);const total=tpu+oepl+paepl;document.getElementById('tpu').textContent=tpu;document.getElementById('oepl').textContent=oepl;document.getElementById('paepl').textContent=paepl;document.getElementById('total').textContent=total;}
 function limitPax(el){if(el.value.length>3)el.value=el.value.slice(0,3);}
 function renderTable(){const username=document.getElementById('usernameInput').value.trim()||'Anonymous';const entries=data[username]||[];const tbody=document.getElementById('dataBody');document.getElementById('date').textContent=new Date().toLocaleDateString();document.getElementById('username').textContent=username;tbody.innerHTML='';let tpuSum=0,oeplSum=0,paeplSum=0,totalSum=0;entries.forEach((entry,idx)=>{const row=document.createElement('tr');row.innerHTML=`<td class="editColumn"><button class="editBtn" onclick="openEditModal(${idx})">✏</button></td><td class="deleteColumn"><button class="deleteBtn" onclick="deleteEntry(${idx})">✕</button></td><td>${idx+1}</td><td>${entry.sobId}</td><td>${entry.tpu}</td><td>${entry.oepl}</td><td>${entry.paepl}</td><td>${entry.tpu+entry.oepl+entry.paepl}</td><td class="activityCell"><pre>${entry.activities}</pre></td><td>${entry.time}</td>`;tbody.appendChild(row);tpuSum+=entry.tpu;oeplSum+=entry.oepl;paeplSum+=entry.paepl;totalSum+=entry.tpu+entry.oepl+entry.paepl;});document.getElementById('tpuT').textContent=tpuSum;document.getElementById('oeplT').textContent=oeplSum;document.getElementById('paeplT').textContent=paeplSum;document.getElementById('totalT').textContent=totalSum;}
 function deleteEntry(idx){if(!confirm('Delete this entry?'))return;const username=document.getElementById('usernameInput').value.trim()||'Anonymous';if(!data[username])return;data[username].splice(idx,1);saveData(username);renderTable();}
