@@ -6,244 +6,286 @@
   <title>SOB Combo Calculator</title>
   <style>
     :root {
-      --bg: #edf3fb;
-      --card: #ffffff;
-      --text: #1f2a37;
-      --muted: #5d6b82;
-      --line: #dfe6f0;
-      --primary: #224a7c;
-      --primary-2: #1d3d6a;
-      --accent: #f4b942;
-      --success: #1da66d;
-      --shadow: 0 12px 28px rgba(25, 40, 60, 0.12);
+      --bg: #1a1a2e;
+      --card: #16213e;
+      --text: #e9ecef;
+      --muted: #adb5bd;
+      --line: #495057;
+      --primary: #00d4ff;
+      --primary-2: #0099cc;
+      --accent: #ffd700;
+      --success: #00ff88;
+      --shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
     }
 
     * { box-sizing: border-box; }
-    body {
+    html, body {
       margin: 0;
-      background: linear-gradient(180deg, #f3f7fb 0%, #eef4fb 100%);
-      font-family: Arial, Helvetica, sans-serif;
+      padding: 0;
+      background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 50%, #16213e 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: var(--text);
+      min-height: 100vh;
     }
+    
     .page {
-      max-width: 980px;
-      margin: 28px auto;
-      padding: 24px 18px 40px;
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 20px;
     }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--primary);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      color: var(--primary);
+      text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+    }
+
     .card {
       background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 18px;
+      border: 2px solid var(--primary);
+      border-radius: 12px;
       box-shadow: var(--shadow);
-      padding: 24px;
+      padding: 25px;
+      margin-bottom: 20px;
     }
-    h1 {
-      margin: 0 0 18px;
-      font-size: clamp(1.7rem, 3vw, 2.5rem);
-      text-align: center;
-      color: var(--primary);
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--primary);
     }
-    .field {
-      margin-bottom: 16px;
+
+    .form-group {
+      margin-bottom: 20px;
     }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
     label {
       display: block;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       margin-bottom: 8px;
-      color: var(--muted);
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
-    select, input {
+
+    input, select {
       width: 100%;
       padding: 12px 14px;
-      border-radius: 12px;
-      border: 1px solid var(--line);
-      background: #fff;
+      border-radius: 8px;
+      border: 2px solid var(--line);
+      background: rgba(0, 212, 255, 0.05);
       color: var(--text);
       font-size: 15px;
       outline: none;
+      transition: all 0.3s ease;
     }
-    select:focus, input:focus {
+
+    input:focus, select:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(34, 74, 124, 0.12);
+      box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.2);
+      background: rgba(0, 212, 255, 0.1);
     }
-    .two-col {
+
+    .price-breakdown {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-    .three-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 16px;
-    }
-    .summary {
-      margin-top: 8px;
-      background: #f7faff;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 18px 20px;
-    }
-    .breakdown-section {
-      margin-top: 20px;
-      background: #f0f8ff;
-      border: 2px solid var(--primary);
-      border-radius: 14px;
-      padding: 16px;
-    }
-    .breakdown-section h3 {
-      margin: 0 0 14px;
-      color: var(--primary);
-      font-size: 16px;
-    }
-    .breakdown-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 12px;
-      margin-bottom: 12px;
+      margin-top: 20px;
+      padding: 20px;
+      background: rgba(0, 212, 255, 0.05);
+      border-radius: 8px;
+      border: 1px solid var(--primary);
     }
-    .breakdown-item {
-      background: white;
-      border: 1px solid var(--line);
-      border-radius: 10px;
+
+    .price-item {
+      background: var(--card);
+      border: 2px solid var(--primary);
+      border-radius: 8px;
       padding: 12px;
       text-align: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
-    .breakdown-item-label {
-      font-size: 12px;
+
+    .price-label {
+      font-size: 11px;
       font-weight: 700;
       color: var(--muted);
       text-transform: uppercase;
-      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      display: block;
     }
-    .breakdown-item-value {
-      font-size: 18px;
+
+    .price-value {
+      font-size: 20px;
       font-weight: 700;
-      color: var(--primary);
+      color: var(--success);
+      font-family: 'Courier New', monospace;
     }
-    .row {
+
+    .summary-box {
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(0, 255, 136, 0.1) 100%);
+      border: 2px solid var(--success);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .summary-row {
       display: flex;
       justify-content: space-between;
-      gap: 16px;
-      padding: 8px 0;
+      align-items: center;
+      padding: 12px 0;
       border-bottom: 1px solid var(--line);
-      font-size: 16px;
+      font-size: 15px;
     }
-    .row:last-child {
+
+    .summary-row:last-child {
       border-bottom: none;
     }
-    .total {
-      margin-top: 10px;
-      padding-top: 10px;
+
+    .summary-label {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .summary-value {
+      font-size: 18px;
       font-weight: 700;
-      font-size: 1.1rem;
+      color: var(--success);
+      font-family: 'Courier New', monospace;
     }
-    .highlight {
-      display: inline-block;
-      background: #fff7d8;
-      border: 2px solid var(--accent);
-      border-radius: 10px;
-      padding: 6px 12px;
-      color: #3a3106;
-      font-size: 1.1rem;
+
+    .total-amount {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 2px solid var(--success);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--accent);
     }
+
+    .total-label {
+      color: var(--primary);
+    }
+
     .button-group {
       display: flex;
       gap: 12px;
-      margin-top: 20px;
+      margin-top: 25px;
       flex-wrap: wrap;
     }
+
     button {
       flex: 1;
       min-width: 140px;
-      padding: 12px 20px;
+      padding: 14px 20px;
       border: none;
-      border-radius: 12px;
+      border-radius: 8px;
       font-size: 15px;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
+
     .btn-primary {
-      background: var(--primary);
-      color: white;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+      color: #000;
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
     }
+
     .btn-primary:hover {
-      background: var(--primary-2);
-      box-shadow: 0 4px 12px rgba(34, 74, 124, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
     }
+
     .btn-secondary {
-      background: var(--success);
-      color: white;
+      background: linear-gradient(135deg, var(--success) 0%, #00cc66 100%);
+      color: #000;
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
     }
+
     .btn-secondary:hover {
-      background: #16884d;
-      box-shadow: 0 4px 12px rgba(29, 166, 109, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
     }
+
     .note {
-      margin-top: 16px;
-      font-size: 13px;
+      margin-top: 20px;
+      padding: 15px;
+      font-size: 12px;
       color: var(--muted);
+      background: rgba(0, 0, 0, 0.3);
+      border-left: 4px solid var(--accent);
+      border-radius: 4px;
+      line-height: 1.6;
     }
-    @media print {
-      body {
-        background: white;
-      }
-      .page {
-        margin: 0;
-        padding: 20px;
-      }
-      .card {
-        box-shadow: none;
-        border: 1px solid #ccc;
-      }
-      .button-group {
-        display: none;
-      }
-      .note {
-        display: none;
-      }
-    }
+
     @media (max-width: 640px) {
-      .two-col { grid-template-columns: 1fr; }
-      .three-col { grid-template-columns: 1fr; }
-      .breakdown-grid { grid-template-columns: 1fr; }
-      .page { padding: 14px; }
-      .card { padding: 18px 14px; }
-      .button-group {
-        flex-direction: column;
-      }
-      button {
-        min-width: auto;
-      }
+      .page { padding: 12px; }
+      .card { padding: 16px; }
+      h1 { font-size: 1.8rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .price-breakdown { grid-template-columns: repeat(2, 1fr); }
+      button { min-width: auto; }
     }
   </style>
 </head>
 <body>
   <div class="page">
-    <div class="card">
-      <h1>SOB Combo Calculator</h1>
+    <div class="header">
+      <h1>⚡ SOB Combo Calculator ⚡</h1>
+    </div>
 
-      <div class="three-col">
-        <div class="field">
-          <label for="username">User Name</label>
+    <div class="card">
+      <div class="section-title">📋 User Information</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="username">👤 User Name</label>
           <input id="username" type="text" placeholder="Enter your name" />
         </div>
-        <div class="field">
-          <label for="date">Date</label>
+        <div class="form-group">
+          <label for="date">📅 Date</label>
           <input id="date" type="date" />
         </div>
-        <div class="field">
-          <label for="notes">Notes/Reference</label>
+        <div class="form-group">
+          <label for="notes">📝 Notes/Reference</label>
           <input id="notes" type="text" placeholder="Add notes (optional)" />
         </div>
       </div>
+    </div>
 
-      <div class="field">
-        <label for="combo">Select Combo</label>
+    <div class="card">
+      <div class="section-title">🎯 Combo Selection</div>
+      <div class="form-group">
+        <label for="combo">Select Your Combo Package</label>
         <select id="combo">
-          <option value="">Choose a combo</option>
+          <option value="">-- Choose a combo --</option>
           <option value="1">Explorer Combo — ₹299 / ₹209</option>
           <option value="2">Eco Adventure Combo — ₹397 / ₹307</option>
           <option value="3">Eco Fun Combo — ₹398 / ₹308</option>
@@ -262,67 +304,157 @@
         </select>
       </div>
 
-      <div class="two-col">
-        <div class="field">
-          <label for="adults">Adults</label>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="adults">👥 Number of Adults</label>
           <input id="adults" type="number" min="0" value="1" />
         </div>
-        <div class="field">
-          <label for="children">Children</label>
+        <div class="form-group">
+          <label for="children">🧒 Number of Children</label>
           <input id="children" type="number" min="0" value="0" />
         </div>
       </div>
+    </div>
 
-      <!-- Summary of Totals -->
-      <div class="summary">
-        <div class="row"><span>TPU (Ticket Price Unit)</span><span id="tpuDisplay">₹0</span></div>
-        <div class="row"><span>OEPL (Optional Extra Per License)</span><span id="oeplDisplay">₹0</span></div>
-        <div class="row"><span>PAEPL (Processing & Admin Extra Per License)</span><span id="paeplDisplay">₹0</span></div>
-        <div class="row total"><span>Total Amount</span><span class="highlight" id="totalDisplay">₹0</span></div>
-      </div>
+    <div class="card">
+      <div class="section-title">💰 Price Segregation</div>
+      <div class="price-breakdown" id="priceBreakdown"></div>
 
-      <!-- Price Breakdown Section -->
-      <div class="breakdown-section" id="breakdownSection" style="display: none;">
-        <h3>💰 Price Breakdown for Selected Combo</h3>
-        <div class="breakdown-grid" id="breakdownGrid"></div>
-        <div class="summary" style="margin-top: 14px;">
-          <div class="row"><span><strong>Combo Base Price (Adult)</strong></span><span id="breakdownAdult">₹0</span></div>
-          <div class="row"><span><strong>Combo Base Price (Child)</strong></span><span id="breakdownChild">₹0</span></div>
-          <div class="row"><span><strong>OEPL per Guest</strong></span><span id="breakdownOeplUnit">₹0</span></div>
-          <div class="row"><span><strong>PAEPL per Guest</strong></span><span id="breakdownPaeplUnit">₹0</span></div>
+      <div class="summary-box">
+        <div class="summary-row">
+          <span class="summary-label">TPU (Adult Amount)</span>
+          <span class="summary-value" id="tpuAdultDisplay">₹0</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">TPU (Child Amount)</span>
+          <span class="summary-value" id="tpuChildDisplay">₹0</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Total TPU</span>
+          <span class="summary-value" id="tpuDisplay">₹0</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Offspring (Amount)</span>
+          <span class="summary-value" id="offspringDisplay">₹0</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Pinnacle (Amount)</span>
+          <span class="summary-value" id="pinnacleDisplay">₹0</span>
+        </div>
+        <div class="total-amount">
+          <span class="total-label">Total Booking Amount</span>
+          <span id="totalDisplay">₹0</span>
         </div>
       </div>
+    </div>
 
+    <div class="card">
       <div class="button-group">
         <button class="btn-primary" type="button" onclick="printSheet()">🖨️ Print Sheet</button>
         <button class="btn-secondary" type="button" onclick="resetForm()">↻ Reset Form</button>
       </div>
+    </div>
 
-      <div class="note">
-        <strong>Formula:</strong> TPU = (Adult Price × Adults) + (Child Price × Children) | OEPL = Per-Guest Charge × Total Guests | PAEPL = Per-Guest Charge × Total Guests
-      </div>
+    <div class="note">
+      <strong>Formula:</strong> TPU = (Adult Price × Adults) + (Child Price × Children) | Offspring = Per-Guest × Total Guests | Pinnacle = Per-Guest × Total Guests | Total = TPU + Offspring + Pinnacle
     </div>
   </div>
 
   <script>
     document.getElementById('date').valueAsDate = new Date();
 
+    // Chart data from your image
     const COMBOS = {
-      1: { name: 'Explorer Combo', adult: 299, child: 209, oepl: 40, paepl: 89 },
-      2: { name: 'Eco Adventure Combo', adult: 397, child: 307, oepl: 0, paepl: 227 },
-      3: { name: 'Eco Fun Combo', adult: 398, child: 308, oepl: 28, paepl: 200 },
-      4: { name: 'Snow Adventure Combo', adult: 425, child: 335, oepl: 255, paepl: 0 },
-      5: { name: 'Aastha Combo', adult: 570, child: 500, oepl: 0, paepl: 100 },
-      6: { name: 'Adventure Combo', adult: 699, child: 0, oepl: 0, paepl: 529 },
-      7: { name: 'Namah Combo', adult: 700, child: 525, oepl: 0, paepl: 50 },
-      8: { name: 'Viewing Fun Combo', adult: 775, child: 585, oepl: 155, paepl: 150 },
-      9: { name: 'Symbolic Play Combo', adult: 769, child: 579, oepl: 249, paepl: 50 },
-      10: { name: 'Ultimate Play Combo', adult: 889, child: 799, oepl: 199, paepl: 520 },
-      11: { name: 'Delight Combo', adult: 925, child: 835, oepl: 105, paepl: 350 },
-      12: { name: 'Mini Blast Combo', adult: 969, child: 779, oepl: 199, paepl: 100 },
-      13: { name: 'All in fun Combo', adult: 1100, child: 925, oepl: 200, paepl: 450 },
-      14: { name: 'Divine Rush Combo', adult: 1550, child: 975, oepl: 0, paepl: 100 },
-      15: { name: 'Ultimate Mega Combo', adult: 4249, child: 0, oepl: 449, paepl: 2300 }
+      1: { 
+        name: 'Explorer Combo', 
+        tpuAdult: 170, tpuChild: 80,
+        offspring: 40, pinnacle: 89,
+        totalAdult: 299, totalChild: 209
+      },
+      2: { 
+        name: 'Eco Adventure Combo', 
+        tpuAdult: 170, tpuChild: 80,
+        offspring: 0, pinnacle: 227,
+        totalAdult: 397, totalChild: 307
+      },
+      3: { 
+        name: 'Eco Fun Combo', 
+        tpuAdult: 170, tpuChild: 80,
+        offspring: 28, pinnacle: 200,
+        totalAdult: 398, totalChild: 308
+      },
+      4: { 
+        name: 'Snow Adventure Combo', 
+        tpuAdult: 170, tpuChild: 80,
+        offspring: 255, pinnacle: 0,
+        totalAdult: 425, totalChild: 335
+      },
+      5: { 
+        name: 'Aastha Combo', 
+        tpuAdult: 470, tpuChild: 400,
+        offspring: 0, pinnacle: 100,
+        totalAdult: 570, totalChild: 500
+      },
+      6: { 
+        name: 'Adventure Combo', 
+        tpuAdult: 170, tpuChild: 0,
+        offspring: 0, pinnacle: 529,
+        totalAdult: 699, totalChild: 0
+      },
+      7: { 
+        name: 'Namah Combo', 
+        tpuAdult: 650, tpuChild: 475,
+        offspring: 0, pinnacle: 50,
+        totalAdult: 700, totalChild: 525
+      },
+      8: { 
+        name: 'Viewing Fun Combo', 
+        tpuAdult: 470, tpuChild: 280,
+        offspring: 155, pinnacle: 150,
+        totalAdult: 775, totalChild: 585
+      },
+      9: { 
+        name: 'Symbolic Play Combo', 
+        tpuAdult: 470, tpuChild: 280,
+        offspring: 249, pinnacle: 50,
+        totalAdult: 769, totalChild: 579
+      },
+      10: { 
+        name: 'Ultimate Play Combo', 
+        tpuAdult: 170, tpuChild: 80,
+        offspring: 199, pinnacle: 520,
+        totalAdult: 889, totalChild: 799
+      },
+      11: { 
+        name: 'Delight Combo', 
+        tpuAdult: 470, tpuChild: 380,
+        offspring: 105, pinnacle: 350,
+        totalAdult: 925, totalChild: 835
+      },
+      12: { 
+        name: 'Mini Blast Combo', 
+        tpuAdult: 670, tpuChild: 480,
+        offspring: 199, pinnacle: 100,
+        totalAdult: 969, totalChild: 779
+      },
+      13: { 
+        name: 'All in fun Combo', 
+        tpuAdult: 450, tpuChild: 275,
+        offspring: 200, pinnacle: 450,
+        totalAdult: 1100, totalChild: 925
+      },
+      14: { 
+        name: 'Divine Rush Combo', 
+        tpuAdult: 1450, tpuChild: 875,
+        offspring: 0, pinnacle: 100,
+        totalAdult: 1550, totalChild: 975
+      },
+      15: { 
+        name: 'Ultimate Mega Combo', 
+        tpuAdult: 1500, tpuChild: 300,
+        offspring: 449, pinnacle: 2300,
+        totalAdult: 4249, totalChild: 0
+      }
     };
 
     function formatMoney(value) {
@@ -335,54 +467,61 @@
       const children = Number(document.getElementById('children').value || 0);
 
       if (!comboId || !COMBOS[comboId]) {
+        document.getElementById('tpuAdultDisplay').textContent = '₹0';
+        document.getElementById('tpuChildDisplay').textContent = '₹0';
         document.getElementById('tpuDisplay').textContent = '₹0';
-        document.getElementById('oeplDisplay').textContent = '₹0';
-        document.getElementById('paeplDisplay').textContent = '₹0';
+        document.getElementById('offspringDisplay').textContent = '₹0';
+        document.getElementById('pinnacleDisplay').textContent = '₹0';
         document.getElementById('totalDisplay').textContent = '₹0';
-        document.getElementById('breakdownSection').style.display = 'none';
+        document.getElementById('priceBreakdown').innerHTML = '';
         return;
       }
 
       const combo = COMBOS[comboId];
       const totalGuests = adults + children;
-      const tpu = (combo.adult * adults) + (combo.child * children);
-      const oepl = combo.oepl * totalGuests;
-      const paepl = combo.paepl * totalGuests;
-      const total = tpu + oepl + paepl;
+      
+      const tpuAdult = combo.tpuAdult * adults;
+      const tpuChild = combo.tpuChild * children;
+      const tpuTotal = tpuAdult + tpuChild;
+      const offspring = combo.offspring * totalGuests;
+      const pinnacle = combo.pinnacle * totalGuests;
+      const total = tpuTotal + offspring + pinnacle;
 
-      document.getElementById('tpuDisplay').textContent = formatMoney(tpu);
-      document.getElementById('oeplDisplay').textContent = formatMoney(oepl);
-      document.getElementById('paeplDisplay').textContent = formatMoney(paepl);
+      document.getElementById('tpuAdultDisplay').textContent = formatMoney(tpuAdult);
+      document.getElementById('tpuChildDisplay').textContent = formatMoney(tpuChild);
+      document.getElementById('tpuDisplay').textContent = formatMoney(tpuTotal);
+      document.getElementById('offspringDisplay').textContent = formatMoney(offspring);
+      document.getElementById('pinnacleDisplay').textContent = formatMoney(pinnacle);
       document.getElementById('totalDisplay').textContent = formatMoney(total);
 
-      // Update breakdown section
-      updateBreakdown(combo, adults, children, totalGuests, tpu, oepl, paepl, total);
+      // Update price breakdown cards
+      updatePriceBreakdown(combo, adults, children, totalGuests);
     }
 
-    function updateBreakdown(combo, adults, children, totalGuests, tpu, oepl, paepl, total) {
-      const breakdownGrid = document.getElementById('breakdownGrid');
-      breakdownGrid.innerHTML = `
-        <div class="breakdown-item">
-          <div class="breakdown-item-label">Adults</div>
-          <div class="breakdown-item-value">${adults}</div>
-          <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">× ${formatMoney(COMBOS[Object.keys(COMBOS).find(k => COMBOS[k].name === combo.name)].adult)}</div>
+    function updatePriceBreakdown(combo, adults, children, totalGuests) {
+      const html = `
+        <div class="price-item">
+          <span class="price-label">TPU (Adult)</span>
+          <span class="price-value">${formatMoney(combo.tpuAdult)}</span>
+          <span style="font-size: 11px; color: var(--muted); margin-top: 4px; display: block;">× ${adults}</span>
         </div>
-        <div class="breakdown-item">
-          <div class="breakdown-item-label">Children</div>
-          <div class="breakdown-item-value">${children}</div>
-          <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">× ${formatMoney(COMBOS[Object.keys(COMBOS).find(k => COMBOS[k].name === combo.name)].child)}</div>
+        <div class="price-item">
+          <span class="price-label">TPU (Child)</span>
+          <span class="price-value">${formatMoney(combo.tpuChild)}</span>
+          <span style="font-size: 11px; color: var(--muted); margin-top: 4px; display: block;">× ${children}</span>
         </div>
-        <div class="breakdown-item">
-          <div class="breakdown-item-label">Total Guests</div>
-          <div class="breakdown-item-value">${totalGuests}</div>
+        <div class="price-item">
+          <span class="price-label">Offspring</span>
+          <span class="price-value">${formatMoney(combo.offspring)}</span>
+          <span style="font-size: 11px; color: var(--muted); margin-top: 4px; display: block;">Per Guest</span>
+        </div>
+        <div class="price-item">
+          <span class="price-label">Pinnacle</span>
+          <span class="price-value">${formatMoney(combo.pinnacle)}</span>
+          <span style="font-size: 11px; color: var(--muted); margin-top: 4px; display: block;">Per Guest</span>
         </div>
       `;
-
-      document.getElementById('breakdownAdult').textContent = formatMoney(combo.adult);
-      document.getElementById('breakdownChild').textContent = formatMoney(combo.child);
-      document.getElementById('breakdownOeplUnit').textContent = formatMoney(combo.oepl);
-      document.getElementById('breakdownPaeplUnit').textContent = formatMoney(combo.paepl);
-      document.getElementById('breakdownSection').style.display = 'block';
+      document.getElementById('priceBreakdown').innerHTML = html;
     }
 
     function printSheet() {
@@ -393,14 +532,17 @@
       const comboName = comboSelect.options[comboSelect.selectedIndex]?.text || 'No combo selected';
       const adults = document.getElementById('adults').value || '0';
       const children = document.getElementById('children').value || '0';
-      const tpu = document.getElementById('tpuDisplay').textContent;
-      const oepl = document.getElementById('oeplDisplay').textContent;
-      const paepl = document.getElementById('paeplDisplay').textContent;
-      const total = document.getElementById('totalDisplay').textContent;
-
+      
       const comboId = comboSelect.value;
       const combo = COMBOS[comboId];
       const totalGuests = parseInt(adults) + parseInt(children);
+      
+      const tpuAdult = combo.tpuAdult * parseInt(adults);
+      const tpuChild = combo.tpuChild * parseInt(children);
+      const tpuTotal = tpuAdult + tpuChild;
+      const offspring = combo.offspring * totalGuests;
+      const pinnacle = combo.pinnacle * totalGuests;
+      const total = tpuTotal + offspring + pinnacle;
 
       const printWindow = window.open('', '_blank');
       printWindow.document.write(`
@@ -409,33 +551,155 @@
         <head>
           <title>SOB Combo Calculator - Print Sheet</title>
           <style>
-            body { font-family: Arial, sans-serif; padding: 30px; background: white; }
-            .container { max-width: 700px; margin: 0 auto; border: 2px solid #224a7c; border-radius: 10px; padding: 24px; }
-            .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #224a7c; padding-bottom: 12px; }
-            .header h1 { margin: 0; color: #224a7c; font-size: 24px; }
-            .info { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 18px; margin-bottom: 20px; }
-            .info-item { border-bottom: 1px solid #dfe6f0; padding-bottom: 8px; }
-            .info-label { font-weight: 700; color: #5d6b82; font-size: 12px; text-transform: uppercase; }
-            .info-value { margin-top: 4px; font-size: 15px; }
-            .combo-box { background: #f7faff; border-left: 4px solid #224a7c; padding: 14px; border-radius: 8px; margin-bottom: 16px; }
-            .combo-name { font-weight: 700; color: #224a7c; margin-bottom: 10px; }
-            .breakdown-box { background: #f0f8ff; border: 2px solid #224a7c; padding: 12px; border-radius: 8px; margin-bottom: 16px; }
-            .breakdown-box h3 { margin: 0 0 10px; font-size: 14px; color: #224a7c; }
-            .breakdown-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #dfe6f0; font-size: 14px; }
-            .breakdown-row:last-child { border-bottom: none; }
-            .summary-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-            .summary-table td { padding: 8px 10px; border-bottom: 1px solid #dfe6f0; }
-            .summary-table td:first-child { font-weight: 700; color: #5d6b82; }
-            .summary-table td:last-child { text-align: right; font-weight: 700; }
-            .summary-table .total-row { background: #fff7d8; }
-            .footer { margin-top: 20px; text-align: center; font-size: 12px; color: #5d6b82; border-top: 1px solid #dfe6f0; padding-top: 10px; }
+            body { 
+              font-family: 'Segoe UI', Tahoma, Geneva, sans-serif; 
+              padding: 30px; 
+              background: white;
+              margin: 0;
+            }
+            .container { 
+              max-width: 800px; 
+              margin: 0 auto; 
+              border: 3px solid #00d4ff; 
+              border-radius: 12px; 
+              padding: 30px;
+              background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            }
+            .header { 
+              text-align: center; 
+              margin-bottom: 25px; 
+              border-bottom: 3px solid #00d4ff; 
+              padding-bottom: 15px; 
+            }
+            .header h1 { 
+              margin: 0; 
+              color: #00d4ff; 
+              font-size: 28px;
+              text-transform: uppercase;
+              letter-spacing: 2px;
+            }
+            .info { 
+              display: grid; 
+              grid-template-columns: 1fr 1fr; 
+              gap: 15px; 
+              margin-bottom: 25px; 
+            }
+            .info-item { 
+              border-bottom: 1px solid #ddd; 
+              padding-bottom: 12px; 
+            }
+            .info-label { 
+              font-weight: 700; 
+              color: #666; 
+              font-size: 11px; 
+              text-transform: uppercase; 
+              letter-spacing: 1px;
+            }
+            .info-value { 
+              margin-top: 6px; 
+              font-size: 16px;
+              color: #333;
+              font-weight: 600;
+            }
+            .combo-box { 
+              background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(0, 255, 136, 0.1) 100%);
+              border: 2px solid #00d4ff; 
+              padding: 16px; 
+              border-radius: 8px;
+              margin-bottom: 20px;
+            }
+            .combo-name { 
+              font-weight: 700; 
+              color: #00d4ff; 
+              margin-bottom: 10px;
+              font-size: 16px;
+            }
+            .combo-info { 
+              font-size: 14px;
+              color: #333;
+              margin-bottom: 12px;
+            }
+            .breakdown-section {
+              background: #f0f8ff;
+              border: 2px solid #00d4ff;
+              padding: 14px;
+              border-radius: 8px;
+              margin-bottom: 16px;
+            }
+            .breakdown-title {
+              font-weight: 700;
+              color: #00d4ff;
+              margin-bottom: 10px;
+              font-size: 13px;
+              text-transform: uppercase;
+            }
+            .breakdown-row { 
+              display: flex; 
+              justify-content: space-between; 
+              padding: 8px 0; 
+              border-bottom: 1px solid #e0e0e0;
+              font-size: 14px;
+            }
+            .breakdown-row:last-child {
+              border-bottom: none;
+            }
+            .breakdown-label {
+              color: #555;
+              font-weight: 600;
+            }
+            .breakdown-value{
+              color: #00d4ff;
+              font-weight: 700;
+              font-family: 'Courier New', monospace;
+            }
+            .summary-table { 
+              width: 100%; 
+              border-collapse: collapse; 
+              margin-top: 16px;
+              background: white;
+              border: 2px solid #00ff88;
+              border-radius: 8px;
+              overflow: hidden;
+            }
+            .summary-table td { 
+              padding: 12px 14px; 
+              border-bottom: 1px solid #e0e0e0;
+              font-size: 15px;
+            }
+            .summary-table td:first-child { 
+              font-weight: 700; 
+              color: #666;
+              width: 60%;
+            }
+            .summary-table td:last-child { 
+              text-align: right; 
+              font-weight: 700;
+              color: #00ff88;
+              font-family: 'Courier New', monospace;
+            }
+            .summary-table .total-row { 
+              background: #fff7d8;
+            }
+            .summary-table .total-row td:last-child {
+              color: #ff6b00;
+              font-size: 18px;
+            }
+            .footer { 
+              margin-top: 25px; 
+              text-align: center; 
+              font-size: 12px; 
+              color: #999; 
+              border-top: 1px solid #ddd; 
+              padding-top: 15px; 
+              line-height: 1.6;
+            }
           </style>
         </head>
         <body>
           <div class="container">
             <div class="header">
-              <h1>SOB Combo Calculator</h1>
-              <div>Calculation Sheet</div>
+              <h1>⚡ SOB Combo Calculator ⚡</h1>
+              <div style="color: #666; font-size: 14px;">Calculation Sheet</div>
             </div>
 
             <div class="info">
@@ -446,42 +710,47 @@
 
             <div class="combo-box">
               <div class="combo-name">${comboName}</div>
-              <div>Adults: ${adults} &nbsp;|&nbsp; Children: ${children} &nbsp;|&nbsp; Total Guests: ${totalGuests}</div>
-            </div>
-
-            <div class="breakdown-box">
-              <h3>Price Segregation</h3>
-              <div class="breakdown-row">
-                <span><strong>Base Price (Adult)</strong></span>
-                <span>${combo.adult ? '₹' + combo.adult.toLocaleString('en-IN') : 'N/A'}</span>
-              </div>
-              <div class="breakdown-row">
-                <span><strong>Base Price (Child)</strong></span>
-                <span>${combo.child ? '₹' + combo.child.toLocaleString('en-IN') : 'N/A'}</span>
-              </div>
-              <div class="breakdown-row">
-                <span><strong>OEPL per Guest</strong></span>
-                <span>${combo.oepl ? '₹' + combo.oepl.toLocaleString('en-IN') : '₹0'}</span>
-              </div>
-              <div class="breakdown-row">
-                <span><strong>PAEPL per Guest</strong></span>
-                <span>${combo.paepl ? '₹' + combo.paepl.toLocaleString('en-IN') : '₹0'}</span>
+              <div class="combo-info">
+                <strong>Guests:</strong> Adults: ${adults} | Children: ${children} | Total: ${totalGuests}
               </div>
             </div>
 
-            <div class="combo-box">
-              <div style="font-weight: 700; margin-bottom: 10px;">Total Calculation</div>
+            <div class="breakdown-section">
+              <div class="breakdown-title">📊 Price Segregation</div>
+              <div class="breakdown-row">
+                <span class="breakdown-label">TPU (Adult Amount) per Person</span>
+                <span class="breakdown-value">₹${combo.tpuAdult.toLocaleString('en-IN')}</span>
+              </div>
+              <div class="breakdown-row">
+                <span class="breakdown-label">TPU (Child Amount) per Person</span>
+                <span class="breakdown-value">₹${combo.tpuChild.toLocaleString('en-IN')}</span>
+              </div>
+              <div class="breakdown-row">
+                <span class="breakdown-label">Offspring (Amount) per Guest</span>
+                <span class="breakdown-value">₹${combo.offspring.toLocaleString('en-IN')}</span>
+              </div>
+              <div class="breakdown-row">
+                <span class="breakdown-label">Pinnacle (Amount) per Guest</span>
+                <span class="breakdown-value">₹${combo.pinnacle.toLocaleString('en-IN')}</span>
+              </div>
+            </div>
+
+            <div class="combo-box" style="margin-top: 16px;">
+              <div style="font-weight: 700; margin-bottom: 12px; font-size: 14px; text-transform: uppercase; color: #00d4ff;">Calculation Summary</div>
               <table class="summary-table">
-                <tr><td>TPU (Base Pricing)</td><td>${tpu}</td></tr>
-                <tr><td>OEPL (Extras)</td><td>${oepl}</td></tr>
-                <tr><td>PAEPL (Processing)</td><td>${paepl}</td></tr>
-                <tr class="total-row"><td>Total</td><td>${total}</td></tr>
+                <tr><td>TPU (Adult Amount)</td><td>₹${tpuAdult.toLocaleString('en-IN')}</td></tr>
+                <tr><td>TPU (Child Amount)</td><td>₹${tpuChild.toLocaleString('en-IN')}</td></tr>
+                <tr><td>Total TPU</td><td>₹${tpuTotal.toLocaleString('en-IN')}</td></tr>
+                <tr><td>Offspring</td><td>₹${offspring.toLocaleString('en-IN')}</td></tr>
+                <tr><td>Pinnacle</td><td>₹${pinnacle.toLocaleString('en-IN')}</td></tr>
+                <tr class="total-row"><td style="font-size: 16px;">Total Booking Amount</td><td>₹${total.toLocaleString('en-IN')}</td></tr>
               </table>
             </div>
 
             <div class="footer">
-              Printed on: ${new Date().toLocaleString('en-IN')}<br>
-              Formula: TPU = (Adult Price × Adults) + (Child Price × Children) | OEPL/PAEPL = Per-Guest Rate × Total Guests
+              <strong>Printed on:</strong> ${new Date().toLocaleString('en-IN')}<br>
+              <strong>Formula:</strong> TPU = (Adult Price × Adults) + (Child Price × Children) | 
+              Offspring/Pinnacle = Per-Guest Rate × Total Guests | Total = TPU + Offspring + Pinnacle
             </div>
           </div>
         </body>
