@@ -374,7 +374,7 @@
       border-radius: 12px;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
       z-index: 1000;
-      min-width: 200px;
+      min-width: 220px;
       overflow: hidden;
       display: none;
     }
@@ -522,23 +522,19 @@
 </head>
 <body>
   <div class="container">
-    <!-- Top Navigation Buttons -->
     <div class="top-buttons">
       <button class="top-btn btn-reverse">🔄 Reverse Combo Finder</button>
       <button class="top-btn btn-daily">📊 Daily Report Generator</button>
     </div>
 
-    <!-- User Section -->
     <div class="user-section">
       <div class="user-icon">👋</div>
       <input type="text" class="user-input" id="username" placeholder="Enter Username" />
       <button class="load-btn" onclick="loadUserData()">Load</button>
     </div>
 
-    <!-- Title -->
     <h1 class="title">SOB coMboS calculator</h1>
 
-    <!-- Combo Selection -->
     <div class="card">
       <div class="form-group">
         <select id="combo" onchange="calculate()">
@@ -562,7 +558,6 @@
       </div>
     </div>
 
-    <!-- Adults Input -->
     <div class="card">
       <div class="form-group">
         <label for="adults">Adults</label>
@@ -570,7 +565,6 @@
       </div>
     </div>
 
-    <!-- Children Input -->
     <div class="card">
       <div class="form-group">
         <label for="children">Children</label>
@@ -578,7 +572,6 @@
       </div>
     </div>
 
-    <!-- Results Display -->
     <div class="results-box">
       <div class="result-row">
         <span class="result-label">TPU</span>
@@ -597,7 +590,6 @@
         <span class="total-value" id="totalDisplay">₹ 0</span>
       </div>
 
-      <!-- Price Breakdown -->
       <div class="breakdown-section" id="breakdownSection" style="display: none;">
         <div class="breakdown-title">💰 Price Segregation</div>
         <div class="breakdown-item">
@@ -619,13 +611,11 @@
       </div>
     </div>
 
-    <!-- SOB ID Section -->
     <div class="card sob-id-section">
       <input type="text" class="sob-id-input" id="sobId" placeholder="Enter 6-digit SOB ID" maxlength="6" />
       <button class="camera-btn" onclick="scanQR()">📷</button>
     </div>
 
-    <!-- Action Buttons -->
     <div class="card">
       <div class="button-group">
         <button class="btn-primary btn-save" onclick="saveSob()">💾 Save SOB</button>
@@ -636,13 +626,15 @@
         <button class="btn-secondary" onclick="printSingleA4()">🖨️ Print My A4</button>
         <button class="btn-secondary" onclick="togglePrintMenu()">🖨️ Print <span id="printDropdown">▼</span></button>
         <div class="print-menu" id="printMenu">
-          <div class="print-menu-item" onclick="printAllSobData()">📋 Print ALL SOBs</div>
+          <div class="print-menu-item" onclick="printSingleA4()">🖨️ Print Current A4</div>
           <div class="print-menu-item" onclick="printByUsername()">👤 Print by Username</div>
+          <div class="print-menu-item" onclick="printAllSobData()">📋 Print ALL SOBs</div>
+          <div class="print-menu-item" onclick="exportUserExcel()">📊 Export User Excel</div>
+          <div class="print-menu-item" onclick="exportAllExcel()">📊 Export All Excel</div>
         </div>
       </div>
     </div>
 
-    <!-- Saved SOBs List -->
     <div class="saved-list-section">
       <div class="saved-list-title">📦 Saved SOBs for <span id="savedListUsername">User</span></div>
       <div id="savedListContainer">
@@ -650,7 +642,6 @@
       </div>
     </div>
 
-    <!-- Footer -->
     <div class="footer-info">
       <div>26G24 | V4.7 | SOB NAME: _____ | DATE: <span id="footerDate"></span></div>
     </div>
@@ -659,102 +650,149 @@
   <script>
     document.getElementById('footerDate').textContent = new Date().toLocaleDateString('en-IN');
 
-    // Chart data from your image
+    const STORAGE_KEY = 'ALL_SOB_DATA';
+
     const COMBOS = {
-      1: { 
-        name: 'Explorer Combo', 
+      1: {
+        name: 'Explorer Combo',
         tpuAdult: 170, tpuChild: 80,
         offspring: 40, pinnacle: 89,
         totalAdult: 299, totalChild: 209
       },
-      2: { 
-        name: 'Eco Adventure Combo', 
+      2: {
+        name: 'Eco Adventure Combo',
         tpuAdult: 170, tpuChild: 80,
         offspring: 0, pinnacle: 227,
         totalAdult: 397, totalChild: 307
       },
-      3: { 
-        name: 'Eco Fun Combo', 
+      3: {
+        name: 'Eco Fun Combo',
         tpuAdult: 170, tpuChild: 80,
         offspring: 28, pinnacle: 200,
         totalAdult: 398, totalChild: 308
       },
-      4: { 
-        name: 'Snow Adventure Combo', 
+      4: {
+        name: 'Snow Adventure Combo',
         tpuAdult: 170, tpuChild: 80,
         offspring: 255, pinnacle: 0,
         totalAdult: 425, totalChild: 335
       },
-      5: { 
-        name: 'Aastha Combo', 
+      5: {
+        name: 'Aastha Combo',
         tpuAdult: 470, tpuChild: 400,
         offspring: 0, pinnacle: 100,
         totalAdult: 570, totalChild: 500
       },
-      6: { 
-        name: 'Adventure Combo', 
+      6: {
+        name: 'Adventure Combo',
         tpuAdult: 170, tpuChild: 0,
         offspring: 0, pinnacle: 529,
         totalAdult: 699, totalChild: 0
       },
-      7: { 
-        name: 'Namah Combo', 
+      7: {
+        name: 'Namah Combo',
         tpuAdult: 650, tpuChild: 475,
         offspring: 0, pinnacle: 50,
         totalAdult: 700, totalChild: 525
       },
-      8: { 
-        name: 'Viewing Fun Combo', 
+      8: {
+        name: 'Viewing Fun Combo',
         tpuAdult: 470, tpuChild: 280,
         offspring: 155, pinnacle: 150,
         totalAdult: 775, totalChild: 585
       },
-      9: { 
-        name: 'Symbolic Play Combo', 
+      9: {
+        name: 'Symbolic Play Combo',
         tpuAdult: 470, tpuChild: 280,
         offspring: 249, pinnacle: 50,
         totalAdult: 769, totalChild: 579
       },
-      10: { 
-        name: 'Ultimate Play Combo', 
+      10: {
+        name: 'Ultimate Play Combo',
         tpuAdult: 170, tpuChild: 80,
         offspring: 199, pinnacle: 520,
         totalAdult: 889, totalChild: 799
       },
-      11: { 
-        name: 'Delight Combo', 
+      11: {
+        name: 'Delight Combo',
         tpuAdult: 470, tpuChild: 380,
         offspring: 105, pinnacle: 350,
         totalAdult: 925, totalChild: 835
       },
-      12: { 
-        name: 'Mini Blast Combo', 
+      12: {
+        name: 'Mini Blast Combo',
         tpuAdult: 670, tpuChild: 480,
         offspring: 199, pinnacle: 100,
         totalAdult: 969, totalChild: 779
       },
-      13: { 
-        name: 'All in fun Combo', 
+      13: {
+        name: 'All in fun Combo',
         tpuAdult: 450, tpuChild: 275,
         offspring: 200, pinnacle: 450,
         totalAdult: 1100, totalChild: 925
       },
-      14: { 
-        name: 'Divine Rush Combo', 
+      14: {
+        name: 'Divine Rush Combo',
         tpuAdult: 1450, tpuChild: 875,
         offspring: 0, pinnacle: 100,
         totalAdult: 1550, totalChild: 975
       },
-      15: { 
-        name: 'Ultimate Mega Combo', 
+      15: {
+        name: 'Ultimate Mega Combo',
         tpuAdult: 1500, tpuChild: 300,
         offspring: 449, pinnacle: 2300,
         totalAdult: 4249, totalChild: 0
       }
     };
 
+    function normalizeUsername(value) {
+      return String(value || '').trim();
+    }
+
+    function safeNumber(value) {
+      const num = Number(value);
+      return Number.isFinite(num) ? num : 0;
+    }
+
     function formatMoney(value) {
-      return '₹ ' + Number(value).toLocaleString('en-IN');
+      return '₹ ' + Number(value || 0).toLocaleString('en-IN');
+    }
+
+    function getAllSobData() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (error) {
+        console.error('Failed to parse saved SOB data:', error);
+        return [];
+      }
+    }
+
+    function saveAllSobData(data) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function getUserSobData(username) {
+      const targetUser = normalizeUsername(username).toLowerCase();
+      if (!targetUser) return [];
+      return getAllSobData().filter(item => String(item.username || '').trim().toLowerCase() === targetUser);
+    }
+
+    function getComboCalculation(comboId, adults, children) {
+      const combo = COMBOS[comboId];
+      if (!combo) {
+        return { tpu: 0, oepl: 0, paepl: 0, total: 0, totalGuests: 0 };
+      }
+
+      const adultCount = safeNumber(adults);
+      const childCount = safeNumber(children);
+      const totalGuests = adultCount + childCount;
+      const tpu = (combo.tpuAdult * adultCount) + (combo.tpuChild * childCount);
+      const oepl = combo.offspring * totalGuests;
+      const paepl = combo.pinnacle * totalGuests;
+      const total = tpu + oepl + paepl;
+
+      return { tpu, oepl, paepl, total, totalGuests };
     }
 
     function calculate() {
@@ -772,18 +810,13 @@
       }
 
       const combo = COMBOS[comboId];
-      const totalGuests = adults + children;
-      const tpu = (combo.tpuAdult * adults) + (combo.tpuChild * children);
-      const oepl = combo.offspring * totalGuests;
-      const paepl = combo.pinnacle * totalGuests;
-      const total = tpu + oepl + paepl;
+      const totals = getComboCalculation(comboId, adults, children);
 
-      document.getElementById('tpuDisplay').textContent = formatMoney(tpu);
-      document.getElementById('oeplDisplay').textContent = formatMoney(oepl);
-      document.getElementById('paeplDisplay').textContent = formatMoney(paepl);
-      document.getElementById('totalDisplay').textContent = formatMoney(total);
+      document.getElementById('tpuDisplay').textContent = formatMoney(totals.tpu);
+      document.getElementById('oeplDisplay').textContent = formatMoney(totals.oepl);
+      document.getElementById('paeplDisplay').textContent = formatMoney(totals.paepl);
+      document.getElementById('totalDisplay').textContent = formatMoney(totals.total);
 
-      // Update breakdown
       document.getElementById('breakdownTpuAdult').textContent = formatMoney(combo.tpuAdult);
       document.getElementById('breakdownTpuChild').textContent = formatMoney(combo.tpuChild);
       document.getElementById('breakdownOffspring').textContent = formatMoney(combo.offspring);
@@ -791,67 +824,60 @@
       document.getElementById('breakdownSection').style.display = 'block';
     }
 
-    function saveSob() {
-      const username = document.getElementById('username').value.trim();
+    function buildSobRecordFromForm() {
+      const username = normalizeUsername(document.getElementById('username').value);
       const comboId = document.getElementById('combo').value;
-      const sobId = document.getElementById('sobId').value.trim();
+      const sobId = normalizeUsername(document.getElementById('sobId').value);
       const adults = document.getElementById('adults').value;
       const children = document.getElementById('children').value;
 
       if (!username) {
-        alert('❌ Please enter a username');
-        return;
+        throw new Error('Please enter a username');
       }
-
       if (!sobId || sobId.length !== 6) {
-        alert('❌ Please enter a valid 6-digit SOB ID');
-        return;
+        throw new Error('Please enter a valid 6-digit SOB ID');
       }
-
-      if (!comboId) {
-        alert('❌ Please select a combo');
-        return;
+      if (!comboId || !COMBOS[comboId]) {
+        throw new Error('Please select a combo');
       }
 
       const combo = COMBOS[comboId];
-      const totalGuests = parseInt(adults) + parseInt(children);
-      const tpu = (combo.tpuAdult * parseInt(adults)) + (combo.tpuChild * parseInt(children));
-      const oepl = combo.offspring * totalGuests;
-      const paepl = combo.pinnacle * totalGuests;
-      const total = tpu + oepl + paepl;
+      const totals = getComboCalculation(comboId, adults, children);
 
-      const sobData = {
+      return {
         username,
         sobId,
         comboId,
         comboName: combo.name,
-        adults,
-        children,
-        totalGuests,
-        tpu,
-        oepl,
-        paepl,
-        total,
+        adults: String(adults || 0),
+        children: String(children || 0),
+        totalGuests: totals.totalGuests,
+        tpu: totals.tpu,
+        oepl: totals.oepl,
+        paepl: totals.paepl,
+        total: totals.total,
         timestamp: new Date().toLocaleString('en-IN'),
         savedAt: new Date().getTime()
       };
+    }
 
-      // Get all saved data
-      const allSobData = JSON.parse(localStorage.getItem('ALL_SOB_DATA') || '[]');
-      
-      // Remove if already exists with same ID
-      const filtered = allSobData.filter(item => !(item.sobId === sobId && item.username === username));
-      filtered.push(sobData);
-      
-      localStorage.setItem('ALL_SOB_DATA', JSON.stringify(filtered));
-      
-      alert(`✅ SOB Data Saved Successfully!\nUsername: ${username}\nSOB ID: ${sobId}\nCombo: ${combo.name}\nTotal: ₹${total.toLocaleString('en-IN')}`);
-      
-      loadUserData();
+    function saveSob() {
+      try {
+        const sobData = buildSobRecordFromForm();
+        const allSobData = getAllSobData();
+        const filtered = allSobData.filter(item => !(String(item.sobId).toLowerCase() === String(sobData.sobId).toLowerCase() && String(item.username || '').trim().toLowerCase() === sobData.username.toLowerCase()));
+        filtered.push(sobData);
+        saveAllSobData(filtered);
+
+        alert(`✅ SOB Data Saved Successfully!\nUsername: ${sobData.username}\nSOB ID: ${sobData.sobId}\nCombo: ${sobData.comboName}\nTotal: ${formatMoney(sobData.total)}`);
+        loadUserData();
+      } catch (error) {
+        alert(`❌ ${error.message}`);
+      }
     }
 
     function loadUserData() {
-      const username = document.getElementById('username').value.trim();
+      const username = normalizeUsername(document.getElementById('username').value);
       if (!username) {
         alert('❌ Please enter a username');
         return;
@@ -859,386 +885,340 @@
 
       document.getElementById('savedListUsername').textContent = username;
       displaySavedSobs(username);
-      alert(`✅ Loading data for: ${username}`);
     }
 
     function displaySavedSobs(username) {
-      const allSobData = JSON.parse(localStorage.getItem('ALL_SOB_DATA') || '[]');
-      const userSobs = allSobData.filter(item => item.username.toLowerCase() === username.toLowerCase());
-      
+      const userSobs = getUserSobData(username).sort((a, b) => Number(b.savedAt || 0) - Number(a.savedAt || 0));
       const container = document.getElementById('savedListContainer');
-      
+
       if (userSobs.length === 0) {
         container.innerHTML = '<div class="no-data-message">No saved SOBs for this user yet.</div>';
         return;
       }
 
-      container.innerHTML = userSobs.map((sob, index) => `
+      container.innerHTML = userSobs.map((sob) => `
         <div class="saved-item">
           <div class="saved-item-info">
             <div class="saved-item-id">SOB ID: ${sob.sobId}</div>
-            <div class="saved-item-combo">${sob.comboName} | Adults: ${sob.adults}, Children: ${sob.children} | ₹${sob.total.toLocaleString('en-IN')}</div>
+            <div class="saved-item-combo">${sob.comboName} | Adults: ${sob.adults}, Children: ${sob.children} | ${formatMoney(sob.total)}</div>
           </div>
           <div class="saved-item-actions">
-            <button class="saved-item-btn saved-item-print" onclick="printIndividualSob(${index})">Print</button>
-            <button class="saved-item-btn saved-item-delete" onclick="deleteSob('${sob.username}', '${sob.sobId}')">Delete</button>
+            <button class="saved-item-btn saved-item-print" onclick="printIndividualSob('${String(sob.username || '').replace(/'/g, "\\'")}', '${String(sob.sobId || '').replace(/'/g, "\\'")}')">Print</button>
+            <button class="saved-item-btn saved-item-delete" onclick="deleteSob('${String(sob.username || '').replace(/'/g, "\\'")}', '${String(sob.sobId || '').replace(/'/g, "\\'")}')">Delete</button>
           </div>
         </div>
       `).join('');
     }
 
     function deleteSob(username, sobId) {
-      if (!confirm(`Are you sure you want to delete SOB ID: ${sobId}?`)) {
+      const targetUser = normalizeUsername(username);
+      const targetSobId = normalizeUsername(sobId);
+
+      if (!targetUser || !targetSobId) {
+        alert('❌ Invalid SOB record');
         return;
       }
 
-      const allSobData = JSON.parse(localStorage.getItem('ALL_SOB_DATA') || '[]');
-      const filtered = allSobData.filter(item => !(item.sobId === sobId && item.username === username));
-      localStorage.setItem('ALL_SOB_DATA', JSON.stringify(filtered));
-      
+      if (!confirm(`Are you sure you want to delete SOB ID: ${targetSobId}?`)) {
+        return;
+      }
+
+      const allSobData = getAllSobData();
+      const filtered = allSobData.filter(item => !(String(item.sobId).toLowerCase() === targetSobId.toLowerCase() && String(item.username || '').trim().toLowerCase() === targetUser.toLowerCase()));
+      saveAllSobData(filtered);
+
       alert('✅ SOB deleted successfully!');
-      displaySavedSobs(username);
+      displaySavedSobs(targetUser);
     }
 
-    function printIndividualSob(index) {
-      const username = document.getElementById('username').value.trim();
-      const allSobData = JSON.parse(localStorage.getItem('ALL_SOB_DATA') || '[]');
-      const userSobs = allSobData.filter(item => item.username.toLowerCase() === username.toLowerCase());
-      const sob = userSobs[index];
+    function printIndividualSob(username, sobId) {
+      const targetUser = normalizeUsername(username);
+      const targetSobId = normalizeUsername(sobId);
 
-      if (!sob) {
+      if (!targetUser || !targetSobId) {
         alert('❌ SOB data not found');
         return;
       }
 
-      printSobDocument([sob]);
-    }
+      const allSobData = getAllSobData();
+      const record = allSobData.find(item => String(item.sobId).toLowerCase() === targetSobId.toLowerCase() && String(item.username || '').trim().toLowerCase() === targetUser.toLowerCase());
 
-    function printSingleA4() {
-      const comboId = document.getElementById('combo').value;
-      if (!comboId) {
-        alert('❌ Please select a combo first');
+      if (!record) {
+        alert('❌ SOB data not found');
         return;
       }
 
-      const username = document.getElementById('username').value || 'Guest';
-      const combo = COMBOS[comboId];
-      const adults = document.getElementById('adults').value || '0';
-      const children = document.getElementById('children').value || '0';
-      const sobId = document.getElementById('sobId').value || 'N/A';
-      
-      const totalGuests = parseInt(adults) + parseInt(children);
-      const tpu = (combo.tpuAdult * parseInt(adults)) + (combo.tpuChild * parseInt(children));
-      const oepl = combo.offspring * totalGuests;
-      const paepl = combo.pinnacle * totalGuests;
-      const total = tpu + oepl + paepl;
+      printSobDocument([record], { title: `SOB Report - ${targetUser}` });
+    }
 
-      const sobData = {
-        username,
-        sobId,
-        comboName: combo.name,
-        adults,
-        children,
-        totalGuests,
-        tpu,
-        oepl,
-        paepl,
-        total,
-        timestamp: new Date().toLocaleString('en-IN')
-      };
-
-      printSobDocument([sobData]);
+    function printSingleA4() {
+      try {
+        const sobData = buildSobRecordFromForm();
+        printSobDocument([sobData], { title: `SOB A4 - ${sobData.username}` });
+      } catch (error) {
+        alert(`❌ ${error.message}`);
+      }
     }
 
     function printAllSobData() {
-      const allSobData = JSON.parse(localStorage.getItem('ALL_SOB_DATA') || '[]');
-      
+      const allSobData = getAllSobData();
       if (allSobData.length === 0) {
         alert('❌ No saved SOB data to print');
         return;
       }
-
-      printSobDocument(allSobData, true);
+      printSobDocument(allSobData, { title: 'SOB All Reports' });
     }
 
     function printByUsername() {
-      const username = document.getElementById('username').value.trim();
+      const username = normalizeUsername(document.getElementById('username').value);
       if (!username) {
         alert('❌ Please enter a username');
         return;
       }
 
-      const allSobData = JSON.parse(localStorage.getItem('ALL_SOB_DATA') || '[]');
-      const userSobs = allSobData.filter(item => item.username.toLowerCase() === username.toLowerCase());
-      
+      const userSobs = getUserSobData(username);
       if (userSobs.length === 0) {
         alert(`❌ No saved SOBs found for user: ${username}`);
         return;
       }
 
-      printSobDocument(userSobs, false, username);
-    }
-
-    function printSobDocument(sobArray, isAllData = false, filterUsername = null) {
-      const printWindow = window.open('', '_blank');
-      
-      let documentHtml = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>SOB Calculator - Print Report</title>
-          <style>
-            body { 
-              font-family: Arial, sans-serif; 
-              padding: 20px; 
-              background: white;
-              color: #333;
-            }
-            .container { 
-              max-width: 900px; 
-              margin: 0 auto;
-            }
-            .header { 
-              text-align: center; 
-              margin-bottom: 25px; 
-              border-bottom: 3px solid #1e88e5;
-              padding-bottom: 15px;
-            }
-            .header h1 { 
-              margin: 0; 
-              font-size: 28px;
-              color: #1e88e5;
-            }
-            .report-title {
-              color: #666;
-              font-size: 14px;
-              margin-top: 5px;
-            }
-            .sob-document {
-              page-break-after: always;
-              margin-bottom: 30px;
-              border: 2px solid #1e88e5;
-              border-radius: 8px;
-              padding: 20px;
-              background: #f9f9f9;
-            }
-            .sob-document:last-child {
-              page-break-after: auto;
-              margin-bottom: 0;
-            }
-            .info-grid {
-              display: grid;
-              grid-template-columns: 1fr 1fr;
-              gap: 15px;
-              margin-bottom: 20px;
-            }
-            .info-item {
-              padding: 10px;
-              background: white;
-              border-left: 4px solid #1e88e5;
-              border-radius: 4px;
-            }
-            .info-label {
-              font-weight: 700;
-              color: #666;
-              font-size: 11px;
-              text-transform: uppercase;
-            }
-            .info-value {
-              font-size: 15px;
-              color: #333;
-              margin-top: 4px;
-              font-weight: 600;
-            }
-            .breakdown-section {
-              background: white;
-              border: 1px solid #e0e0e0;
-              padding: 12px;
-              border-radius: 6px;
-              margin-bottom: 12px;
-            }
-            .breakdown-title {
-              font-weight: 700;
-              color: #1e88e5;
-              margin-bottom: 10px;
-              font-size: 12px;
-              text-transform: uppercase;
-            }
-            .breakdown-row {
-              display: flex;
-              justify-content: space-between;
-              padding: 6px 0;
-              border-bottom: 1px solid #f0f0f0;
-              font-size: 13px;
-            }
-            .breakdown-row:last-child {
-              border-bottom: none;
-            }
-            .results-table {
-              width: 100%;
-              border-collapse: collapse;
-              background: white;
-              border: 1px solid #ddd;
-              border-radius: 6px;
-              overflow: hidden;
-            }
-            .results-table td {
-              padding: 12px;
-              border-bottom: 1px solid #f0f0f0;
-            }
-            .results-table td:first-child {
-              font-weight: 700;
-              width: 50%;
-              background: #f5f5f5;
-            }
-            .results-table td:last-child {
-              text-align: right;
-              font-weight: 700;
-              font-family: 'Courier New', monospace;
-              color: #1a1a1a;
-            }
-            .results-table .total-row td {
-              background: #fff8dc;
-              font-size: 15px;
-              padding: 14px 12px;
-            }
-            .footer {
-              margin-top: 20px;
-              text-align: center;
-              color: #999;
-              font-size: 11px;
-              border-top: 1px solid #eee;
-              padding-top: 10px;
-            }
-            @media print {
-              body { padding: 0; }
-              .sob-document { page-break-after: always; }
-            }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <h1>⚡ SOB CoMboS Calculator Report ⚡</h1>
-              <div class="report-title">${isAllData ? 'All Saved SOBs' : `User: ${filterUsername || sobArray[0].username}`} | Printed: ${new Date().toLocaleString('en-IN')}</div>
-            </div>
-      `;
-
-      sobArray.forEach((sob, index) => {
-        const combo = COMBOS[sob.comboId];
-        documentHtml += `
-          <div class="sob-document">
-            <div class="info-grid">
-              <div class="info-item">
-                <div class="info-label">User Name</div>
-                <div class="info-value">${sob.username}</div>
-              </div>
-              <div class="info-item">
-                <div class="info-label">SOB ID</div>
-                <div class="info-value">${sob.sobId}</div>
-              </div>
-              <div class="info-item">
-                <div class="info-label">Combo Selected</div>
-                <div class="info-value">${sob.comboName}</div>
-              </div>
-              <div class="info-item">
-                <div class="info-label">Saved Date</div>
-                <div class="info-value">${sob.timestamp}</div>
-              </div>
-            </div>
-
-            <div class="breakdown-section">
-              <div class="breakdown-title">👥 Guest Information</div>
-              <div class="breakdown-row">
-                <span>Adults</span>
-                <span>${sob.adults}</span>
-              </div>
-              <div class="breakdown-row">
-                <span>Children</span>
-                <span>${sob.children}</span>
-              </div>
-              <div class="breakdown-row">
-                <span><strong>Total Guests</strong></span>
-                <span><strong>${sob.totalGuests}</strong></span>
-              </div>
-            </div>
-
-            <div class="breakdown-section">
-              <div class="breakdown-title">💰 Price Segregation</div>
-              <div class="breakdown-row">
-                <span>TPU (Adult) per person</span>
-                <span>₹${combo.tpuAdult.toLocaleString('en-IN')}</span>
-              </div>
-              <div class="breakdown-row">
-                <span>TPU (Child) per person</span>
-                <span>₹${combo.tpuChild.toLocaleString('en-IN')}</span>
-              </div>
-              <div class="breakdown-row">
-                <span>Offspring (Amount) per guest</span>
-                <span>₹${combo.offspring.toLocaleString('en-IN')}</span>
-              </div>
-              <div class="breakdown-row">
-                <span>Pinnacle (Amount) per guest</span>
-                <span>₹${combo.pinnacle.toLocaleString('en-IN')}</span>
-              </div>
-            </div>
-
-            <table class="results-table">
-              <tr><td>TPU</td><td>₹${sob.tpu.toLocaleString('en-IN')}</td></tr>
-              <tr><td>OEPL (Offspring)</td><td>₹${sob.oepl.toLocaleString('en-IN')}</td></tr>
-              <tr><td>PAEPL (Pinnacle)</td><td>₹${sob.paepl.toLocaleString('en-IN')}</td></tr>
-              <tr class="total-row"><td>TOTAL BOOKING AMOUNT</td><td>₹${sob.total.toLocaleString('en-IN')}</td></tr>
-            </table>
-
-            <div class="footer">
-              <strong>SOB #${index + 1}</strong> | Formula: TPU = (Adult Price × Adults) + (Child Price × Children)
-            </div>
-          </div>
-        `;
-      });
-
-      documentHtml += `
-          </div>
-        </body>
-        </html>
-      `;
-
-      printWindow.document.write(documentHtml);
-      printWindow.document.close();
-      printWindow.focus();
-      setTimeout(() => printWindow.print(), 250);
+      printSobDocument(userSobs, { title: `SOB Report - ${username}` });
     }
 
     function togglePrintMenu() {
       const menu = document.getElementById('printMenu');
-      menu.classList.toggle('active');
+      const dropdown = document.getElementById('printDropdown');
+      const isActive = menu.classList.toggle('active');
+      dropdown.textContent = isActive ? '▲' : '▼';
     }
+
+    document.addEventListener('click', (event) => {
+      const printMenu = document.getElementById('printMenu');
+      const toggleBtn = document.querySelector('.btn-secondary');
+      if (!printMenu.contains(event.target) && !toggleBtn.contains(event.target)) {
+        printMenu.classList.remove('active');
+        document.getElementById('printDropdown').textContent = '▼';
+      }
+    });
 
     function resetForm() {
       document.getElementById('combo').value = '';
       document.getElementById('adults').value = '1';
       document.getElementById('children').value = '1';
       document.getElementById('sobId').value = '';
+      document.getElementById('tpuDisplay').textContent = '₹ 0';
+      document.getElementById('oeplDisplay').textContent = '₹ 0';
+      document.getElementById('paeplDisplay').textContent = '₹ 0';
+      document.getElementById('totalDisplay').textContent = '₹ 0';
       document.getElementById('breakdownSection').style.display = 'none';
-      document.getElementById('printMenu').classList.remove('active');
-      calculate();
     }
 
     function scanQR() {
-      alert('🔄 QR Scanner feature coming soon!');
+      const scannedId = prompt('Enter SOB ID scanned from QR / camera:', document.getElementById('sobId').value || '');
+      if (scannedId !== null) {
+        const cleanId = normalizeUsername(scannedId).replace(/[^0-9]/g, '').slice(0, 6);
+        document.getElementById('sobId').value = cleanId;
+      }
     }
 
-    // Close menu when clicking outside
-    document.addEventListener('click', function(event) {
-      const menu = document.getElementById('printMenu');
-      const printBtn = event.target.closest('.btn-secondary');
-      if (!printBtn && menu.classList.contains('active')) {
-        menu.classList.remove('active');
+    function escapeCsvValue(value) {
+      const stringValue = String(value ?? '');
+      if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
+        return `"${stringValue.replace(/"/g, '""')}"`;
       }
-    });
+      return stringValue;
+    }
 
-    // Initialize
-    calculate();
+    function createExcelCsv(sobArray) {
+      const headers = ['Username', 'SOB ID', 'Combo', 'Adults', 'Children', 'Total Guests', 'TPU', 'OEPL', 'PAEPL', 'Total', 'Saved At'];
+      const rows = sobArray.map(item => [
+        item.username || '',
+        item.sobId || '',
+        item.comboName || '',
+        item.adults || 0,
+        item.children || 0,
+        item.totalGuests || 0,
+        item.tpu || 0,
+        item.oepl || 0,
+        item.paepl || 0,
+        item.total || 0,
+        item.timestamp || ''
+      ]);
+
+      const csvContent = [headers, ...rows]
+        .map(row => row.map(escapeCsvValue).join(','))
+        .join('\n');
+
+      return '\uFEFF' + csvContent;
+    }
+
+    function downloadCsvFile(filename, csvContent) {
+      const blob = new Blob([csvContent], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = filename;
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+      URL.revokeObjectURL(url);
+    }
+
+    function exportUserExcel() {
+      const username = normalizeUsername(document.getElementById('username').value);
+      if (!username) {
+        alert('❌ Please enter a username');
+        return;
+      }
+
+      const userSobs = getUserSobData(username);
+      if (userSobs.length === 0) {
+        alert(`❌ No saved SOBs found for user: ${username}`);
+        return;
+      }
+
+      const csvContent = createExcelCsv(userSobs);
+      downloadCsvFile(`${username.toLowerCase()}-sob-data.csv`, csvContent);
+      alert(`✅ Excel exported for user: ${username}`);
+    }
+
+    function exportAllExcel() {
+      const allSobData = getAllSobData();
+      if (allSobData.length === 0) {
+        alert('❌ No saved SOB data to export');
+        return;
+      }
+
+      const csvContent = createExcelCsv(allSobData);
+      downloadCsvFile('all-sob-data.csv', csvContent);
+      alert('✅ All SOB data exported to Excel');
+    }
+
+    function printSobDocument(sobArray, options = {}) {
+      const printWindow = window.open('', '_blank');
+      const title = options.title || 'SOB Calculator - Print Report';
+      const reportTitle = options.reportTitle || 'SOB Report';
+      const rows = sobArray.map((sob, index) => `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${sob.username || 'N/A'}</td>
+          <td>${sob.sobId || 'N/A'}</td>
+          <td>${sob.comboName || 'N/A'}</td>
+          <td>${sob.adults || 0}</td>
+          <td>${sob.children || 0}</td>
+          <td>${formatMoney(sob.tpu || 0)}</td>
+          <td>${formatMoney(sob.oepl || 0)}</td>
+          <td>${formatMoney(sob.paepl || 0)}</td>
+          <td>${formatMoney(sob.total || 0)}</td>
+          <td>${sob.timestamp || 'N/A'}</td>
+        </tr>
+      `).join('');
+
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>${title}</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              margin: 0;
+              padding: 24px;
+              background: white;
+              color: #333;
+            }
+            .report-container {
+              max-width: 1100px;
+              margin: 0 auto;
+            }
+            .header {
+              text-align: center;
+              margin-bottom: 20px;
+              border-bottom: 2px solid #1e88e5;
+              padding-bottom: 12px;
+            }
+            h1 {
+              margin: 0;
+              font-size: 28px;
+              color: #1a1a1a;
+            }
+            .subtitle {
+              margin-top: 8px;
+              color: #666;
+              font-size: 14px;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              margin-top: 16px;
+              font-size: 12px;
+            }
+            th, td {
+              border: 1px solid #ddd;
+              padding: 10px 8px;
+              text-align: left;
+              vertical-align: top;
+            }
+            th {
+              background: #f2f7ff;
+              color: #1a1a1a;
+              font-weight: 700;
+            }
+            .totals {
+              margin-top: 18px;
+              padding: 12px 16px;
+              background: #fff7d6;
+              border: 1px solid #f4d35e;
+              border-radius: 8px;
+              font-weight: 700;
+            }
+            @media print {
+              body { padding: 0; }
+              .report-container { max-width: 100%; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="report-container">
+            <div class="header">
+              <h1>${reportTitle}</h1>
+              <div class="subtitle">Generated on ${new Date().toLocaleString('en-IN')}</div>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Username</th>
+                  <th>SOB ID</th>
+                  <th>Combo</th>
+                  <th>Adults</th>
+                  <th>Children</th>
+                  <th>TPU</th>
+                  <th>OEPL</th>
+                  <th>PAEPL</th>
+                  <th>Total</th>
+                  <th>Saved At</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows}
+              </tbody>
+            </table>
+            <div class="totals">Total Records: ${sobArray.length}</div>
+          </div>
+        </body>
+        </html>
+      `);
+
+      printWindow.document.close();
+      setTimeout(() => printWindow.print(), 300);
+    }
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('savedListUsername').textContent = normalizeUsername(document.getElementById('username').value) || 'User';
+      });
+    }
   </script>
 </body>
 </html>
