@@ -84,6 +84,44 @@
       border-radius: 16px;
       padding: 18px 20px;
     }
+    .breakdown-section {
+      margin-top: 20px;
+      background: #f0f8ff;
+      border: 2px solid var(--primary);
+      border-radius: 14px;
+      padding: 16px;
+    }
+    .breakdown-section h3 {
+      margin: 0 0 14px;
+      color: var(--primary);
+      font-size: 16px;
+    }
+    .breakdown-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .breakdown-item {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    .breakdown-item-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .breakdown-item-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+    }
     .row {
       display: flex;
       justify-content: space-between;
@@ -170,6 +208,7 @@
     @media (max-width: 640px) {
       .two-col { grid-template-columns: 1fr; }
       .three-col { grid-template-columns: 1fr; }
+      .breakdown-grid { grid-template-columns: 1fr; }
       .page { padding: 14px; }
       .card { padding: 18px 14px; }
       .button-group {
@@ -234,11 +273,24 @@
         </div>
       </div>
 
+      <!-- Summary of Totals -->
       <div class="summary">
-        <div class="row"><span>TPU</span><span id="tpuDisplay">₹0</span></div>
-        <div class="row"><span>OEPL</span><span id="oeplDisplay">₹0</span></div>
-        <div class="row"><span>PAEPL</span><span id="paeplDisplay">₹0</span></div>
-        <div class="row total"><span>Total</span><span class="highlight" id="totalDisplay">₹0</span></div>
+        <div class="row"><span>TPU (Ticket Price Unit)</span><span id="tpuDisplay">₹0</span></div>
+        <div class="row"><span>OEPL (Optional Extra Per License)</span><span id="oeplDisplay">₹0</span></div>
+        <div class="row"><span>PAEPL (Processing & Admin Extra Per License)</span><span id="paeplDisplay">₹0</span></div>
+        <div class="row total"><span>Total Amount</span><span class="highlight" id="totalDisplay">₹0</span></div>
+      </div>
+
+      <!-- Price Breakdown Section -->
+      <div class="breakdown-section" id="breakdownSection" style="display: none;">
+        <h3>💰 Price Breakdown for Selected Combo</h3>
+        <div class="breakdown-grid" id="breakdownGrid"></div>
+        <div class="summary" style="margin-top: 14px;">
+          <div class="row"><span><strong>Combo Base Price (Adult)</strong></span><span id="breakdownAdult">₹0</span></div>
+          <div class="row"><span><strong>Combo Base Price (Child)</strong></span><span id="breakdownChild">₹0</span></div>
+          <div class="row"><span><strong>OEPL per Guest</strong></span><span id="breakdownOeplUnit">₹0</span></div>
+          <div class="row"><span><strong>PAEPL per Guest</strong></span><span id="breakdownPaeplUnit">₹0</span></div>
+        </div>
       </div>
 
       <div class="button-group">
@@ -246,7 +298,9 @@
         <button class="btn-secondary" type="button" onclick="resetForm()">↻ Reset Form</button>
       </div>
 
-      <div class="note">Formula used: Adult TPU and Child TPU are calculated separately, and OEPL/PAEPL are applied per total guest count.</div>
+      <div class="note">
+        <strong>Formula:</strong> TPU = (Adult Price × Adults) + (Child Price × Children) | OEPL = Per-Guest Charge × Total Guests | PAEPL = Per-Guest Charge × Total Guests
+      </div>
     </div>
   </div>
 
@@ -254,21 +308,21 @@
     document.getElementById('date').valueAsDate = new Date();
 
     const COMBOS = {
-      1: { adult: 299, child: 209, oepl: 40, paepl: 89 },
-      2: { adult: 397, child: 307, oepl: 0, paepl: 227 },
-      3: { adult: 398, child: 308, oepl: 28, paepl: 200 },
-      4: { adult: 425, child: 335, oepl: 255, paepl: 0 },
-      5: { adult: 570, child: 500, oepl: 0, paepl: 100 },
-      6: { adult: 699, child: 0, oepl: 0, paepl: 529 },
-      7: { adult: 700, child: 525, oepl: 0, paepl: 50 },
-      8: { adult: 775, child: 585, oepl: 155, paepl: 150 },
-      9: { adult: 769, child: 579, oepl: 249, paepl: 50 },
-      10: { adult: 889, child: 799, oepl: 199, paepl: 520 },
-      11: { adult: 925, child: 835, oepl: 105, paepl: 350 },
-      12: { adult: 969, child: 779, oepl: 199, paepl: 100 },
-      13: { adult: 1100, child: 925, oepl: 200, paepl: 450 },
-      14: { adult: 1550, child: 975, oepl: 0, paepl: 100 },
-      15: { adult: 4249, child: 0, oepl: 449, paepl: 2300 }
+      1: { name: 'Explorer Combo', adult: 299, child: 209, oepl: 40, paepl: 89 },
+      2: { name: 'Eco Adventure Combo', adult: 397, child: 307, oepl: 0, paepl: 227 },
+      3: { name: 'Eco Fun Combo', adult: 398, child: 308, oepl: 28, paepl: 200 },
+      4: { name: 'Snow Adventure Combo', adult: 425, child: 335, oepl: 255, paepl: 0 },
+      5: { name: 'Aastha Combo', adult: 570, child: 500, oepl: 0, paepl: 100 },
+      6: { name: 'Adventure Combo', adult: 699, child: 0, oepl: 0, paepl: 529 },
+      7: { name: 'Namah Combo', adult: 700, child: 525, oepl: 0, paepl: 50 },
+      8: { name: 'Viewing Fun Combo', adult: 775, child: 585, oepl: 155, paepl: 150 },
+      9: { name: 'Symbolic Play Combo', adult: 769, child: 579, oepl: 249, paepl: 50 },
+      10: { name: 'Ultimate Play Combo', adult: 889, child: 799, oepl: 199, paepl: 520 },
+      11: { name: 'Delight Combo', adult: 925, child: 835, oepl: 105, paepl: 350 },
+      12: { name: 'Mini Blast Combo', adult: 969, child: 779, oepl: 199, paepl: 100 },
+      13: { name: 'All in fun Combo', adult: 1100, child: 925, oepl: 200, paepl: 450 },
+      14: { name: 'Divine Rush Combo', adult: 1550, child: 975, oepl: 0, paepl: 100 },
+      15: { name: 'Ultimate Mega Combo', adult: 4249, child: 0, oepl: 449, paepl: 2300 }
     };
 
     function formatMoney(value) {
@@ -285,6 +339,7 @@
         document.getElementById('oeplDisplay').textContent = '₹0';
         document.getElementById('paeplDisplay').textContent = '₹0';
         document.getElementById('totalDisplay').textContent = '₹0';
+        document.getElementById('breakdownSection').style.display = 'none';
         return;
       }
 
@@ -299,6 +354,35 @@
       document.getElementById('oeplDisplay').textContent = formatMoney(oepl);
       document.getElementById('paeplDisplay').textContent = formatMoney(paepl);
       document.getElementById('totalDisplay').textContent = formatMoney(total);
+
+      // Update breakdown section
+      updateBreakdown(combo, adults, children, totalGuests, tpu, oepl, paepl, total);
+    }
+
+    function updateBreakdown(combo, adults, children, totalGuests, tpu, oepl, paepl, total) {
+      const breakdownGrid = document.getElementById('breakdownGrid');
+      breakdownGrid.innerHTML = `
+        <div class="breakdown-item">
+          <div class="breakdown-item-label">Adults</div>
+          <div class="breakdown-item-value">${adults}</div>
+          <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">× ${formatMoney(COMBOS[Object.keys(COMBOS).find(k => COMBOS[k].name === combo.name)].adult)}</div>
+        </div>
+        <div class="breakdown-item">
+          <div class="breakdown-item-label">Children</div>
+          <div class="breakdown-item-value">${children}</div>
+          <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">× ${formatMoney(COMBOS[Object.keys(COMBOS).find(k => COMBOS[k].name === combo.name)].child)}</div>
+        </div>
+        <div class="breakdown-item">
+          <div class="breakdown-item-label">Total Guests</div>
+          <div class="breakdown-item-value">${totalGuests}</div>
+        </div>
+      `;
+
+      document.getElementById('breakdownAdult').textContent = formatMoney(combo.adult);
+      document.getElementById('breakdownChild').textContent = formatMoney(combo.child);
+      document.getElementById('breakdownOeplUnit').textContent = formatMoney(combo.oepl);
+      document.getElementById('breakdownPaeplUnit').textContent = formatMoney(combo.paepl);
+      document.getElementById('breakdownSection').style.display = 'block';
     }
 
     function printSheet() {
@@ -313,6 +397,10 @@
       const oepl = document.getElementById('oeplDisplay').textContent;
       const paepl = document.getElementById('paeplDisplay').textContent;
       const total = document.getElementById('totalDisplay').textContent;
+
+      const comboId = comboSelect.value;
+      const combo = COMBOS[comboId];
+      const totalGuests = parseInt(adults) + parseInt(children);
 
       const printWindow = window.open('', '_blank');
       printWindow.document.write(`
@@ -329,8 +417,12 @@
             .info-item { border-bottom: 1px solid #dfe6f0; padding-bottom: 8px; }
             .info-label { font-weight: 700; color: #5d6b82; font-size: 12px; text-transform: uppercase; }
             .info-value { margin-top: 4px; font-size: 15px; }
-            .combo-box { background: #f7faff; border-left: 4px solid #224a7c; padding: 14px; border-radius: 8px; }
+            .combo-box { background: #f7faff; border-left: 4px solid #224a7c; padding: 14px; border-radius: 8px; margin-bottom: 16px; }
             .combo-name { font-weight: 700; color: #224a7c; margin-bottom: 10px; }
+            .breakdown-box { background: #f0f8ff; border: 2px solid #224a7c; padding: 12px; border-radius: 8px; margin-bottom: 16px; }
+            .breakdown-box h3 { margin: 0 0 10px; font-size: 14px; color: #224a7c; }
+            .breakdown-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #dfe6f0; font-size: 14px; }
+            .breakdown-row:last-child { border-bottom: none; }
             .summary-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
             .summary-table td { padding: 8px 10px; border-bottom: 1px solid #dfe6f0; }
             .summary-table td:first-child { font-weight: 700; color: #5d6b82; }
@@ -354,19 +446,42 @@
 
             <div class="combo-box">
               <div class="combo-name">${comboName}</div>
-              <div>Adults: ${adults} &nbsp;|&nbsp; Children: ${children}</div>
+              <div>Adults: ${adults} &nbsp;|&nbsp; Children: ${children} &nbsp;|&nbsp; Total Guests: ${totalGuests}</div>
+            </div>
 
+            <div class="breakdown-box">
+              <h3>Price Segregation</h3>
+              <div class="breakdown-row">
+                <span><strong>Base Price (Adult)</strong></span>
+                <span>${combo.adult ? '₹' + combo.adult.toLocaleString('en-IN') : 'N/A'}</span>
+              </div>
+              <div class="breakdown-row">
+                <span><strong>Base Price (Child)</strong></span>
+                <span>${combo.child ? '₹' + combo.child.toLocaleString('en-IN') : 'N/A'}</span>
+              </div>
+              <div class="breakdown-row">
+                <span><strong>OEPL per Guest</strong></span>
+                <span>${combo.oepl ? '₹' + combo.oepl.toLocaleString('en-IN') : '₹0'}</span>
+              </div>
+              <div class="breakdown-row">
+                <span><strong>PAEPL per Guest</strong></span>
+                <span>${combo.paepl ? '₹' + combo.paepl.toLocaleString('en-IN') : '₹0'}</span>
+              </div>
+            </div>
+
+            <div class="combo-box">
+              <div style="font-weight: 700; margin-bottom: 10px;">Total Calculation</div>
               <table class="summary-table">
-                <tr><td>TPU</td><td>${tpu}</td></tr>
-                <tr><td>OEPL</td><td>${oepl}</td></tr>
-                <tr><td>PAEPL</td><td>${paepl}</td></tr>
+                <tr><td>TPU (Base Pricing)</td><td>${tpu}</td></tr>
+                <tr><td>OEPL (Extras)</td><td>${oepl}</td></tr>
+                <tr><td>PAEPL (Processing)</td><td>${paepl}</td></tr>
                 <tr class="total-row"><td>Total</td><td>${total}</td></tr>
               </table>
             </div>
 
             <div class="footer">
               Printed on: ${new Date().toLocaleString('en-IN')}<br>
-              Formula: Adult TPU and Child TPU are calculated separately. OEPL/PAEPL are applied per total guest count.
+              Formula: TPU = (Adult Price × Adults) + (Child Price × Children) | OEPL/PAEPL = Per-Guest Rate × Total Guests
             </div>
           </div>
         </body>
