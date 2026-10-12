@@ -374,7 +374,7 @@
       border-radius: 12px;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
       z-index: 1000;
-      min-width: 220px;
+      min-width: 240px;
       overflow: hidden;
       display: none;
     }
@@ -628,6 +628,7 @@
         <div class="print-menu" id="printMenu">
           <div class="print-menu-item" onclick="printSingleA4()">🖨️ Print Current A4</div>
           <div class="print-menu-item" onclick="printByUsername()">👤 Print by Username</div>
+          <div class="print-menu-item" onclick="printAllUserSobs()">📋 Print All My SOBs</div>
           <div class="print-menu-item" onclick="printAllSobData()">📋 Print ALL SOBs</div>
           <div class="print-menu-item" onclick="exportUserExcel()">📊 Export User Excel</div>
           <div class="print-menu-item" onclick="exportAllExcel()">📊 Export All Excel</div>
@@ -643,7 +644,7 @@
     </div>
 
     <div class="footer-info">
-      <div>26G24 | V4.7 | SOB NAME: _____ | DATE: <span id="footerDate"></span></div>
+      <div>26G24 | V4.8 | SOB NAME: _____ | DATE: <span id="footerDate"></span></div>
     </div>
   </div>
 
@@ -948,25 +949,16 @@
         return;
       }
 
-      printSobDocument([record], { title: `SOB Report - ${targetUser}` });
+      printSobDocument([record], { title: `SOB Report - ${targetUser}`, reportTitle: `Individual SOB Report for ${record.sobId}` });
     }
 
     function printSingleA4() {
       try {
         const sobData = buildSobRecordFromForm();
-        printSobDocument([sobData], { title: `SOB A4 - ${sobData.username}` });
+        printSobDocument([sobData], { title: `SOB A4 - ${sobData.username}`, reportTitle: 'Current SOB Entry' });
       } catch (error) {
         alert(`❌ ${error.message}`);
       }
-    }
-
-    function printAllSobData() {
-      const allSobData = getAllSobData();
-      if (allSobData.length === 0) {
-        alert('❌ No saved SOB data to print');
-        return;
-      }
-      printSobDocument(allSobData, { title: 'SOB All Reports' });
     }
 
     function printByUsername() {
@@ -982,7 +974,36 @@
         return;
       }
 
-      printSobDocument(userSobs, { title: `SOB Report - ${username}` });
+      printSobDocument(userSobs, { title: `SOB Report - ${username}`, reportTitle: `Daily SOB Report for ${username}` });
+    }
+
+    function printAllUserSobs() {
+      const username = normalizeUsername(document.getElementById('username').value);
+      if (!username) {
+        alert('❌ Please enter a username');
+        return;
+      }
+
+      const userSobs = getUserSobData(username).sort((a, b) => Number(b.savedAt || 0) - Number(a.savedAt || 0));
+      if (userSobs.length === 0) {
+        alert(`❌ No saved SOBs found for user: ${username}`);
+        return;
+      }
+
+      printSobDocument(userSobs, { 
+        title: `Print All SOBs - ${username}`, 
+        reportTitle: `📋 All SOBs for ${username} - Daily Summary`,
+        showTotals: true
+      });
+    }
+
+    function printAllSobData() {
+      const allSobData = getAllSobData();
+      if (allSobData.length === 0) {
+        alert('❌ No saved SOB data to print');
+        return;
+      }
+      printSobDocument(allSobData, { title: 'SOB All Reports', reportTitle: 'All SOBs - Complete Report', showTotals: true });
     }
 
     function togglePrintMenu() {
@@ -1098,21 +1119,44 @@
       const printWindow = window.open('', '_blank');
       const title = options.title || 'SOB Calculator - Print Report';
       const reportTitle = options.reportTitle || 'SOB Report';
-      const rows = sobArray.map((sob, index) => `
-        <tr>
-          <td>${index + 1}</td>
-          <td>${sob.username || 'N/A'}</td>
-          <td>${sob.sobId || 'N/A'}</td>
-          <td>${sob.comboName || 'N/A'}</td>
-          <td>${sob.adults || 0}</td>
-          <td>${sob.children || 0}</td>
-          <td>${formatMoney(sob.tpu || 0)}</td>
-          <td>${formatMoney(sob.oepl || 0)}</td>
-          <td>${formatMoney(sob.paepl || 0)}</td>
-          <td>${formatMoney(sob.total || 0)}</td>
-          <td>${sob.timestamp || 'N/A'}</td>
+      const showTotals = options.showTotals || false;
+
+      let totalTPU = 0, totalOEPL = 0, totalPAEPL = 0, totalAmount = 0;
+
+      const rows = sobArray.map((sob, index) => {
+        if (showTotals) {
+          totalTPU += safeNumber(sob.tpu);
+          totalOEPL += safeNumber(sob.oepl);
+          totalPAEPL += safeNumber(sob.paepl);
+          totalAmount += safeNumber(sob.total);
+        }
+        return `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${sob.username || 'N/A'}</td>
+            <td>${sob.sobId || 'N/A'}</td>
+            <td>${sob.comboName || 'N/A'}</td>
+            <td>${sob.adults || 0}</td>
+            <td>${sob.children || 0}</td>
+            <td>${formatMoney(sob.tpu || 0)}</td>
+            <td>${formatMoney(sob.oepl || 0)}</td>
+            <td>${formatMoney(sob.paepl || 0)}</td>
+            <td>${formatMoney(sob.total || 0)}</td>
+            <td>${sob.timestamp || 'N/A'}</td>
+          </tr>
+        `;
+      }).join('');
+
+      const totalsRow = showTotals ? `
+        <tr style="background: #fff7d6; border-top: 2px solid #f4d35e; font-weight: 700;">
+          <td colspan="6" style="text-align: right;">GRAND TOTAL</td>
+          <td>${formatMoney(totalTPU)}</td>
+          <td>${formatMoney(totalOEPL)}</td>
+          <td>${formatMoney(totalPAEPL)}</td>
+          <td>${formatMoney(totalAmount)}</td>
+          <td></td>
         </tr>
-      `).join('');
+      ` : '';
 
       printWindow.document.write(`
         <!DOCTYPE html>
@@ -1164,7 +1208,7 @@
               color: #1a1a1a;
               font-weight: 700;
             }
-            .totals {
+            .summary {
               margin-top: 18px;
               padding: 12px 16px;
               background: #fff7d6;
@@ -1202,9 +1246,10 @@
               </thead>
               <tbody>
                 ${rows}
+                ${totalsRow}
               </tbody>
             </table>
-            <div class="totals">Total Records: ${sobArray.length}</div>
+            <div class="summary">Total Records: ${sobArray.length}${showTotals ? ` | Grand Total: ${formatMoney(totalAmount)}` : ''}</div>
           </div>
         </body>
         </html>
