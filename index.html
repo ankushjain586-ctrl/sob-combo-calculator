@@ -3,289 +3,422 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SOB Combo Calculator</title>
+  <title>SOB Combos Calculator</title>
   <style>
-    :root {
-      --bg: #1a1a2e;
-      --card: #16213e;
-      --text: #e9ecef;
-      --muted: #adb5bd;
-      --line: #495057;
-      --primary: #00d4ff;
-      --primary-2: #0099cc;
-      --accent: #ffd700;
-      --success: #00ff88;
-      --shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
-    }
-
-    * { box-sizing: border-box; }
-    html, body {
+    * {
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 50%, #16213e 100%);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: var(--text);
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
       min-height: 100vh;
-    }
-    
-    .page {
-      max-width: 1000px;
-      margin: 20px auto;
-      padding: 20px;
+      padding: 16px;
     }
 
-    .header {
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .top-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .top-btn {
+      padding: 14px 16px;
+      border: none;
+      border-radius: 20px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-reverse {
+      background: linear-gradient(135deg, #00d97e 0%, #00b85c 100%);
+      box-shadow: 0 4px 15px rgba(0, 217, 126, 0.3);
+    }
+
+    .btn-reverse:active {
+      transform: scale(0.98);
+    }
+
+    .btn-daily {
+      background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);
+      box-shadow: 0 4px 15px rgba(156, 39, 176, 0.3);
+    }
+
+    .btn-daily:active {
+      transform: scale(0.98);
+    }
+
+    .user-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      padding: 14px 16px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .user-icon {
+      font-size: 28px;
+    }
+
+    .user-input {
+      flex: 1;
+      border: none;
+      background: none;
+      font-size: 16px;
+      color: #333;
+      outline: none;
+      font-weight: 500;
+    }
+
+    .user-input::placeholder {
+      color: #999;
+    }
+
+    .load-btn {
+      padding: 10px 20px;
+      background: linear-gradient(135deg, #1e88e5 0%, #1565c0 100%);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(30, 136, 229, 0.3);
+    }
+
+    .load-btn:active {
+      transform: scale(0.98);
+    }
+
+    .title {
       text-align: center;
-      margin-bottom: 30px;
-      padding-bottom: 20px;
-      border-bottom: 2px solid var(--primary);
-    }
-
-    h1 {
-      margin: 0;
-      font-size: 2.5rem;
-      color: var(--primary);
-      text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+      font-size: 32px;
+      font-weight: 800;
+      color: #1a1a1a;
+      margin-bottom: 28px;
+      letter-spacing: -0.5px;
     }
 
     .card {
-      background: var(--card);
-      border: 2px solid var(--primary);
-      border-radius: 12px;
-      box-shadow: var(--shadow);
-      padding: 25px;
-      margin-bottom: 20px;
-    }
-
-    .section-title {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 15px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid var(--primary);
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-      margin-bottom: 15px;
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
     }
 
     label {
       display: block;
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 600;
+      color: #666;
       margin-bottom: 8px;
-      color: var(--primary);
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
     input, select {
       width: 100%;
-      padding: 12px 14px;
-      border-radius: 8px;
-      border: 2px solid var(--line);
-      background: rgba(0, 212, 255, 0.05);
-      color: var(--text);
-      font-size: 15px;
+      padding: 16px;
+      border: none;
+      background: #f5f5f5;
+      border-radius: 14px;
+      font-size: 16px;
+      color: #333;
       outline: none;
       transition: all 0.3s ease;
+      font-weight: 500;
     }
 
     input:focus, select:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.2);
-      background: rgba(0, 212, 255, 0.1);
+      background: #f0f0f0;
+      box-shadow: 0 0 0 2px rgba(30, 136, 229, 0.1);
     }
 
-    .price-breakdown {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 12px;
-      margin-top: 20px;
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 20px;
+      padding-right: 40px;
+      background-color: #f5f5f5;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .results-box {
+      background: white;
+      border-radius: 20px;
       padding: 20px;
-      background: rgba(0, 212, 255, 0.05);
-      border-radius: 8px;
-      border: 1px solid var(--primary);
+      margin-bottom: 16px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
     }
 
-    .price-item {
-      background: var(--card);
-      border: 2px solid var(--primary);
-      border-radius: 8px;
-      padding: 12px;
-      text-align: center;
-    }
-
-    .price-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 8px;
-      display: block;
-    }
-
-    .price-value {
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--success);
-      font-family: 'Courier New', monospace;
-    }
-
-    .summary-box {
-      background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(0, 255, 136, 0.1) 100%);
-      border: 2px solid var(--success);
-      border-radius: 12px;
-      padding: 20px;
-      margin-top: 20px;
-    }
-
-    .summary-row {
+    .result-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--line);
-      font-size: 15px;
+      padding: 14px 0;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 16px;
+      font-weight: 500;
     }
 
-    .summary-row:last-child {
+    .result-row:last-child {
       border-bottom: none;
     }
 
-    .summary-label {
-      color: var(--muted);
+    .result-label {
+      color: #333;
       font-weight: 600;
     }
 
-    .summary-value {
-      font-size: 18px;
+    .result-value {
+      color: #1a1a1a;
       font-weight: 700;
-      color: var(--success);
+      font-size: 18px;
       font-family: 'Courier New', monospace;
     }
 
-    .total-amount {
-      margin-top: 15px;
-      padding-top: 15px;
-      border-top: 2px solid var(--success);
+    .total-row {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 2px solid #ffd700;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
+      border-radius: 10px;
+      padding: 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--accent);
     }
 
     .total-label {
-      color: var(--primary);
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .total-value {
+      background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+      color: #1a1a1a;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-size: 20px;
+      font-weight: 700;
+      font-family: 'Courier New', monospace;
+      box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+    }
+
+    .breakdown-section {
+      background: linear-gradient(135deg, rgba(30, 136, 229, 0.05) 0%, rgba(30, 136, 229, 0.02) 100%);
+      border: 2px solid rgba(30, 136, 229, 0.2);
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 16px;
+      margin-bottom: 16px;
+    }
+
+    .breakdown-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1e88e5;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .breakdown-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .breakdown-value {
+      font-weight: 700;
+      color: #1a1a1a;
+      font-family: 'Courier New', monospace;
+    }
+
+    .sob-id-section {
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    .sob-id-input {
+      padding-right: 50px;
+    }
+
+    .camera-btn {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #333;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .camera-btn:active {
+      transform: translateY(-50%) scale(0.95);
     }
 
     .button-group {
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 12px;
-      margin-top: 25px;
-      flex-wrap: wrap;
-    }
-
-    button {
-      flex: 1;
-      min-width: 140px;
-      padding: 14px 20px;
-      border: none;
-      border-radius: 8px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      margin-bottom: 12px;
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
-      color: #000;
-      box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+      padding: 14px 20px;
+      border: none;
+      border-radius: 20px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
     }
 
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    .btn-save {
+      background: linear-gradient(135deg, #1e88e5 0%, #1565c0 100%);
+      box-shadow: 0 4px 15px rgba(30, 136, 229, 0.3);
+    }
+
+    .btn-reset {
+      background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+      box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+    }
+
+    .print-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
     }
 
     .btn-secondary {
-      background: linear-gradient(135deg, var(--success) 0%, #00cc66 100%);
-      color: #000;
-      box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+      padding: 12px 16px;
+      border: 2px solid #ddd;
+      background: white;
+      border-radius: 16px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    .btn-secondary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+    .btn-secondary:active {
+      transform: scale(0.98);
+      background: #f5f5f5;
     }
 
-    .note {
-      margin-top: 20px;
-      padding: 15px;
-      font-size: 12px;
-      color: var(--muted);
-      background: rgba(0, 0, 0, 0.3);
-      border-left: 4px solid var(--accent);
-      border-radius: 4px;
+    .footer-info {
+      text-align: center;
+      font-size: 11px;
+      color: #999;
+      margin-top: 16px;
       line-height: 1.6;
     }
 
-    @media (max-width: 640px) {
-      .page { padding: 12px; }
-      .card { padding: 16px; }
-      h1 { font-size: 1.8rem; }
-      .form-row { grid-template-columns: 1fr; }
-      .price-breakdown { grid-template-columns: repeat(2, 1fr); }
-      button { min-width: auto; }
+    @media (max-width: 480px) {
+      .title {
+        font-size: 26px;
+      }
+
+      .card {
+        padding: 16px;
+      }
+
+      input, select {
+        padding: 14px;
+        font-size: 16px;
+      }
+
+      .button-group {
+        grid-template-columns: 1fr;
+      }
+
+      .print-section {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <div class="header">
-      <h1>⚡ SOB Combo Calculator ⚡</h1>
+  <div class="container">
+    <!-- Top Navigation Buttons -->
+    <div class="top-buttons">
+      <button class="top-btn btn-reverse">🔄 Reverse Combo Finder</button>
+      <button class="top-btn btn-daily">📊 Daily Report Generator</button>
     </div>
 
-    <div class="card">
-      <div class="section-title">📋 User Information</div>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="username">👤 User Name</label>
-          <input id="username" type="text" placeholder="Enter your name" />
-        </div>
-        <div class="form-group">
-          <label for="date">📅 Date</label>
-          <input id="date" type="date" />
-        </div>
-        <div class="form-group">
-          <label for="notes">📝 Notes/Reference</label>
-          <input id="notes" type="text" placeholder="Add notes (optional)" />
-        </div>
-      </div>
+    <!-- User Section -->
+    <div class="user-section">
+      <div class="user-icon">👋</div>
+      <input type="text" class="user-input" id="username" placeholder="Enter Username" />
+      <button class="load-btn" onclick="loadUserData()">Load</button>
     </div>
 
+    <!-- Title -->
+    <h1 class="title">SOB coMboS calculator</h1>
+
+    <!-- Combo Selection -->
     <div class="card">
-      <div class="section-title">🎯 Combo Selection</div>
       <div class="form-group">
-        <label for="combo">Select Your Combo Package</label>
-        <select id="combo">
-          <option value="">-- Choose a combo --</option>
+        <select id="combo" onchange="calculate()">
+          <option value="">Select Combo</option>
           <option value="1">Explorer Combo — ₹299 / ₹209</option>
           <option value="2">Eco Adventure Combo — ₹397 / ₹307</option>
           <option value="3">Eco Fun Combo — ₹398 / ₹308</option>
@@ -303,65 +436,92 @@
           <option value="15">Ultimate Mega Combo — ₹4249 / NA</option>
         </select>
       </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="adults">👥 Number of Adults</label>
-          <input id="adults" type="number" min="0" value="1" />
-        </div>
-        <div class="form-group">
-          <label for="children">🧒 Number of Children</label>
-          <input id="children" type="number" min="0" value="0" />
-        </div>
-      </div>
     </div>
 
+    <!-- Adults Input -->
     <div class="card">
-      <div class="section-title">💰 Price Segregation</div>
-      <div class="price-breakdown" id="priceBreakdown"></div>
+      <div class="form-group">
+        <label for="adults">Adults</label>
+        <input id="adults" type="number" min="0" value="1" oninput="calculate()" />
+      </div>
+    </div>
 
-      <div class="summary-box">
-        <div class="summary-row">
-          <span class="summary-label">TPU (Adult Amount)</span>
-          <span class="summary-value" id="tpuAdultDisplay">₹0</span>
+    <!-- Children Input -->
+    <div class="card">
+      <div class="form-group">
+        <label for="children">Children</label>
+        <input id="children" type="number" min="0" value="1" oninput="calculate()" />
+      </div>
+    </div>
+
+    <!-- Results Display -->
+    <div class="results-box">
+      <div class="result-row">
+        <span class="result-label">TPU</span>
+        <span class="result-value" id="tpuDisplay">₹ 0</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">OEPL</span>
+        <span class="result-value" id="oeplDisplay">₹ 0</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">PAEPL</span>
+        <span class="result-value" id="paeplDisplay">₹ 0</span>
+      </div>
+      <div class="total-row">
+        <span class="total-label">TOTAL</span>
+        <span class="total-value" id="totalDisplay">₹ 0</span>
+      </div>
+
+      <!-- Price Breakdown -->
+      <div class="breakdown-section" id="breakdownSection" style="display: none;">
+        <div class="breakdown-title">💰 Price Segregation</div>
+        <div class="breakdown-item">
+          <span>TPU (Adult) per person</span>
+          <span class="breakdown-value" id="breakdownTpuAdult">₹0</span>
         </div>
-        <div class="summary-row">
-          <span class="summary-label">TPU (Child Amount)</span>
-          <span class="summary-value" id="tpuChildDisplay">₹0</span>
+        <div class="breakdown-item">
+          <span>TPU (Child) per person</span>
+          <span class="breakdown-value" id="breakdownTpuChild">₹0</span>
         </div>
-        <div class="summary-row">
-          <span class="summary-label">Total TPU</span>
-          <span class="summary-value" id="tpuDisplay">₹0</span>
+        <div class="breakdown-item">
+          <span>Offspring per guest</span>
+          <span class="breakdown-value" id="breakdownOffspring">₹0</span>
         </div>
-        <div class="summary-row">
-          <span class="summary-label">Offspring (Amount)</span>
-          <span class="summary-value" id="offspringDisplay">₹0</span>
-        </div>
-        <div class="summary-row">
-          <span class="summary-label">Pinnacle (Amount)</span>
-          <span class="summary-value" id="pinnacleDisplay">₹0</span>
-        </div>
-        <div class="total-amount">
-          <span class="total-label">Total Booking Amount</span>
-          <span id="totalDisplay">₹0</span>
+        <div class="breakdown-item">
+          <span>Pinnacle per guest</span>
+          <span class="breakdown-value" id="breakdownPinnacle">₹0</span>
         </div>
       </div>
     </div>
 
+    <!-- SOB ID Section -->
+    <div class="card sob-id-section">
+      <input type="text" class="sob-id-input" id="sobId" placeholder="Enter 6-digit SOB ID" maxlength="6" />
+      <button class="camera-btn" onclick="scanQR()">📷</button>
+    </div>
+
+    <!-- Action Buttons -->
     <div class="card">
       <div class="button-group">
-        <button class="btn-primary" type="button" onclick="printSheet()">🖨️ Print Sheet</button>
-        <button class="btn-secondary" type="button" onclick="resetForm()">↻ Reset Form</button>
+        <button class="btn-primary btn-save" onclick="saveSob()">💾 Save SOB</button>
+        <button class="btn-primary btn-reset" onclick="resetForm()">↻ Reset Calculator</button>
+      </div>
+
+      <div class="print-section">
+        <button class="btn-secondary" onclick="printA4()">🖨️ Print My A4</button>
+        <button class="btn-secondary" onclick="togglePrintMenu()">🖨️ Print <span id="printDropdown">▼</span></button>
       </div>
     </div>
 
-    <div class="note">
-      <strong>Formula:</strong> TPU = (Adult Price × Adults) + (Child Price × Children) | Offspring = Per-Guest × Total Guests | Pinnacle = Per-Guest × Total Guests | Total = TPU + Offspring + Pinnacle
+    <!-- Footer -->
+    <div class="footer-info">
+      <div>26G24 | V4.7 | SOB NAME: _____ | DATE: <span id="footerDate"></span></div>
     </div>
   </div>
 
   <script>
-    document.getElementById('date').valueAsDate = new Date();
+    document.getElementById('footerDate').textContent = new Date().toLocaleDateString('en-IN');
 
     // Chart data from your image
     const COMBOS = {
@@ -458,7 +618,7 @@
     };
 
     function formatMoney(value) {
-      return '₹' + Number(value).toLocaleString('en-IN');
+      return '₹ ' + Number(value).toLocaleString('en-IN');
     }
 
     function calculate() {
@@ -467,290 +627,288 @@
       const children = Number(document.getElementById('children').value || 0);
 
       if (!comboId || !COMBOS[comboId]) {
-        document.getElementById('tpuAdultDisplay').textContent = '₹0';
-        document.getElementById('tpuChildDisplay').textContent = '₹0';
-        document.getElementById('tpuDisplay').textContent = '₹0';
-        document.getElementById('offspringDisplay').textContent = '₹0';
-        document.getElementById('pinnacleDisplay').textContent = '₹0';
-        document.getElementById('totalDisplay').textContent = '₹0';
-        document.getElementById('priceBreakdown').innerHTML = '';
+        document.getElementById('tpuDisplay').textContent = '₹ 0';
+        document.getElementById('oeplDisplay').textContent = '₹ 0';
+        document.getElementById('paeplDisplay').textContent = '₹ 0';
+        document.getElementById('totalDisplay').textContent = '₹ 0';
+        document.getElementById('breakdownSection').style.display = 'none';
         return;
       }
 
       const combo = COMBOS[comboId];
       const totalGuests = adults + children;
-      
-      const tpuAdult = combo.tpuAdult * adults;
-      const tpuChild = combo.tpuChild * children;
-      const tpuTotal = tpuAdult + tpuChild;
-      const offspring = combo.offspring * totalGuests;
-      const pinnacle = combo.pinnacle * totalGuests;
-      const total = tpuTotal + offspring + pinnacle;
+      const tpu = (combo.tpuAdult * adults) + (combo.tpuChild * children);
+      const oepl = combo.offspring * totalGuests;
+      const paepl = combo.pinnacle * totalGuests;
+      const total = tpu + oepl + paepl;
 
-      document.getElementById('tpuAdultDisplay').textContent = formatMoney(tpuAdult);
-      document.getElementById('tpuChildDisplay').textContent = formatMoney(tpuChild);
-      document.getElementById('tpuDisplay').textContent = formatMoney(tpuTotal);
-      document.getElementById('offspringDisplay').textContent = formatMoney(offspring);
-      document.getElementById('pinnacleDisplay').textContent = formatMoney(pinnacle);
+      document.getElementById('tpuDisplay').textContent = formatMoney(tpu);
+      document.getElementById('oeplDisplay').textContent = formatMoney(oepl);
+      document.getElementById('paeplDisplay').textContent = formatMoney(paepl);
       document.getElementById('totalDisplay').textContent = formatMoney(total);
 
-      // Update price breakdown cards
-      updatePriceBreakdown(combo, adults, children, totalGuests);
+      // Update breakdown
+      document.getElementById('breakdownTpuAdult').textContent = formatMoney(combo.tpuAdult);
+      document.getElementById('breakdownTpuChild').textContent = formatMoney(combo.tpuChild);
+      document.getElementById('breakdownOffspring').textContent = formatMoney(combo.offspring);
+      document.getElementById('breakdownPinnacle').textContent = formatMoney(combo.pinnacle);
+      document.getElementById('breakdownSection').style.display = 'block';
     }
 
-    function updatePriceBreakdown(combo, adults, children, totalGuests) {
-      const html = `
-        <div class="price-item">
-          <span class="price-label">TPU (Adult)</span>
-          <span class="price-value">${formatMoney(combo.tpuAdult)}</span>
-          <span style="font-size: 11px; color: var(--muted); margin-top: 4px; display: block;">× ${adults}</span>
-        </div>
-        <div class="price-item">
-          <span class="price-label">TPU (Child)</span>
-          <span class="price-value">${formatMoney(combo.tpuChild)}</span>
-          <span style="font-size: 11px; color: var(--muted); margin-top: 4px; display: block;">× ${children}</span>
-        </div>
-        <div class="price-item">
-          <span class="price-label">Offspring</span>
-          <span class="price-value">${formatMoney(combo.offspring)}</span>
-          <span style="font-size: 11px; color: var(--muted); margin-top: 4px; display: block;">Per Guest</span>
-        </div>
-        <div class="price-item">
-          <span class="price-label">Pinnacle</span>
-          <span class="price-value">${formatMoney(combo.pinnacle)}</span>
-          <span style="font-size: 11px; color: var(--muted); margin-top: 4px; display: block;">Per Guest</span>
-        </div>
-      `;
-      document.getElementById('priceBreakdown').innerHTML = html;
+    function resetForm() {
+      document.getElementById('combo').value = '';
+      document.getElementById('adults').value = '1';
+      document.getElementById('children').value = '1';
+      document.getElementById('sobId').value = '';
+      document.getElementById('breakdownSection').style.display = 'none';
+      calculate();
     }
 
-    function printSheet() {
+    function saveSob() {
+      const comboId = document.getElementById('combo').value;
+      const sobId = document.getElementById('sobId').value;
+      const username = document.getElementById('username').value;
+      const adults = document.getElementById('adults').value;
+      const children = document.getElementById('children').value;
+
+      if (!sobId || sobId.length !== 6) {
+        alert('Please enter a valid 6-digit SOB ID');
+        return;
+      }
+
+      if (!comboId) {
+        alert('Please select a combo');
+        return;
+      }
+
+      const data = {
+        username,
+        sobId,
+        comboId,
+        adults,
+        children,
+        timestamp: new Date().toLocaleString('en-IN')
+      };
+
+      localStorage.setItem(`SOB_${sobId}`, JSON.stringify(data));
+      alert(`SOB Data saved successfully!\nID: ${sobId}`);
+    }
+
+    function loadUserData() {
+      const username = document.getElementById('username').value;
+      if (!username) {
+        alert('Please enter a username');
+        return;
+      }
+      alert(`Loading data for: ${username}`);
+    }
+
+    function scanQR() {
+      alert('QR Scanner feature coming soon!');
+    }
+
+    function printA4() {
       const username = document.getElementById('username').value || 'Guest';
-      const date = document.getElementById('date').value || 'N/A';
-      const notes = document.getElementById('notes').value || 'N/A';
       const comboSelect = document.getElementById('combo');
+      const comboId = comboSelect.value;
       const comboName = comboSelect.options[comboSelect.selectedIndex]?.text || 'No combo selected';
       const adults = document.getElementById('adults').value || '0';
       const children = document.getElementById('children').value || '0';
-      
-      const comboId = comboSelect.value;
+      const sobId = document.getElementById('sobId').value || 'N/A';
+
+      if (!comboId) {
+        alert('Please select a combo first');
+        return;
+      }
+
       const combo = COMBOS[comboId];
       const totalGuests = parseInt(adults) + parseInt(children);
-      
-      const tpuAdult = combo.tpuAdult * parseInt(adults);
-      const tpuChild = combo.tpuChild * parseInt(children);
-      const tpuTotal = tpuAdult + tpuChild;
-      const offspring = combo.offspring * totalGuests;
-      const pinnacle = combo.pinnacle * totalGuests;
-      const total = tpuTotal + offspring + pinnacle;
+      const tpu = (combo.tpuAdult * parseInt(adults)) + (combo.tpuChild * parseInt(children));
+      const oepl = combo.offspring * totalGuests;
+      const paepl = combo.pinnacle * totalGuests;
+      const total = tpu + oepl + paepl;
 
       const printWindow = window.open('', '_blank');
       printWindow.document.write(`
         <!DOCTYPE html>
         <html>
         <head>
-          <title>SOB Combo Calculator - Print Sheet</title>
+          <title>SOB Calculator - Print Sheet</title>
           <style>
             body { 
-              font-family: 'Segoe UI', Tahoma, Geneva, sans-serif; 
-              padding: 30px; 
+              font-family: Arial, sans-serif; 
+              padding: 40px; 
               background: white;
-              margin: 0;
+              color: #333;
             }
             .container { 
               max-width: 800px; 
-              margin: 0 auto; 
-              border: 3px solid #00d4ff; 
-              border-radius: 12px; 
-              padding: 30px;
-              background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+              margin: 0 auto;
             }
             .header { 
               text-align: center; 
-              margin-bottom: 25px; 
-              border-bottom: 3px solid #00d4ff; 
-              padding-bottom: 15px; 
+              margin-bottom: 30px; 
+              border-bottom: 3px solid #1e88e5;
+              padding-bottom: 15px;
             }
             .header h1 { 
               margin: 0; 
-              color: #00d4ff; 
               font-size: 28px;
+              color: #1e88e5;
+            }
+            .info-grid {
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              gap: 20px;
+              margin-bottom: 30px;
+            }
+            .info-item {
+              padding: 12px;
+              background: #f5f5f5;
+              border-left: 4px solid #1e88e5;
+              border-radius: 4px;
+            }
+            .info-label {
+              font-weight: 700;
+              color: #666;
+              font-size: 12px;
               text-transform: uppercase;
-              letter-spacing: 2px;
             }
-            .info { 
-              display: grid; 
-              grid-template-columns: 1fr 1fr; 
-              gap: 15px; 
-              margin-bottom: 25px; 
-            }
-            .info-item { 
-              border-bottom: 1px solid #ddd; 
-              padding-bottom: 12px; 
-            }
-            .info-label { 
-              font-weight: 700; 
-              color: #666; 
-              font-size: 11px; 
-              text-transform: uppercase; 
-              letter-spacing: 1px;
-            }
-            .info-value { 
-              margin-top: 6px; 
+            .info-value {
               font-size: 16px;
               color: #333;
+              margin-top: 6px;
               font-weight: 600;
-            }
-            .combo-box { 
-              background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(0, 255, 136, 0.1) 100%);
-              border: 2px solid #00d4ff; 
-              padding: 16px; 
-              border-radius: 8px;
-              margin-bottom: 20px;
-            }
-            .combo-name { 
-              font-weight: 700; 
-              color: #00d4ff; 
-              margin-bottom: 10px;
-              font-size: 16px;
-            }
-            .combo-info { 
-              font-size: 14px;
-              color: #333;
-              margin-bottom: 12px;
             }
             .breakdown-section {
               background: #f0f8ff;
-              border: 2px solid #00d4ff;
-              padding: 14px;
+              border: 2px solid #1e88e5;
+              padding: 16px;
               border-radius: 8px;
-              margin-bottom: 16px;
+              margin-bottom: 20px;
             }
             .breakdown-title {
               font-weight: 700;
-              color: #00d4ff;
-              margin-bottom: 10px;
-              font-size: 13px;
+              color: #1e88e5;
+              margin-bottom: 12px;
+              font-size: 14px;
               text-transform: uppercase;
             }
-            .breakdown-row { 
-              display: flex; 
-              justify-content: space-between; 
-              padding: 8px 0; 
-              border-bottom: 1px solid #e0e0e0;
-              font-size: 14px;
+            .breakdown-row {
+              display: flex;
+              justify-content: space-between;
+              padding: 8px 0;
+              border-bottom: 1px solid #ddd;
             }
             .breakdown-row:last-child {
               border-bottom: none;
             }
-            .breakdown-label {
-              color: #555;
-              font-weight: 600;
-            }
-            .breakdown-value{
-              color: #00d4ff;
-              font-weight: 700;
-              font-family: 'Courier New', monospace;
-            }
-            .summary-table { 
-              width: 100%; 
-              border-collapse: collapse; 
-              margin-top: 16px;
+            .results-table {
+              width: 100%;
+              border-collapse: collapse;
+              margin-bottom: 20px;
               background: white;
-              border: 2px solid #00ff88;
-              border-radius: 8px;
-              overflow: hidden;
+              border: 2px solid #ffd700;
             }
-            .summary-table td { 
-              padding: 12px 14px; 
-              border-bottom: 1px solid #e0e0e0;
-              font-size: 15px;
+            .results-table td {
+              padding: 14px;
+              border-bottom: 1px solid #eee;
             }
-            .summary-table td:first-child { 
-              font-weight: 700; 
-              color: #666;
-              width: 60%;
-            }
-            .summary-table td:last-child { 
-              text-align: right; 
+            .results-table td:first-child {
               font-weight: 700;
-              color: #00ff88;
+              width: 50%;
+            }
+            .results-table td:last-child {
+              text-align: right;
+              font-weight: 700;
               font-family: 'Courier New', monospace;
+              color: #1a1a1a;
             }
-            .summary-table .total-row { 
-              background: #fff7d8;
+            .results-table .total-row {
+              background: #fff8dc;
+              font-size: 16px;
             }
-            .summary-table .total-row td:last-child {
-              color: #ff6b00;
-              font-size: 18px;
-            }
-            .footer { 
-              margin-top: 25px; 
-              text-align: center; 
-              font-size: 12px; 
-              color: #999; 
-              border-top: 1px solid #ddd; 
-              padding-top: 15px; 
-              line-height: 1.6;
+            .footer {
+              margin-top: 30px;
+              text-align: center;
+              color: #999;
+              font-size: 12px;
             }
           </style>
         </head>
         <body>
           <div class="container">
             <div class="header">
-              <h1>⚡ SOB Combo Calculator ⚡</h1>
-              <div style="color: #666; font-size: 14px;">Calculation Sheet</div>
+              <h1>⚡ SOB CoMbos Calculator ⚡</h1>
+              <div style="color: #666;">Calculation Sheet</div>
             </div>
 
-            <div class="info">
-              <div class="info-item"><div class="info-label">User Name</div><div class="info-value">${username}</div></div>
-              <div class="info-item"><div class="info-label">Date</div><div class="info-value">${date}</div></div>
-              <div class="info-item" style="grid-column: 1 / -1;"><div class="info-label">Notes / Reference</div><div class="info-value">${notes}</div></div>
-            </div>
-
-            <div class="combo-box">
-              <div class="combo-name">${comboName}</div>
-              <div class="combo-info">
-                <strong>Guests:</strong> Adults: ${adults} | Children: ${children} | Total: ${totalGuests}
+            <div class="info-grid">
+              <div class="info-item">
+                <div class="info-label">User Name</div>
+                <div class="info-value">${username}</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">SOB ID</div>
+                <div class="info-value">${sobId}</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Combo Selected</div>
+                <div class="info-value">${comboName}</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Date</div>
+                <div class="info-value">${new Date().toLocaleDateString('en-IN')}</div>
               </div>
             </div>
 
             <div class="breakdown-section">
-              <div class="breakdown-title">📊 Price Segregation</div>
+              <div class="breakdown-title">👥 Guest Information</div>
               <div class="breakdown-row">
-                <span class="breakdown-label">TPU (Adult Amount) per Person</span>
-                <span class="breakdown-value">₹${combo.tpuAdult.toLocaleString('en-IN')}</span>
+                <span>Adults</span>
+                <span>${adults}</span>
               </div>
               <div class="breakdown-row">
-                <span class="breakdown-label">TPU (Child Amount) per Person</span>
-                <span class="breakdown-value">₹${combo.tpuChild.toLocaleString('en-IN')}</span>
+                <span>Children</span>
+                <span>${children}</span>
               </div>
               <div class="breakdown-row">
-                <span class="breakdown-label">Offspring (Amount) per Guest</span>
-                <span class="breakdown-value">₹${combo.offspring.toLocaleString('en-IN')}</span>
-              </div>
-              <div class="breakdown-row">
-                <span class="breakdown-label">Pinnacle (Amount) per Guest</span>
-                <span class="breakdown-value">₹${combo.pinnacle.toLocaleString('en-IN')}</span>
+                <span><strong>Total Guests</strong></span>
+                <span><strong>${totalGuests}</strong></span>
               </div>
             </div>
 
-            <div class="combo-box" style="margin-top: 16px;">
-              <div style="font-weight: 700; margin-bottom: 12px; font-size: 14px; text-transform: uppercase; color: #00d4ff;">Calculation Summary</div>
-              <table class="summary-table">
-                <tr><td>TPU (Adult Amount)</td><td>₹${tpuAdult.toLocaleString('en-IN')}</td></tr>
-                <tr><td>TPU (Child Amount)</td><td>₹${tpuChild.toLocaleString('en-IN')}</td></tr>
-                <tr><td>Total TPU</td><td>₹${tpuTotal.toLocaleString('en-IN')}</td></tr>
-                <tr><td>Offspring</td><td>₹${offspring.toLocaleString('en-IN')}</td></tr>
-                <tr><td>Pinnacle</td><td>₹${pinnacle.toLocaleString('en-IN')}</td></tr>
-                <tr class="total-row"><td style="font-size: 16px;">Total Booking Amount</td><td>₹${total.toLocaleString('en-IN')}</td></tr>
-              </table>
+            <div class="breakdown-section">
+              <div class="breakdown-title">💰 Price Segregation</div>
+              <div class="breakdown-row">
+                <span>TPU (Adult) per person</span>
+                <span>₹${combo.tpuAdult.toLocaleString('en-IN')}</span>
+              </div>
+              <div class="breakdown-row">
+                <span>TPU (Child) per person</span>
+                <span>₹${combo.tpuChild.toLocaleString('en-IN')}</span>
+              </div>
+              <div class="breakdown-row">
+                <span>Offspring (Amount) per guest</span>
+                <span>₹${combo.offspring.toLocaleString('en-IN')}</span>
+              </div>
+              <div class="breakdown-row">
+                <span>Pinnacle (Amount) per guest</span>
+                <span>₹${combo.pinnacle.toLocaleString('en-IN')}</span>
+              </div>
             </div>
+
+            <table class="results-table">
+              <tr><td>TPU</td><td>₹${tpu.toLocaleString('en-IN')}</td></tr>
+              <tr><td>OEPL (Offspring)</td><td>₹${oepl.toLocaleString('en-IN')}</td></tr>
+              <tr><td>PAEPL (Pinnacle)</td><td>₹${paepl.toLocaleString('en-IN')}</td></tr>
+              <tr class="total-row"><td>TOTAL</td><td>₹${total.toLocaleString('en-IN')}</td></tr>
+            </table>
 
             <div class="footer">
               <strong>Printed on:</strong> ${new Date().toLocaleString('en-IN')}<br>
               <strong>Formula:</strong> TPU = (Adult Price × Adults) + (Child Price × Children) | 
-              Offspring/Pinnacle = Per-Guest Rate × Total Guests | Total = TPU + Offspring + Pinnacle
+              OEPL/PAEPL = Per-Guest Rate × Total Guests
             </div>
           </div>
         </body>
@@ -759,22 +917,13 @@
 
       printWindow.document.close();
       printWindow.focus();
-      printWindow.print();
+      setTimeout(() => printWindow.print(), 250);
     }
 
-    function resetForm() {
-      document.getElementById('username').value = '';
-      document.getElementById('date').valueAsDate = new Date();
-      document.getElementById('notes').value = '';
-      document.getElementById('combo').value = '';
-      document.getElementById('adults').value = '1';
-      document.getElementById('children').value = '0';
-      calculate();
+    function togglePrintMenu() {
+      alert('Print Menu: Select print option\n• Print MY A4\n• Print ALL');
     }
 
-    document.getElementById('combo').addEventListener('change', calculate);
-    document.getElementById('adults').addEventListener('input', calculate);
-    document.getElementById('children').addEventListener('input', calculate);
     calculate();
   </script>
 </body>
