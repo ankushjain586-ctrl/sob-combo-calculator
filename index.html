@@ -23,6 +23,7 @@ body{margin:0;background:#eef2ff;font-family:system-ui;padding:10px}
 .save{background:#0047cc;border-radius:22px;padding:12px 22px}
 .reset{background:#ff8a00;border-radius:22px;padding:12px 22px}
 .live-dot{font-size:11px;background:#00c853;color:#fff;padding:3px 8px;border-radius:10px;margin-left:6px}
+small{color:#666;font-size:11px}
 </style>
 </head>
 <body>
@@ -32,36 +33,73 @@ body{margin:0;background:#eef2ff;font-family:system-ui;padding:10px}
 </div>
 <div class="hi-row">
 <span>🌞</span><b>Hi,</b>
-<input id="username" placeholder="Enter Username" value="">
+<input id="username" placeholder="Enter Username">
 <button class="btn blue" onclick="loadLive()">Load</button>
 </div>
-
-<!-- YE TABHI DIKHEGA JAB LOAD DABAO -->
 <div class="info" id="infoBar"><b id="uName"></b> ke <span id="userCount">0</span> SOB saved hai | Total All Users: <span id="totalCount">0</span> <span class="live-dot">● LIVE</span></div>
 
 <div class="title">SOB coMboS calculator</div>
-<select class="input" id="comboSel" onchange="calc()"><option value="">Select Combo</option><option>Combo 1 - 2N/3D</option><option>Combo 2 - 3N/4D</option><option>Combo 3 - 4N/5D</option></select>
+
+<!-- SAARE 15 COMBOS -->
+<select class="input" id="comboSel" onchange="calc()">
+<option value="">Select Combo</option>
+<option value="Explorer" data-adult="299" data-child="209">1. Explorer Combo - 299/209</option>
+<option value="Eco Adventure" data-adult="397" data-child="307">2. Eco Adventure Combo - 397/307</option>
+<option value="Eco Fun" data-adult="398" data-child="308">3. Eco Fun Combo - 398/308</option>
+<option value="Snow Adventure" data-adult="425" data-child="335">4. Snow Adventure Combo - 425/335</option>
+<option value="Aastha" data-adult="570" data-child="500">5. Aastha Combo - 570/500</option>
+<option value="Adventure" data-adult="699" data-child="699">6. Adventure Combo - 699/NA</option>
+<option value="Namah" data-adult="700" data-child="525">7. Namah Combo - 700/525</option>
+<option value="Viewing Fun" data-adult="775" data-child="585">8. Viewing Fun Combo - 775/585</option>
+<option value="Symbolic Play" data-adult="769" data-child="579">9. Symbolic Play Combo - 769/579</option>
+<option value="Ultimate Play" data-adult="889" data-child="799">10. Ultimate Play Combo - 889/799</option>
+<option value="Delight" data-adult="925" data-child="835">11. Delight Combo - 925/835</option>
+<option value="Mini Blast" data-adult="969" data-child="779">12. Mini Blast Combo - 969/779</option>
+<option value="All in fun" data-adult="1100" data-child="925">13. All in fun Combo - 1100/925</option>
+<option value="Divine Rush" data-adult="1550" data-child="975">14. Divine Rush Combo - 1550/975</option>
+<option value="Ultimate Mega" data-adult="4249" data-child="4249">15. Ultimate Mega Combo - 4249/NA</option>
+</select>
+
 <input class="input" id="adults" type="number" placeholder="No. of Adults" oninput="calc()">
 <input class="input" id="children" type="number" placeholder="No. of Children" oninput="calc()">
-<div class="card"><div class="row"><span>TPU</span><span id="tpu">₹ 0</span></div><div class="row"><span>OEPL</span><span id="oepl">₹ 0</span></div><div class="row"><span>PAEPL</span><span id="paepl">₹ 0</span></div><div class="row total-row"><span>TOTAL</span><span class="total-pill" id="total">₹ 0</span></div></div>
+
+<div class="card">
+<div class="row"><span>TPU <small id="tpuBreak"></small></span><span id="tpu">₹ 0</span></div>
+<div class="row"><span>OEPL (10%)</span><span id="oepl">₹ 0</span></div>
+<div class="row"><span>PAEPL (5%)</span><span id="paepl">₹ 0</span></div>
+<div class="row total-row"><span>TOTAL</span><span class="total-pill" id="total">₹ 0</span></div>
+</div>
+
 <input class="input" id="sobId" placeholder="Enter 6-digit SOB ID" maxlength="6">
 <div class="actions"><button class="btn save" onclick="saveSOB()">Save SOB</button><button class="btn reset" onclick="resetAll()">Reset</button></div>
 <div id="status" style="font-size:12px;text-align:center;color:#666">Username daal ke Load dabao</div>
-<div class="card" id="listCard" style="display:none"><b>Recent LIVE Bookings</b><table><thead><tr><th>SOB ID</th><th>User</th><th>Total</th><th>Del</th></tr></thead><tbody id="list"></tbody></table></div>
+<div class="card" id="listCard" style="display:none"><b>Recent LIVE Bookings</b><div style="overflow:auto"><table style="width:100%;font-size:12px"><thead><tr><th>SOB ID</th><th>Combo</th><th>Total</th><th>Del</th></tr></thead><tbody id="list"></tbody></table></div></div>
 
 <script>
 const API="https://api.npoint.io/86455d8f8fd1e7f18d6c";
 let allData=[];
 function calc(){
+  let sel=document.getElementById('comboSel');
+  let opt=sel.options[sel.selectedIndex];
+  let adultPrice=parseInt(opt.getAttribute('data-adult'))||0;
+  let childPrice=parseInt(opt.getAttribute('data-child'))||0;
+  if(opt.value.includes('Adventure') && sel.selectedIndex==6) childPrice=adultPrice;
+  if(opt.value.includes('Mega') && sel.selectedIndex==15) childPrice=adultPrice;
+  
   let a=parseInt(document.getElementById('adults').value)||0;
   let c=parseInt(document.getElementById('children').value)||0;
-  let base=[0,12000,15000,18000,20000][document.getElementById('comboSel').selectedIndex]||0;
-  let tpu=a*base+c*base*0.5, oepl=tpu*0.1, paepl=tpu*0.05, tot=tpu+oepl+paepl;
+  
+  let tpu = (a*adultPrice)+(c*childPrice);
+  let oepl = Math.round(tpu*0.10);
+  let paepl = Math.round(tpu*0.05);
+  let tot = tpu+oepl+paepl;
+  
+  document.getElementById('tpuBreak').innerText = `(${a}x${adultPrice} + ${c}x${childPrice})`;
   document.getElementById('tpu').innerText='₹ '+tpu;
   document.getElementById('oepl').innerText='₹ '+oepl;
   document.getElementById('paepl').innerText='₹ '+paepl;
   document.getElementById('total').innerText='₹ '+tot;
-  return {tot};
+  return {tpu,oepl,paepl,tot,adultPrice,childPrice};
 }
 async function loadLive(){
   let user=document.getElementById('username').value.trim();
@@ -72,18 +110,17 @@ async function loadLive(){
     let r=await fetch(API); allData=await r.json(); if(!Array.isArray(allData)) allData=[];
     document.getElementById('userCount').innerText=allData.filter(x=>x.user===user).length;
     document.getElementById('totalCount').innerText=allData.length;
-    // AB INFO BAR DIKHAO
     document.getElementById('infoBar').style.display='block';
     document.getElementById('status').innerText='LIVE synced - '+allData.length+' bookings';
     renderList();
   }catch(e){document.getElementById('status').innerText='Error: '+e}
 }
 function renderList(){
-  if(allData.length==0) return;
+  if(allData.length==0){document.getElementById('listCard').style.display='none';return;}
   document.getElementById('listCard').style.display='block';
   let tbody=document.getElementById('list'); tbody.innerHTML='';
-  allData.slice().reverse().slice(0,10).forEach(b=>{
-    tbody.innerHTML+=`<tr><td>${b.sobId}</td><td>${b.user}</td><td>₹${b.total}</td><td><button onclick="delLive('${b.id}')" style="border:none;background:none;color:red">❌</button></td></tr>`;
+  allData.slice().reverse().slice(0,20).forEach(b=>{
+    tbody.innerHTML+=`<tr><td>${b.sobId}</td><td><small>${b.combo}</small></td><td>₹${b.total}</td><td><button onclick="delLive('${b.id}')" style="border:none;background:none;color:red">❌</button></td></tr>`;
   });
 }
 async function saveSOB(){
@@ -91,8 +128,11 @@ async function saveSOB(){
   if(!user){alert('Pehle Load dabao');return;}
   let sobId=document.getElementById('sobId').value;
   if(sobId.length!==6){alert('6-digit SOB ID dalo');return;}
+  let sel=document.getElementById('comboSel').value;
+  if(!sel){alert('Combo select karo');return;}
   let c=calc();
-  allData.push({id:Date.now().toString(),user:user,sobId:sobId,total:c.tot});
+  allData.push({id:Date.now().toString(),user:user,sobId:sobId,combo:sel,adults:document.getElementById('adults').value,children:document.getElementById('children').value,total:c.tot});
+  document.getElementById('status').innerText='Saving LIVE...';
   await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(allData)});
   loadLive(); document.getElementById('sobId').value='';
 }
