@@ -2,33 +2,23 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOB coMboS calculator - With Excel</title>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<title>SOB coMboS calculator - Final</title>
 <style>
 *{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;margin:0;padding:0}
 body{background:#eef4ff;min-height:100vh;padding-bottom:30px}
 .top{display:flex;justify-content:space-between;padding:10px;gap:8px}
-.g{background:#00b050;color:#fff;border:none;padding:10px 12px;border-radius:10px;font-weight:800;font-size:13px;box-shadow:0 3px 0 #007a38;cursor:pointer}
-.p{background:#7c3aed;color:#fff;border:none;padding:10px 12px;border-radius:10px;font-weight:800;font-size:13px;box-shadow:0 3px 0 #4c1d95;cursor:pointer}
+.g{background:#00b050;color:#fff;border:none;padding:10px 12px;border-radius:10px;font-weight:800;font-size:13px;box-shadow:0 3px 0 #007a38}
+.p{background:#7c3aed;color:#fff;border:none;padding:10px 12px;border-radius:10px;font-weight:800;font-size:13px;box-shadow:0 3px 0 #4c1d95}
 .hi{display:flex;align-items:center;justify-content:center;gap:8px;margin:14px 0 8px} .inpU{background:#fff;border:0;border-radius:22px;padding:8px 16px;width:150px;text-align:center;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.12)} .btnL{background:#1a56db;color:#fff;border:0;border-radius:20px;padding:8px 20px;font-weight:800;box-shadow:0 3px 0 #0f2f7a}
 h1{text-align:center;font-size:26px;font-weight:900;margin:14px 0 16px}
 .sel,.num{margin:10px 14px;background:#fff;border-radius:16px;padding:14px 16px;border:0;box-shadow:0 4px 14px rgba(0,0,0,.08);width:calc(100% - 28px);font-size:16px;outline:none;display:block} .sel{font-weight:600}
 .box{margin:16px 14px;background:#fff;border-radius:20px;padding:16px;box-shadow:0 6px 18px rgba(0,0,0,.1)} .row{display:flex;justify-content:space-between;padding:8px 4px;font-size:17px;font-weight:600} .line{height:1px;background:#333;margin:8px 0;opacity:.3} .totalRow{display:flex;justify-content:space-between;align-items:center;margin-top:6px} .tot{background:#fff;border:2px solid #facc15;padding:6px 14px;border-radius:12px;font-weight:900;box-shadow:0 0 12px #facc15;min-width:80px;text-align:center}
 .sobId{display:flex;margin:16px 14px;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.08)} .sobId input{flex:1;border:0;padding:14px 16px;font-size:15px;outline:none} .sobId button{border:0;border-left:1px solid #eee;background:#fff;padding:0 14px}
-.actions{display:flex;justify-content:center;gap:12px;margin:14px} .bSave{background:#0b56d1;color:#fff;border:0;padding:12px 22px;border-radius:24px;font-weight:800} .bReset{background:#ff8c00;color:#fff;border:0;padding:12px 18px;border-radius:24px;font-weight:800} .prints{display:flex;justify-content:center;gap:10px;margin:10px 14px} .pr{background:#fff;border:0;padding:10px 14px;border-radius:20px;box-shadow:0 3px 10px rgba(0,0,0,.1);font-weight:700;cursor:pointer}
-.small{font-size:10px;text-align:center;color:#333;margin-top:10px;font-weight:600}
-.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center;padding:12px}
-.modal.show{display:flex}
-.modalBox{background:#fff;width:100%;max-width:800px;max-height:90vh;border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
-.modalHead{display:flex;justify-content:space-between;padding:14px 18px;background:#1a56db;color:#fff;font-weight:800}
-.modalBody{overflow:auto;padding:12px}
-table{width:100%;border-collapse:collapse;font-size:12px} th{background:#eef4ff;padding:8px;text-align:left;position:sticky;top:0} td{padding:7px 8px;border-bottom:1px solid #eee}
-.btnExcel{background:#107c41;color:#fff;border:0;padding:10px 18px;border-radius:8px;font-weight:800;margin:10px;cursor:pointer}
-.btnClear{background:#c00;color:#fff;border:0;padding:8px 14px;border-radius:8px;font-weight:700;margin-left:8px}
+.actions{display:flex;justify-content:center;gap:12px;margin:14px} .bSave{background:#0b56d1;color:#fff;border:0;padding:12px 22px;border-radius:24px;font-weight:800} .bReset{background:#ff8c00;color:#fff;border:0;padding:12px 18px;border-radius:24px;font-weight:800} .prints{display:flex;justify-content:center;gap:10px;margin:10px 14px} .pr{background:#fff;border:0;padding:10px 14px;border-radius:20px;box-shadow:0 3px 10px rgba(0,0,0,.1);font-weight:700} .small{font-size:10px;text-align:center;color:#333;margin-top:10px;font-weight:600}
 </style>
 </head>
 <body>
-<div class="top"><button class="g" onclick="showReverse()">Reverse Combo Finder</button><button class="p" onclick="openReport()">Daily Report Generator</button></div>
+<div class="top"><button class="g">Reverse Combo Finder</button><button class="p">Daily Report Generator</button></div>
 <div class="hi"><span>🌞</span><b>Hi,</b><input class="inpU" id="userName" placeholder="Enter Username"><button class="btnL" onclick="loadUser()">Load</button></div>
 <h1>SOB coMboS calculator</h1>
 <select class="sel" id="comboSelect" onchange="calculate()"><option value="">Select Combo</option></select>
@@ -44,23 +34,8 @@ table{width:100%;border-collapse:collapse;font-size:12px} th{background:#eef4ff;
 </div>
 <div class="sobId"><input id="sobId" placeholder="Enter 6-digit SOB ID" maxlength="6"><button>📷</button></div>
 <div class="actions"><button class="bSave" onclick="saveSob()">Save SOB</button><button class="bReset" onclick="resetAll()">Reset Calculator</button></div>
-<div class="prints"><button class="pr" onclick="printMyA4()">📄 Print My A4</button><button class="pr" onclick="openReport()">📄 Print ALL ▼</button></div>
-<div class="small"><span>26G24 | V4.8 EXCEL</span> ✅ NAME.S : <u id="displayName">____</u> DATE : <span id="date"></span> | Saved: <span id="savedCount">0</span></div>
-
-<div class="modal" id="reportModal">
-<div class="modalBox">
-<div class="modalHead"><span>Daily Report - All Saved SOB (<span id="modalCount">0</span>)</span><span style="cursor:pointer" onclick="closeReport()">✕</span></div>
-<div style="padding:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center">
-<button class="btnExcel" onclick="exportExcel()">📊 Download Excel Sheet</button>
-<button class="btnExcel" style="background:#1a56db" onclick="printTable()">🖨️ Print All</button>
-<button class="btnClear" onclick="clearAllData()">🗑️ Clear All</button>
-</div>
-<div class="modalBody" id="modalBody">
-<table id="reportTable"><thead><tr><th>#</th><th>Date</th><th>User</th><th>SOB ID</th><th>Combo</th><th>Adults</th><th>Children</th><th>TPU</th><th>OEPL</th><th>PAEPL</th><th>TOTAL</th></tr></thead><tbody id="reportTbody"></tbody></table>
-</div>
-</div>
-</div>
-
+<div class="prints"><button class="pr">📄 Print My A4</button><button class="pr">📄 Print ALL ▼</button></div>
+<div class="small"><span>26G24 | V4.7</span> ✅ NAME.S : <u id="displayName">____</u> DATE : <span id="date"></span></div>
 <script>
 const combos = [
   {id:1,name:"1. Explorer Combo",tpuA:170,tpuC:80,oeplA:40,paeplA:89,totalA:299,totalC:209},
@@ -81,19 +56,33 @@ const combos = [
 ];
 const select = document.getElementById('comboSelect');
 combos.forEach(c=>{ const o=document.createElement('option'); o.value=c.id; o.textContent=c.name + " - ₹"+c.totalA + (c.totalC?"/₹"+c.totalC:""); select.appendChild(o); });
-let currentCalc = {tpu:0,oepl:0,paepl:0,total:0};
 function calculate(){
   const id=parseInt(select.value); const adults=parseInt(document.getElementById('adults').value)||0; const children=parseInt(document.getElementById('children').value)||0;
   if(!id){ setValues(0,0,0,0,""); return; }
   const combo=combos.find(c=>c.id===id);
   if(combo.totalC===null && children>0){ alert('Is combo me Child NA hai'); document.getElementById('children').value=0; return calculate(); }
-  let tpu = adults*combo.tpuA; let oepl = adults*combo.oeplA; let paepl = adults*combo.paeplA;
+  let tpu = adults*combo.tpuA;
+  let oepl = adults*combo.oeplA;
+  let paepl = adults*combo.paeplA;
   if(children>0 && combo.totalC!==null){
-    let tpuC = children*combo.tpuC; let remainingChild = children*combo.totalC - tpuC;
+    let tpuC = children*combo.tpuC;
+    let remainingChild = children*combo.totalC - tpuC;
     let adultRemaining = combo.totalA - combo.tpuA;
     let oeplRatio = adultRemaining ? combo.oeplA/adultRemaining : 0;
-    let oeplC = Math.round(remainingChild*oeplRatio); let paeplC = remainingChild - oeplC;
+    let paeplRatio = adultRemaining ? combo.paeplA/adultRemaining : 0;
+    let oeplC = Math.round(remainingChild*oeplRatio);
+    let paeplC = remainingChild - oeplC;
     tpu+=tpuC; oepl+=oeplC; paepl+=paeplC;
   }
-  const total = tpu+oepl+paepl; currentCalc={tpu,oepl,paepl,total,combo,adults,children};
-  setValues(tpu,oepl,paepl,total, adults+" Adult x "+combo.totalA+" + "+children+" Child x "+(combo.total
+  const total = tpu+oepl+paepl;
+  setValues(tpu,oepl,paepl,total, adults+" Adult x "+combo.totalA+" + "+children+" Child x "+(combo.totalC||0));
+}
+function setValues(tpu,oepl,paepl,total,detail){ document.getElementById('tpu').innerText="₹ "+tpu; document.getElementById('oepl').innerText="₹ "+oepl; document.getElementById('paepl').innerText="₹ "+paepl; document.getElementById('total').innerText="₹ "+total; document.getElementById('detail').innerText=detail; }
+function resetAll(){ select.value=""; document.getElementById('adults').value=""; document.getElementById('children').value=""; document.getElementById('sobId').value=""; setValues(0,0,0,0,""); }
+function loadUser(){ const n=document.getElementById('userName').value; if(n) document.getElementById('displayName').innerText=n; localStorage.setItem('sob_user',n); }
+function saveSob(){ const sob=document.getElementById('sobId').value; if(sob.length!==6){ alert('Enter 6-digit SOB ID'); return; } alert('Saved SOB '+sob+' - '+document.getElementById('total').innerText); }
+document.getElementById('date').innerText=new Date().toLocaleDateString('en-GB');
+const saved=localStorage.getItem('sob_user'); if(saved){ document.getElementById('userName').value=saved; document.getElementById('displayName').innerText=saved; }
+</script>
+</body>
+</html>
