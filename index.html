@@ -1,80 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOB Combo Calculator - New</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOB coMboS calculator - Final</title>
 <style>
-/* --- PEHLI WALI KA SAME DESIGN --- */
-body{font-family: 'Segoe UI', sans-serif;background:#f5f7fb;margin:0;padding:15px}
-.container{max-width:900px;margin:auto;background:#fff;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.1);padding:20px}
-h1{text-align:center;color:#0d47a1;margin-bottom:5px}
-.sub{text-align:center;color:#666;margin-bottom:20px}
-.combo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-.combo-card{border:1px solid #ddd;border-radius:10px;padding:12px;display:flex;justify-content:space-between;align-items:center;background:#fafafa}
-.combo-card.active{border-color:#0d47a1;background:#e3f2fd}
-.combo-info b{font-size:16px}
-.combo-info span{display:block;font-size:13px;color:#555}
-.combo-card button{background:#0d47a1;color:#fff;border:none;padding:7px 12px;border-radius:6px;cursor:pointer}
-.summary{margin-top:20px;background:#f0f4ff;border-radius:10px;padding:15px}
-.summary h3{margin:0 0 10px}
-.split-box{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #ccc;font-size:14px}
-.total{font-weight:bold;font-size:18px;text-align:right;margin-top:10px;color:#0d47a1}
+*{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;margin:0;padding:0}
+body{background:#eef4ff;min-height:100vh;padding-bottom:30px}
+.top{display:flex;justify-content:space-between;padding:10px;gap:8px}
+.g{background:#00b050;color:#fff;border:none;padding:10px 12px;border-radius:10px;font-weight:800;font-size:13px;box-shadow:0 3px 0 #007a38}
+.p{background:#7c3aed;color:#fff;border:none;padding:10px 12px;border-radius:10px;font-weight:800;font-size:13px;box-shadow:0 3px 0 #4c1d95}
+.hi{display:flex;align-items:center;justify-content:center;gap:8px;margin:14px 0 8px} .inpU{background:#fff;border:0;border-radius:22px;padding:8px 16px;width:150px;text-align:center;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.12)} .btnL{background:#1a56db;color:#fff;border:0;border-radius:20px;padding:8px 20px;font-weight:800;box-shadow:0 3px 0 #0f2f7a}
+h1{text-align:center;font-size:26px;font-weight:900;margin:14px 0 16px}
+.sel,.num{margin:10px 14px;background:#fff;border-radius:16px;padding:14px 16px;border:0;box-shadow:0 4px 14px rgba(0,0,0,.08);width:calc(100% - 28px);font-size:16px;outline:none;display:block} .sel{font-weight:600}
+.box{margin:16px 14px;background:#fff;border-radius:20px;padding:16px;box-shadow:0 6px 18px rgba(0,0,0,.1)} .row{display:flex;justify-content:space-between;padding:8px 4px;font-size:17px;font-weight:600} .line{height:1px;background:#333;margin:8px 0;opacity:.3} .totalRow{display:flex;justify-content:space-between;align-items:center;margin-top:6px} .tot{background:#fff;border:2px solid #facc15;padding:6px 14px;border-radius:12px;font-weight:900;box-shadow:0 0 12px #facc15;min-width:80px;text-align:center}
+.sobId{display:flex;margin:16px 14px;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.08)} .sobId input{flex:1;border:0;padding:14px 16px;font-size:15px;outline:none} .sobId button{border:0;border-left:1px solid #eee;background:#fff;padding:0 14px}
+.actions{display:flex;justify-content:center;gap:12px;margin:14px} .bSave{background:#0b56d1;color:#fff;border:0;padding:12px 22px;border-radius:24px;font-weight:800} .bReset{background:#ff8c00;color:#fff;border:0;padding:12px 18px;border-radius:24px;font-weight:800} .prints{display:flex;justify-content:center;gap:10px;margin:10px 14px} .pr{background:#fff;border:0;padding:10px 14px;border-radius:20px;box-shadow:0 3px 10px rgba(0,0,0,.1);font-weight:700} .small{font-size:10px;text-align:center;color:#333;margin-top:10px;font-weight:600}
 </style>
 </head>
 <body>
-<div class="container">
-<h1>SOB COMBO</h1>
-<p class="sub">Select Combo - Auto Split Calculation</p>
-
-<div class="combo-grid" id="comboGrid"></div>
-
-<div class="summary">
-<h3>Selected Combo: <span id="selectedName">None</span></h3>
-<div id="splitList"></div>
-<div class="total" id="totalAmount">Total: 0 Rs</div>
+<div class="top"><button class="g">Reverse Combo Finder</button><button class="p">Daily Report Generator</button></div>
+<div class="hi"><span>🌞</span><b>Hi,</b><input class="inpU" id="userName" placeholder="Enter Username"><button class="btnL" onclick="loadUser()">Load</button></div>
+<h1>SOB coMboS calculator</h1>
+<select class="sel" id="comboSelect" onchange="calculate()"><option value="">Select Combo</option></select>
+<input class="num" id="adults" type="number" placeholder="No. of Adults" min="0" oninput="calculate()">
+<input class="num" id="children" type="number" placeholder="No. of Children" min="0" oninput="calculate()">
+<div class="box">
+<div class="row"><span>TPU</span><span id="tpu">₹ 0</span></div>
+<div class="row"><span>OEPL</span><span id="oepl">₹ 0</span></div>
+<div class="row"><span>PAEPL</span><span id="paepl">₹ 0</span></div>
+<div class="line"></div>
+<div class="totalRow"><b>TOTAL</b><div class="tot" id="total">₹ 0</div></div>
+<div style="margin-top:8px;font-size:11px;color:#555" id="detail"></div>
 </div>
-</div>
-
+<div class="sobId"><input id="sobId" placeholder="Enter 6-digit SOB ID" maxlength="6"><button>📷</button></div>
+<div class="actions"><button class="bSave" onclick="saveSob()">Save SOB</button><button class="bReset" onclick="resetAll()">Reset Calculator</button></div>
+<div class="prints"><button class="pr">📄 Print My A4</button><button class="pr">📄 Print ALL ▼</button></div>
+<div class="small"><span>26G24 | V4.7</span> ✅ NAME.S : <u id="displayName">____</u> DATE : <span id="date"></span></div>
 <script>
-// --- NEW COMBO DATA - DUSRI WALI LINK SE (Yahi aapko rakhna hai) ---
-// Agar amount change karna ho to bas yahi edit karo
 const combos = [
-  { id: 1, name: "Basic Combo", price: 400, split: { "Park Entry": 150, "SOB": 250 } },
-  { id: 2, name: "Snow Park Combo", price: 650, split: { "Park Entry": 150, "Snow Park": 250, "SOB": 250 } },
-  { id: 3, name: "Full Enjoy Combo", price: 850, split: { "Park Entry": 150, "Snow Park": 250, "Museum + Village": 200, "SOB": 250 } },
-  { id: 4, name: "Snow + SOB Only", price: 500, split: { "Snow Park": 250, "SOB": 250 } },
-  // Aap apne new combos yaha add kar sakte ho
+  {id:1,name:"1. Explorer Combo",tpuA:170,tpuC:80,oeplA:40,paeplA:89,totalA:299,totalC:209},
+  {id:2,name:"2. Eco Adventure Combo",tpuA:170,tpuC:80,oeplA:0,paeplA:227,totalA:397,totalC:307},
+  {id:3,name:"3. Eco Fun Combo",tpuA:170,tpuC:80,oeplA:28,paeplA:200,totalA:398,totalC:308},
+  {id:4,name:"4. Snow Adventure Combo",tpuA:170,tpuC:80,oeplA:0,paeplA:255,totalA:425,totalC:335},
+  {id:5,name:"5. Aastha Combo",tpuA:470,tpuC:400,oeplA:0,paeplA:100,totalA:570,totalC:500},
+  {id:6,name:"6. Adventure Combo",tpuA:170,tpuC:0,oeplA:0,paeplA:529,totalA:699,totalC:null},
+  {id:7,name:"7. Namah Combo",tpuA:650,tpuC:475,oeplA:0,paeplA:50,totalA:700,totalC:525},
+  {id:8,name:"8. Viewing Fun Combo",tpuA:470,tpuC:280,oeplA:155,paeplA:150,totalA:775,totalC:585},
+  {id:9,name:"9. Symbolic Play Combo",tpuA:470,tpuC:280,oeplA:249,paeplA:50,totalA:769,totalC:579},
+  {id:10,name:"10. Ultimate Play Combo",tpuA:170,tpuC:80,oeplA:199,paeplA:520,totalA:889,totalC:799},
+  {id:11,name:"11. Delight Combo",tpuA:470,tpuC:380,oeplA:105,paeplA:350,totalA:925,totalC:835},
+  {id:12,name:"12. Mini Blast Combo",tpuA:670,tpuC:480,oeplA:199,paeplA:100,totalA:969,totalC:779},
+  {id:13,name:"13. All in fun Combo",tpuA:450,tpuC:275,oeplA:200,paeplA:450,totalA:1100,totalC:925},
+  {id:14,name:"14. Divine Rush Combo",tpuA:1450,tpuC:875,oeplA:0,paeplA:100,totalA:1550,totalC:975},
+  {id:15,name:"15. Ultimate Mega Combo",tpuA:1500,tpuC:0,oeplA:449,paeplA:2300,totalA:4249,totalC:null}
 ];
-
-let selected = null;
-const grid = document.getElementById('comboGrid');
-const selectedName = document.getElementById('selectedName');
-const splitList = document.getElementById('splitList');
-const totalAmount = document.getElementById('totalAmount');
-
-function render(){
-  grid.innerHTML = "";
-  combos.forEach(c=>{
-    const div = document.createElement('div');
-    div.className = 'combo-card' + (selected && selected.id===c.id ? ' active':'');
-    div.innerHTML = `<div class="combo-info"><b>${c.name}</b><span>Price: ${c.price} Rs</span></div><button onclick="selectCombo(${c.id})">Select</button>`;
-    grid.appendChild(div);
-  });
+const select = document.getElementById('comboSelect');
+combos.forEach(c=>{ const o=document.createElement('option'); o.value=c.id; o.textContent=c.name + " - ₹"+c.totalA + (c.totalC?"/₹"+c.totalC:""); select.appendChild(o); });
+function calculate(){
+  const id=parseInt(select.value); const adults=parseInt(document.getElementById('adults').value)||0; const children=parseInt(document.getElementById('children').value)||0;
+  if(!id){ setValues(0,0,0,0,""); return; }
+  const combo=combos.find(c=>c.id===id);
+  if(combo.totalC===null && children>0){ alert('Is combo me Child NA hai'); document.getElementById('children').value=0; return calculate(); }
+  let tpu = adults*combo.tpuA;
+  let oepl = adults*combo.oeplA;
+  let paepl = adults*combo.paeplA;
+  if(children>0 && combo.totalC!==null){
+    let tpuC = children*combo.tpuC;
+    let remainingChild = children*combo.totalC - tpuC;
+    let adultRemaining = combo.totalA - combo.tpuA;
+    let oeplRatio = adultRemaining ? combo.oeplA/adultRemaining : 0;
+    let paeplRatio = adultRemaining ? combo.paeplA/adultRemaining : 0;
+    let oeplC = Math.round(remainingChild*oeplRatio);
+    let paeplC = remainingChild - oeplC;
+    tpu+=tpuC; oepl+=oeplC; paepl+=paeplC;
+  }
+  const total = tpu+oepl+paepl;
+  setValues(tpu,oepl,paepl,total, adults+" Adult x "+combo.totalA+" + "+children+" Child x "+(combo.totalC||0));
 }
-
-function selectCombo(id){
-  selected = combos.find(c=>c.id===id);
-  selectedName.innerText = selected.name;
-  splitList.innerHTML = "";
-  Object.entries(selected.split).forEach(([k,v])=>{
-    splitList.innerHTML += `<div class="split-box"><span>${k}</span><span>${v} Rs</span></div>`;
-  });
-  totalAmount.innerText = "Total: " + selected.price + " Rs";
-  render();
-}
-
-render();
+function setValues(tpu,oepl,paepl,total,detail){ document.getElementById('tpu').innerText="₹ "+tpu; document.getElementById('oepl').innerText="₹ "+oepl; document.getElementById('paepl').innerText="₹ "+paepl; document.getElementById('total').innerText="₹ "+total; document.getElementById('detail').innerText=detail; }
+function resetAll(){ select.value=""; document.getElementById('adults').value=""; document.getElementById('children').value=""; document.getElementById('sobId').value=""; setValues(0,0,0,0,""); }
+function loadUser(){ const n=document.getElementById('userName').value; if(n) document.getElementById('displayName').innerText=n; localStorage.setItem('sob_user',n); }
+function saveSob(){ const sob=document.getElementById('sobId').value; if(sob.length!==6){ alert('Enter 6-digit SOB ID'); return; } alert('Saved SOB '+sob+' - '+document.getElementById('total').innerText); }
+document.getElementById('date').innerText=new Date().toLocaleDateString('en-GB');
+const saved=localStorage.getItem('sob_user'); if(saved){ document.getElementById('userName').value=saved; document.getElementById('displayName').innerText=saved; }
 </script>
 </body>
 </html>
