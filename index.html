@@ -6,9 +6,9 @@
 <title>SOB coMboS calculator</title>
 <style>
 body{margin:0;background:#eef2ff;font-family:system-ui;padding:10px}
-.top{display:flex;justify-content:space-between;margin:6px 0 12px}
-.btn{border:none;border-radius:12px;padding:10px 16px;font-weight:700;color:#fff;font-size:14px}
-.green{background:#00b050}.purple{background:#7b5cff}
+.top{display:flex;justify-content:space-between;margin:6px 0 12px;flex-wrap:wrap;gap:6px}
+.btn{border:none;border-radius:12px;padding:10px 16px;font-weight:700;color:#fff;font-size:13px;cursor:pointer}
+.green{background:#00b050}.purple{background:#7b5cff}.orange{background:#ff8a00}.darkblue{background:#0047cc}
 .hi-row{display:flex;align-items:center;gap:8px;margin:10px 0}
 .hi-row input{flex:1;background:#fff;border:none;border-radius:20px;padding:10px 16px;text-align:center;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.08)}
 .blue{background:#0055ff;color:#fff;border-radius:20px;padding:10px 14px}
@@ -19,63 +19,94 @@ body{margin:0;background:#eef2ff;font-family:system-ui;padding:10px}
 .row{display:flex;justify-content:space-between;padding:8px 0;font-weight:600}
 .total-row{border-top:2px solid #ddd;margin-top:8px;padding-top:12px}
 .total-pill{border:2px solid #ffcc00;border-radius:18px;padding:6px 18px;font-weight:800}
-.actions{display:flex;justify-content:center;gap:12px;margin:14px 0}
-.save{background:#0047cc;border-radius:22px;padding:12px 22px}
-.reset{background:#ff8a00;border-radius:22px;padding:12px 22px}
+.actions{display:flex;justify-content:center;gap:10px;margin:14px 0;flex-wrap:wrap}
+.save{background:#0047cc;border-radius:22px;padding:12px 20px}
+.reset{background:#ff8a00;border-radius:22px;padding:12px 20px}
+.print{background:#00b050;border-radius:22px;padding:12px 20px}
+.table-wrap{background:#fff;border-radius:18px;padding:12px;margin:12px 0;overflow:auto;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{border:1px solid #ddd;padding:6px 8px;text-align:center}
+th{background:#eef2ff;font-weight:700}
+@media print{.no-print{display:none}.print-only{display:block} }
 </style>
 </head>
 <body>
-<div class="top">
-<button class="btn green">Reverse Combo Finder</button>
-<button class="btn purple">Daily Report</button>
+<div class="top no-print">
+<button class="btn green" onclick="reverseFinder()">Reverse Combo Finder</button>
+<button class="btn purple" onclick="dailyReport()">Daily Report</button>
+<button class="btn orange" onclick="printAll()">Print All</button>
+<button class="btn darkblue" onclick="showUserwise()">Userwise</button>
 </div>
-<div class="hi-row">
+
+<div class="hi-row no-print">
 <span>🌞</span><b>Hi,</b>
 <input id="username" placeholder="Enter Username">
 <button class="btn blue" onclick="loadLive()">Load</button>
 </div>
+
 <div class="info" id="infoBar"><b id="uName"></b> ke <span id="userCount">0</span> SOB saved hai | Total All Users: <span id="totalCount">0</span></div>
+
 <div class="title">SOB coMboS calculator</div>
+
 <select class="input" id="comboSel" onchange="calc()">
 <option value="">Select Combo</option>
-<option value="0">Explorer Combo</option>
-<option value="1">Eco Adventure Combo</option>
-<option value="2">Eco Fun Combo</option>
-<option value="3">Snow Adventure Combo</option>
-<option value="4">Aastha Combo</option>
-<option value="5">Adventure Combo</option>
-<option value="6">Namah Combo</option>
-<option value="7">Viewing Fun Combo</option>
-<option value="8">Symbolic Play Combo</option>
-<option value="9">Ultimate Play Combo</option>
-<option value="10">Delight Combo</option>
-<option value="11">Mini Blast Combo</option>
-<option value="12">All in fun Combo</option>
-<option value="13">Divine Rush Combo</option>
-<option value="14">Ultimate Mega Combo</option>
+<option value="0">Explorer Combo - 299/209</option>
+<option value="1">Eco Adventure Combo - 397/307</option>
+<option value="2">Eco Fun Combo - 398/308</option>
+<option value="3">Snow Adventure Combo - 425/335</option>
+<option value="4">Aastha Combo - 570/500</option>
+<option value="5">Adventure Combo - 699/NA</option>
+<option value="6">Namah Combo - 700/525</option>
+<option value="7">Viewing Fun Combo - 775/585</option>
+<option value="8">Symbolic Play Combo - 769/579</option>
+<option value="9">Ultimate Play Combo - 889/799</option>
+<option value="10">Delight Combo - 925/835</option>
+<option value="11">Mini Blast Combo - 969/779</option>
+<option value="12">All in fun Combo - 1100/925</option>
+<option value="13">Divine Rush Combo - 1550/975</option>
+<option value="14">Ultimate Mega Combo - 4249/NA</option>
 </select>
+
 <input class="input" id="adults" type="number" placeholder="No. of Adults" oninput="calc()">
 <input class="input" id="children" type="number" placeholder="No. of Children" oninput="calc()">
-<div class="card">
+
+<div class="card" id="billCard">
 <div class="row"><span>TPU</span><span id="tpu">₹ 0</span></div>
-<div class="row"><span>OEPL</span><span id="oepl">₹ 0</span></div>
-<div class="row"><span>PAEPL</span><span id="paepl">₹ 0</span></div>
+<div class="row"><span>OEPL (Offspring)</span><span id="oepl">₹ 0</span></div>
+<div class="row"><span>PAEPL (Pinnacle)</span><span id="paepl">₹ 0</span></div>
 <div class="row total-row"><span>TOTAL</span><span class="total-pill" id="total">₹ 0</span></div>
+<div id="breakup" style="font-size:11px;color:#666;margin-top:8px;text-align:center"></div>
 </div>
-<input class="input" id="sobId" placeholder="Enter 6-digit SOB ID" maxlength="6">
-<div class="actions"><button class="btn save" onclick="saveSOB()">Save SOB</button><button class="btn reset" onclick="resetAll()">Reset</button></div>
+
+<input class="input no-print" id="sobId" placeholder="Enter 6-digit SOB ID" maxlength="6">
+
+<div class="actions no-print">
+<button class="btn save" onclick="saveSOB()">Save SOB</button>
+<button class="btn print" onclick="printCurrent()">Print</button>
+<button class="btn reset" onclick="resetAll()">Reset</button>
+</div>
+
+<div class="table-wrap no-print" id="reportArea" style="display:none">
+<h3 id="reportTitle" style="text-align:center;margin:0 0 8px"></h3>
+<table id="reportTable"></table>
+</div>
 
 <script>
 const API="https://api.npoint.io/86455d8f8fd1e7f18d6c";
+// [TPU_Adult, TPU_Child, Offspring, Pinnacle]
 const DATA=[
 [170,80,40,89],[170,80,0,227],[170,80,28,200],[170,80,255,0],[470,400,0,100],
 [170,0,0,529],[650,475,0,50],[470,280,155,150],[470,280,249,50],[170,80,199,520],
 [470,380,105,350],[670,480,199,100],[450,275,200,450],[1450,875,0,100],[1500,300,449,2300]
 ];
+const NAMES=["Explorer Combo","Eco Adventure Combo","Eco Fun Combo","Snow Adventure Combo","Aastha Combo","Adventure Combo","Namah Combo","Viewing Fun Combo","Symbolic Play Combo","Ultimate Play Combo","Delight Combo","Mini Blast Combo","All in fun Combo","Divine Rush Combo","Ultimate Mega Combo"];
 let allData=[];
+
 function calc(){
   let idx=document.getElementById('comboSel').value;
-  if(idx===""){document.getElementById('tpu').innerText='₹ 0';document.getElementById('oepl').innerText='₹ 0';document.getElementById('paepl').innerText='₹ 0';document.getElementById('total').innerText='₹ 0';return {tot:0};}
+  if(idx===""){
+    document.getElementById('tpu').innerText='₹ 0';document.getElementById('oepl').innerText='₹ 0';document.getElementById('paepl').innerText='₹ 0';document.getElementById('total').innerText='₹ 0';document.getElementById('breakup').innerText=''; return {tot:0,tpu:0,oepl:0,paepl:0};
+  }
   idx=parseInt(idx); let d=DATA[idx];
   let a=parseInt(document.getElementById('adults').value)||0;
   let c=parseInt(document.getElementById('children').value)||0;
@@ -87,8 +118,10 @@ function calc(){
   document.getElementById('oepl').innerText='₹ '+oepl;
   document.getElementById('paepl').innerText='₹ '+paepl;
   document.getElementById('total').innerText='₹ '+tot;
-  return {tot};
+  document.getElementById('breakup').innerText = `${NAMES[idx]} | ${a} Adult (TPU ${d[0]}) + ${c} Child (TPU ${d[1]}) | Off ${d[2]} + Pin ${d[3]} per person`;
+  return {tot,tpu,oepl,paepl,a,c,idx};
 }
+
 async function loadLive(){
   let user=document.getElementById('username').value.trim();
   if(!user){alert('Username daalo');return;}
@@ -98,21 +131,87 @@ async function loadLive(){
     document.getElementById('userCount').innerText=allData.filter(x=>x.user===user).length;
     document.getElementById('totalCount').innerText=allData.length;
     document.getElementById('infoBar').style.display='block';
-  }catch(e){}
+    showUserwise(); // auto show userwise after load
+  }catch(e){alert('Load fail, net check karo');}
 }
+
 async function saveSOB(){
   let user=document.getElementById('username').value.trim();
-  if(!user){alert('Load dabao');return;}
+  if(!user){alert('Pehle Username + Load dabao');return;}
   let sobId=document.getElementById('sobId').value;
-  if(sobId.length!==6){alert('6-digit ID');return;}
-  let idx=document.getElementById('comboSel').value;
-  if(idx===""){alert('Combo select karo');return;}
+  if(sobId.length!==6){alert('6-digit SOB ID daalo');return;}
   let c=calc();
-  allData.push({id:Date.now().toString(),user:user,sobId:sobId,total:c.tot});
+  if(c.tot===0){alert('Combo + Adults/Children daalo');return;}
+  let rec={id:Date.now().toString(),user:user,sobId:sobId,combo:NAMES[c.idx],comboIdx:c.idx,adults:c.a,children:c.c,tpu:c.tpu,oepl:c.oepl,paepl:c.paepl,total:c.tot,date:new Date().toLocaleString()};
+  allData.push(rec);
   await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(allData)});
-  loadLive(); document.getElementById('sobId').value='';
+  loadLive();
+  document.getElementById('sobId').value='';
+  alert('SOB Saved LIVE! '+sobId+' = ₹'+c.tot);
 }
+
 function resetAll(){document.getElementById('adults').value='';document.getElementById('children').value='';document.getElementById('sobId').value='';document.getElementById('comboSel').selectedIndex=0;calc();}
+
+function printCurrent(){
+  let c=calc(); if(c.tot===0){alert('Pehle calculation karo');return;}
+  let user=document.getElementById('username').value||'Guest';
+  let w=window.open('','','width=350,height=600');
+  w.document.write(`<html><body style="font-family:monospace;padding:10px"><h3 style="text-align:center">SOB RECEIPT</h3><hr>User: ${user}<br>SOB ID: ${document.getElementById('sobId').value||'---'}<br>Date: ${new Date().toLocaleString()}<hr>Combo: ${NAMES[c.idx]}<br>Adults: ${c.a} Children: ${c.c}<hr>TPU: ₹${c.tpu}<br>OEPL: ₹${c.oepl}<br>PAEPL: ₹${c.paepl}<hr><b>TOTAL: ₹${c.tot}</b><hr><small>${document.getElementById('breakup').innerText}</small><br><br><button onclick="window.print()">Print</button></body></html>`);
+  w.document.close();
+}
+
+function printAll(){
+  let user=document.getElementById('username').value.trim();
+  if(!user){alert('Username Load karo');return;}
+  let myData=allData.filter(x=>x.user===user);
+  if(myData.length===0){alert('Koi SOB nahi hai');return;}
+  let html=`<h2>${user} - All SOBs (${myData.length})</h2><table border=1 cellpadding=6 style="width:100%;border-collapse:collapse"><tr><th>SOB ID</th><th>Combo</th><th>A/C</th><th>Total</th><th>Date</th></tr>`;
+  myData.forEach(r=>{html+=`<tr><td>${r.sobId}</td><td>${r.combo}</td><td>${r.adults}/${r.children}</td><td>₹${r.total}</td><td>${r.date||''}</td></tr>`});
+  html+=`</table><br><button onclick="window.print()">Print All</button>`;
+  let w=window.open('','','width=800,height=600'); w.document.write(html); w.document.close();
+}
+
+function showUserwise(){
+  if(allData.length===0){return;}
+  let user=document.getElementById('username').value.trim();
+  document.getElementById('reportArea').style.display='block';
+  document.getElementById('reportTitle').innerText=user?`${user} ke SOBs + All Users`:`All Users - Userwise Report`;
+  let grouped={};
+  allData.forEach(r=>{ if(!grouped[r.user]) grouped[r.user]=[]; grouped[r.user].push(r); });
+  let html='<tr><th>User</th><th>SOB ID</th><th>Combo</th><th>A/C</th><th>Total</th><th>Date</th></tr>';
+  Object.keys(grouped).forEach(u=>{
+    grouped[u].forEach(r=>{
+      html+=`<tr><td>${r.user}</td><td>${r.sobId}</td><td>${r.combo}</td><td>${r.adults}/${r.children}</td><td>₹${r.total}</td><td>${r.date||''}</td></tr>`;
+    });
+  });
+  document.getElementById('reportTable').innerHTML=html;
+}
+
+function dailyReport(){
+  if(allData.length===0){alert('Load karo pehle');return;}
+  let today=new Date().toLocaleDateString();
+  let todays=allData.filter(r=> r.date && r.date.includes(today) || true); // show all for now
+  document.getElementById('reportArea').style.display='block';
+  document.getElementById('reportTitle').innerText='Daily Report - '+today+' (Total: '+allData.length+')';
+  let html='<tr><th>User</th><th>SOB ID</th><th>Combo</th><th>Total</th><th>Date</th></tr>';
+  allData.slice(-50).reverse().forEach(r=>{html+=`<tr><td>${r.user}</td><td>${r.sobId}</td><td>${r.combo}</td><td>₹${r.total}</td><td>${r.date||''}</td></tr>`});
+  document.getElementById('reportTable').innerHTML=html;
+}
+
+function reverseFinder(){
+  let amt=prompt('TOTAL Amount daalo (jaise 299 ya 397):');
+  if(!amt) return;
+  amt=parseInt(amt);
+  let found=[];
+  DATA.forEach((d,i)=>{
+    let totalAdult=d[0]+d[2]+d[3];
+    let totalChild=d[1]+d[2]+d[3];
+    if(totalAdult===amt || totalChild===amt) found.push(`${NAMES[i]} - Adult ${totalAdult} / Child ${totalChild}`);
+  });
+  if(found.length>0) alert('Found:\n'+found.join('\n'));
+  else alert('Koi combo is amount ka nahi mila');
+}
+
 calc();
 </script>
 </body>
