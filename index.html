@@ -21,9 +21,9 @@ table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid 
   body *{visibility:hidden}
   #printArea, #printArea *{visibility:visible}
   #printArea{position:absolute;left:0;top:0;width:100%;padding:0}
- .no-print{display:none!important}
- .print-head{display:flex!important;align-items:center;gap:12px;border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:8px}
- .print-head img{height:45px}
+.no-print{display:none!important}
+.print-head{display:flex!important;align-items:center;gap:12px;border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:8px}
+.print-head img{height:45px}
 }
 </style></head>
 <body>
@@ -38,7 +38,7 @@ table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid 
 
 <div class="card" id="printArea">
 <div class="print-head"><img src="logo.jpg"><div><b>॥ विश्वास स्वरूपम ॥ STATUE OF BELIEF</b><br><span id="printUser"></span> - <span id="printDate"></span></div></div>
-<div style="display:flex;justify-content:space-between;align-items:center"><b id="reportTitle">Meri Aaj Ki Report</b><div class="no-print" style="display:flex;gap:6px"><button class="btn" style="background:#5a2ec0" onclick="loadLive()">Load</button><button class="btn" style="background:#000" onclick="doPrint()">Print</button></div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><b id="reportTitle">Meri Aaj Ki Report</b><div class="no-print" style="display:flex;gap:6px"><button class="btn" style="background:#5a2ec0" onclick="loadLive()">Load</button><button class="btn" style="background:#0a7e07" onclick="exportExcel()">Excel</button><button class="btn" style="background:#000" onclick="doPrint()">Print</button></div></div>
 <div class="no-print" id="userList" style="margin:10px 0"></div>
 <div id="reportTable" style="margin-top:10px;overflow:auto"></div>
 <div id="reportTotal" style="margin-top:10px;font-weight:900;text-align:right;font-size:15px"></div></div>
@@ -61,15 +61,12 @@ function filterReport(){
    let users=[...new Set(filtered.map(x=>x.user))];let finalHtml="";let grandTotal=0;
    users.forEach(u=>{let uData=filtered.filter(x=>x.user==u);let sum=uData.reduce((s,r)=>s+(+r.total||0),0);grandTotal+=sum;
      finalHtml+=`<div style="margin-top:12px;padding:8px;background:#000;color:#ffe14d;border-radius:10px;font-weight:900"> ${u} - ${uData.length} SOB - TOTAL Rs ${sum} </div>`;
-     finalHtml+='<table><tr><th>SOB ID</th><th>Combo</th><th>Ad/Ch</th><th>Total</th><th class="no-print">Action</th></tr>';
-     uData.reverse().forEach(r=>{finalHtml+=`<tr><td>${r.sobId}</td><td>${r.combo}</td><td>${r.adults}/${r.children}</td><td><b>${r.total}</b></td><td class="no-print"><button class="del" onclick="deleteSOB('${r.id}')">DELETE</button></td></tr>`;});
+     finalHtml+='<table><tr><th>SOB ID</th><th>Combo</th><th>Ad/Ch</th><th>TPU</th><th>Off</th><th>Pin</th><th>Total</th><th class="no-print">Action</th></tr>';
+     uData.reverse().forEach(r=>{finalHtml+=`<tr><td>${r.sobId}</td><td>${r.combo}</td><td>${r.adults}/${r.children}</td><td>${r.tpu}</td><td>${r.oepl}</td><td>${r.paepl}</td><td><b>${r.total}</b></td><td class="no-print"><button class="del" onclick="deleteSOB('${r.id}')">DELETE</button></td></tr>`;});
      finalHtml+='</table>';});
    reportTable.innerHTML=finalHtml;reportTotal.innerHTML=`<span style="background:#000;color:#ffe14d;padding:6px 12px;border-radius:8px">GRAND TOTAL: Rs ${grandTotal} (${filtered.length} SOB)</span>`;reportTitle.innerText=`Report: ALL - ${filtered.length} SOB`;return;
  }
  let h='<table><tr><th>SOB ID</th><th>User</th><th>Combo</th><th>Ad/Ch</th><th>TPU</th><th>Off</th><th>Pin</th><th>Total</th><th class="no-print">Action</th></tr>';let sum=0,sumTPU=0,sumOff=0,sumPin=0;filtered.slice().reverse().forEach(r=>{sum+=+r.total||0;sumTPU+=+r.tpu||0;sumOff+=+r.oepl||0;sumPin+=+r.paepl||0;h+=`<tr><td>${r.sobId}</td><td>${r.user}</td><td>${r.combo}</td><td>${r.adults}/${r.children}</td><td>${r.tpu}</td><td>${r.oepl}</td><td>${r.paepl}</td><td><b>${r.total}</b></td><td class="no-print"><button class="del" onclick="deleteSOB('${r.id}')">DELETE</button></td></tr>`;});h+='</table>';reportTable.innerHTML=h;reportTotal.innerHTML=`TPU: Rs ${sumTPU} | Off: Rs ${sumOff} | Pin: Rs ${sumPin} | <span style="background:#000;color:#ffe14d;padding:4px 10px;border-radius:8px">TOTAL: Rs ${sum}</span>`;reportTitle.innerText=`Report: ${selectedUser} - ${filtered.length} SOB`;
 }
 async function saveSOB(){let u=username.value.trim();if(!u)return alert("Name likho");let sid=sobId.value.trim();if(sid.length!=6)return alert("6 Digit SOB ID");let c=calc();if(c.tot==0)return alert("Combo select karo");let childVal=document.getElementById('children').disabled?"NA":c.c;let rec={id:Date.now().toString(),user:u,sobId:sid,combo:NAMES[c.idx],adults:c.a,children:childVal,tpu:c.tpuV,oepl:c.oeplV,paepl:c.paeplV,total:c.tot,date:new Date().toLocaleString()};try{let r=await fetch(API);let old=await r.json();if(Array.isArray(old))allData=old;}catch(e){}if(!Array.isArray(allData))allData=[];allData.push(rec);await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(allData)});alert("SAVE HO GAYA - SOB: "+sid+" Total Rs "+c.tot);sobId.value="";adults.value="";children.value="";calc();selectedUser=u;buildUserList();filterReport();}
-async function deleteSOB(id){let rec=allData.find(x=>x.id==id);if(!rec)return;if(!confirm("DELETE karna hai? SOB: "+rec.sobId))return;allData=allData.filter(x=>x.id!=id);await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(allData)});alert("DELETE ho gaya - "+rec.sobId);buildUserList();filterReport();}
-function doPrint(){let u=selectedUser=="ALL"?username.value||"ALL":selectedUser;document.getElementById('printUser').innerText="User: "+u;document.getElementById('printDate').innerText=new Date().toLocaleString();setTimeout(()=>window.print(),300);}
-calc();loadLive();
-</script></body></html>
+async function deleteSOB(id){let rec=allData.find(x=>x.id==id);if(!rec)return;if(!confirm("DELETE karna hai? SOB: "+
