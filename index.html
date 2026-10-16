@@ -1,33 +1,119 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SOB - Vishwas Swaroopam</title>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOB coMboS calculator</title>
 <style>
-body{margin:0;background:#ede8ff;font-family:system-ui;padding:12px}
-.header{background:#000;border-radius:20px;padding:14px;text-align:center;margin-bottom:12px}
-.header h2{color:#ff3b3b;margin:8px 0 2px;font-size:18px}
-.header p{color:#fff;margin:0;font-size:11px;letter-spacing:2px}
-.btn{border:none;border-radius:20px;padding:10px 16px;font-weight:700;color:#fff;cursor:pointer}
-.card{background:#fff;border-radius:20px;padding:16px;margin:10px 0}
-.sel{width:100%;padding:14px;border-radius:12px;border:1.5px solid #aaa;font-weight:700}
-.row2{display:flex;gap:10px;margin:12px 0}
-.box{flex:1;background:#f5f1ff;border-radius:14px;padding:10px;text-align:center;border:2px solid #b8b0db}
-.box input{width:100%;padding:12px;border-radius:10px;border:2px solid #777;font-size:22px;font-weight:900;text-align:center;box-sizing:border-box;margin-top:5px}
-.box input:disabled{background:#ddd}
-.yellow{background:#ffe14d;border-radius:16px;padding:14px;margin:12px 0}
-.r{display:flex;justify-content:space-between;padding:6px 0;font-weight:800}
-.inp{width:100%;padding:14px;border-radius:12px;border:1.5px solid #aaa;font-weight:700;box-sizing:border-box;margin:6px 0}
-table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #ccc;padding:6px;text-align:center}th{background:#e8e4ff}
-.del{border:none;background:#ff1a1a;color:#fff;padding:5px 10px;border-radius:8px;font-weight:800;cursor:pointer}
-.user-chip{display:inline-block;background:#5a2ec0;color:#fff;padding:6px 12px;border-radius:20px;margin:4px;font-size:12px;font-weight:700;cursor:pointer}
-.user-chip.active{background:#000;color:#ffe14d}
-.print-head{display:none}
-@media print{.no-print{display:none !important}body{background:#fff}.print-head{display:flex !important;align-items:center;gap:12px;border-bottom:3px solid #000;padding-bottom:12px;margin-bottom:12px}.print-head img{height:70px}}
-</style></head>
+body{margin:0;background:#eef2ff;font-family:system-ui;padding:10px}
+.top{display:flex;justify-content:space-between;margin:6px 0 12px}
+.btn{border:none;border-radius:12px;padding:10px 16px;font-weight:700;color:#fff;font-size:14px}
+.green{background:#00b050}.purple{background:#7b5cff}
+.hi-row{display:flex;align-items:center;gap:8px;margin:10px 0}
+.hi-row input{flex:1;background:#fff;border:none;border-radius:20px;padding:10px 16px;text-align:center;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.blue{background:#0055ff;color:#fff;border-radius:20px;padding:10px 14px}
+.info{background:#fff;border-radius:18px;padding:12px;text-align:center;margin:10px 0;box-shadow:0 2px 8px rgba(0,0,0,.06);font-weight:600;display:none}
+.title{font-size:26px;font-weight:800;text-align:center;margin:14px 0}
+.input{width:100%;background:#fff;border:none;border-radius:18px;padding:14px 16px;margin:8px 0;box-shadow:0 2px 8px rgba(0,0,0,.06);font-size:15px}
+.card{background:#fff;border-radius:22px;padding:16px 18px;margin:12px 0;box-shadow:0 4px 14px rgba(0,0,0,.08)}
+.row{display:flex;justify-content:space-between;padding:8px 0;font-weight:600}
+.total-row{border-top:2px solid #ddd;margin-top:8px;padding-top:12px}
+.total-pill{border:2px solid #ffcc00;border-radius:18px;padding:6px 18px;font-weight:800}
+.actions{display:flex;justify-content:center;gap:12px;margin:14px 0}
+.save{background:#0047cc;border-radius:22px;padding:12px 22px}
+.reset{background:#ff8a00;border-radius:22px;padding:12px 22px}
+</style>
+</head>
 <body>
-
-<div class="header no-print">
-<img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD..." style="height:75px">
-<h2>॥ विश्वास स्वरूपम ॥</h2><p>STATUE OF BELIEF</p>
-<div style="color:#ffe14d;font-weight:800;margin-top:6px">SOB DAILY CALCULATOR</div>
+<div class="top">
+<button class="btn green">Reverse Combo Finder</button>
+<button class="btn purple">Daily Report</button>
 </div>
+<div class="hi-row">
+<span>🌞</span><b>Hi,</b>
+<input id="username" placeholder="Enter Username">
+<button class="btn blue" onclick="loadLive()">Load</button>
+</div>
+<div class="info" id="infoBar"><b id="uName"></b> ke <span id="userCount">0</span> SOB saved hai | Total All Users: <span id="totalCount">0</span></div>
+<div class="title">SOB coMboS calculator</div>
+<select class="input" id="comboSel" onchange="calc()">
+<option value="">Select Combo</option>
+<option value="0">Explorer Combo</option>
+<option value="1">Eco Adventure Combo</option>
+<option value="2">Eco Fun Combo</option>
+<option value="3">Snow Adventure Combo</option>
+<option value="4">Aastha Combo</option>
+<option value="5">Adventure Combo</option>
+<option value="6">Namah Combo</option>
+<option value="7">Viewing Fun Combo</option>
+<option value="8">Symbolic Play Combo</option>
+<option value="9">Ultimate Play Combo</option>
+<option value="10">Delight Combo</option>
+<option value="11">Mini Blast Combo</option>
+<option value="12">All in fun Combo</option>
+<option value="13">Divine Rush Combo</option>
+<option value="14">Ultimate Mega Combo</option>
+</select>
+<input class="input" id="adults" type="number" placeholder="No. of Adults" oninput="calc()">
+<input class="input" id="children" type="number" placeholder="No. of Children" oninput="calc()">
+<div class="card">
+<div class="row"><span>TPU</span><span id="tpu">₹ 0</span></div>
+<div class="row"><span>OEPL</span><span id="oepl">₹ 0</span></div>
+<div class="row"><span>PAEPL</span><span id="paepl">₹ 0</span></div>
+<div class="row total-row"><span>TOTAL</span><span class="total-pill" id="total">₹ 0</span></div>
+</div>
+<input class="input" id="sobId" placeholder="Enter 6-digit SOB ID" maxlength="6">
+<div class="actions"><button class="btn save" onclick="saveSOB()">Save SOB</button><button class="btn reset" onclick="resetAll()">Reset</button></div>
 
-<!-- Logo ka base64 bada hai, isliye maine file bana ke di hai niche. GitHub me logo_final.jpg use kar sakte ho -->
+<script>
+const API="https://api.npoint.io/86455d8f8fd1e7f18d6c";
+const DATA=[
+[170,80,40,89],[170,80,0,227],[170,80,28,200],[170,80,255,0],[470,400,0,100],
+[170,0,0,529],[650,475,0,50],[470,280,155,150],[470,280,249,50],[170,80,199,520],
+[470,380,105,350],[670,480,199,100],[450,275,200,450],[1450,875,0,100],[1500,300,449,2300]
+];
+let allData=[];
+function calc(){
+  let idx=document.getElementById('comboSel').value;
+  if(idx===""){document.getElementById('tpu').innerText='₹ 0';document.getElementById('oepl').innerText='₹ 0';document.getElementById('paepl').innerText='₹ 0';document.getElementById('total').innerText='₹ 0';return {tot:0};}
+  idx=parseInt(idx); let d=DATA[idx];
+  let a=parseInt(document.getElementById('adults').value)||0;
+  let c=parseInt(document.getElementById('children').value)||0;
+  let tpu=(a*d[0])+(c*d[1]);
+  let oepl=(a+c)*d[2];
+  let paepl=(a+c)*d[3];
+  let tot=tpu+oepl+paepl;
+  document.getElementById('tpu').innerText='₹ '+tpu;
+  document.getElementById('oepl').innerText='₹ '+oepl;
+  document.getElementById('paepl').innerText='₹ '+paepl;
+  document.getElementById('total').innerText='₹ '+tot;
+  return {tot};
+}
+async function loadLive(){
+  let user=document.getElementById('username').value.trim();
+  if(!user){alert('Username daalo');return;}
+  document.getElementById('uName').innerText=user;
+  try{
+    let r=await fetch(API); allData=await r.json(); if(!Array.isArray(allData)) allData=[];
+    document.getElementById('userCount').innerText=allData.filter(x=>x.user===user).length;
+    document.getElementById('totalCount').innerText=allData.length;
+    document.getElementById('infoBar').style.display='block';
+  }catch(e){}
+}
+async function saveSOB(){
+  let user=document.getElementById('username').value.trim();
+  if(!user){alert('Load dabao');return;}
+  let sobId=document.getElementById('sobId').value;
+  if(sobId.length!==6){alert('6-digit ID');return;}
+  let idx=document.getElementById('comboSel').value;
+  if(idx===""){alert('Combo select karo');return;}
+  let c=calc();
+  allData.push({id:Date.now().toString(),user:user,sobId:sobId,total:c.tot});
+  await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(allData)});
+  loadLive(); document.getElementById('sobId').value='';
+}
+function resetAll(){document.getElementById('adults').value='';document.getElementById('children').value='';document.getElementById('sobId').value='';document.getElementById('comboSel').selectedIndex=0;calc();}
+calc();
+</script>
+</body>
+</html>
