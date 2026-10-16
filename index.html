@@ -1,187 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SOB LIVE + SPLIT</title>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SOB FINAL DELETE PRICE</title>
 <style>
 body{margin:0;background:#e8e8ff;font-family:system-ui;padding:12px}
-.top{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-.btn{border:none;border-radius:20px;padding:10px 14px;font-weight:700;color:#fff;cursor:pointer;font-size:13px}
+.btn{border:none;border-radius:20px;padding:10px 14px;font-weight:700;color:#fff;cursor:pointer;font-size:12px}
 .card{background:#fff;border-radius:20px;padding:14px;margin:10px 0}
-.sel{width:100%;padding:12px;border-radius:12px;border:1px solid #ddd;margin:6px 0}
+.sel{width:100%;padding:12px;border-radius:12px;border:1px solid #ddd;margin:6px 0;background:#fff;font-size:13px}
 .row2{display:flex;gap:10px;margin:10px 0}
-.box{flex:1;background:#f6f6ff;border-radius:14px;padding:10px;text-align:center;border:1px solid #ddd}
-.box b{display:block;font-size:12px;margin-bottom:6px}
-.box input{width:100%;padding:12px;border-radius:10px;border:2px solid #ccc;font-size:20px;font-weight:800;text-align:center;box-sizing:border-box}
+.box{flex:1;background:#f6f6ff;border-radius:14px;padding:10px;text-align:center;border:2px solid #ccc}
+.box b{font-size:11px;display:block;margin-bottom:4px}
+.box input{width:100%;padding:12px;border-radius:10px;border:2px solid #999;font-size:20px;font-weight:800;text-align:center;box-sizing:border-box}
 .yellow{background:#ffe14d;border-radius:16px;padding:14px;margin:10px 0}
-.r{display:flex;justify-content:space-between;padding:5px 0;font-weight:700}
-.inp{width:100%;padding:12px;border-radius:12px;border:1px solid #ddd;box-sizing:border-box;margin:6px 0}
+.r{display:flex;justify-content:space-between;padding:4px 0;font-weight:700}
 .hi{display:flex;gap:8px;margin:8px 0}
 .hi input{flex:1;padding:12px;border-radius:20px;border:none;text-align:center;font-weight:700}
-</style>
-</head>
+.del{background:#ff2222;color:#fff;border:none;border-radius:6px;padding:6px 10px;font-weight:800;cursor:pointer}
+table{width:100%;border-collapse:collapse;font-size:11px}th,td{border:1px solid #ddd;padding:5px;text-align:center}th{background:#eef2ff}
+</style></head>
 <body>
 
-<div class="top">
-<button class="btn" style="background:#5a2ec0" onclick="showAll()">👥 All Users</button>
-<button class="btn" style="background:#111" onclick="loadLive()">⬇️ Load Live</button>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<button class="btn" style="background:#5a2ec0" onclick="loadLive()">⬇️ Load Live</button>
 <button class="btn" style="background:#00a000" onclick="exportExcel()">📊 Excel Split</button>
 <button class="btn" style="background:#000" onclick="window.print()">🖨️ Print</button>
 </div>
 
 <div class="hi">
 <input id="username" placeholder="Username">
-<input id="sobId" placeholder="SOB ID 6-digit" maxlength="6" style="flex:1">
+<input id="sobId" placeholder="SOB 6-digit" maxlength="6">
 </div>
 
 <div class="card">
-<div style="text-align:center;font-weight:800;font-size:18px;margin-bottom:8px">SOB coMboS - LIVE + SPLIT</div>
+<div style="text-align:center;font-weight:800;font-size:17px">SOB - DELETE + PRICE LIST</div>
+
 <select class="sel" id="comboSel" onchange="calc()">
-<option value="">Select Combo (15)</option>
-<option value="0">1 Explorer</option>
-<option value="1">2 Eco Adventure</option>
-<option value="2">3 Eco Fun</option>
-<option value="3">4 Snow Adventure</option>
-<option value="4">5 Aastha</option>
-<option value="5">6 Adventure</option>
-<option value="6">7 Namah</option>
-<option value="7">8 Viewing Fun</option>
-<option value="8">9 Symbolic Play</option>
-<option value="9">10 Ultimate Play</option>
-<option value="10">11 Delight</option>
-<option value="11">12 Mini Blast</option>
-<option value="12">13 All in fun</option>
-<option value="13">14 Divine Rush</option>
-<option value="14">15 Ultimate Mega</option>
-</select>
-
-<div class="row2">
-<div class="box"><b>👨 ADULTS</b><input id="adults" type="number" placeholder="0" oninput="calc()"></div>
-<div class="box"><b>👶 CHILDREN</b><input id="children" type="number" placeholder="0" oninput="calc()"></div>
-</div>
-
-<div class="yellow">
-<div class="r"><span>TPU</span><span id="tpu">Rs 0</span></div>
-<div class="r"><span>OEPL</span><span id="oepl">Rs 0</span></div>
-<div class="r"><span>PAEPL</span><span id="paepl">Rs 0</span></div>
-<hr>
-<div class="r"><b>TOTAL</b><b id="total" style="background:#000;color:#ffe14d;padding:4px 12px;border-radius:8px">Rs 0</b></div>
-<div id="note" style="font-size:10px;color:#555;margin-top:4px"></div>
-</div>
-
-<button class="btn" style="background:#5a2ec0;width:100%;padding:14px;font-size:16px" onclick="saveSOB()">+ Save Split LIVE</button>
-<button class="btn" style="background:#eee;color:#333;width:100%;padding:10px;margin-top:6px" onclick="resetAll()">Reset</button>
-</div>
-
-<div class="card" id="reportArea" style="display:none">
-<h3 id="reportTitle" style="margin:0 0 8px 0;font-size:14px"></h3>
-<div id="reportTable" style="overflow:auto;font-size:11px"></div>
-</div>
-
-<script>
-const API="https://api.npoint.io/86455d8f8fd1e7f18d6c";
-const DATA=[[170,80,40,89],[170,80,0,227],[170,80,28,200],[170,80,255,0],[470,400,0,100],[170,0,0,529],[650,475,0,50],[470,280,155,150],[470,280,249,50],[170,80,199,520],[470,380,105,350],[670,480,199,100],[450,275,200,450],[1450,875,0,100],[1500,0,449,2300]];
-const NAMES=["Explorer","Eco Adventure","Eco Fun","Snow Adventure","Aastha","Adventure","Namah","Viewing Fun","Symbolic Play","Ultimate Play","Delight","Mini Blast","All in fun","Divine Rush","Ultimate Mega"];
-let allData=[];
-
-function calc(){
- let v=document.getElementById("comboSel").value;
- if(v===""){document.getElementById("tpu").innerText="Rs 0";document.getElementById("oepl").innerText="Rs 0";document.getElementById("paepl").innerText="Rs 0";document.getElementById("total").innerText="Rs 0";return {tot:0};}
- v=+v;let d=DATA[v];
- let a=+document.getElementById("adults").value||0;
- let ce=document.getElementById("children");
- let c=+ce.value||0;
- if(d[1]==0){c=0;ce.value="N/A";ce.disabled=true;}else{if(ce.value=="N/A")ce.value="";ce.disabled=false;}
- let tv=a*d[0]+c*d[1];
- let ov=(a+c)*d[2];
- let pv=(a+c)*d[3];
- let tt=tv+ov+pv;
- document.getElementById("tpu").innerText="Rs "+tv;
- document.getElementById("oepl").innerText="Rs "+ov;
- document.getElementById("paepl").innerText="Rs "+pv;
- document.getElementById("total").innerText="Rs "+tt;
- document.getElementById("note").innerText="Adult "+a+" + Child "+(ce.value=="N/A"?0:c)+" = TPU "+tv+" OEPL "+ov+" PAEPL "+pv;
- return {tot:tt,tpuV:tv,oeplV:ov,paeplV:pv,a,c,idx:v};
-}
-
-async function loadLive(){
- try{
-  let r=await fetch(API);
-  allData=await r.json();
-  if(!Array.isArray(allData)) allData=[];
- }catch(e){allData=[]}
- document.getElementById("reportArea").style.display="block";
- document.getElementById("reportTitle").innerText="LIVE Data - Total "+allData.length+" SOB";
- showAll();
-}
-
-function showAll(){
- if(!allData.length){document.getElementById("reportTable").innerHTML="No data - Load Live dabao";return;}
- let h='<table border=1 cellpadding=6 cellspacing=0 style="width:100%;border-collapse:collapse"><tr><th>User</th><th>SOB</th><th>Ad</th><th>Ch</th><th>TPU</th><th>OEPL</th><th>PAEPL</th><th>TOTAL</th></tr>';
- allData.slice().reverse().forEach(r=>{
-  h+='<tr><td>'+r.user+'</td><td>'+r.sobId+'</td><td>'+r.adults+'</td><td>'+r.children+'</td><td>'+r.tpu+'</td><td>'+r.oepl+'</td><td>'+r.paepl+'</td><td><b>'+r.total+'</b></td></tr>';
- });
- h+='</table>';
- document.getElementById("reportTable").innerHTML=h;
-}
-
-async function saveSOB(){
- let u=document.getElementById("username").value.trim();
- if(!u) return alert("Username likho");
- let sid=document.getElementById("sobId").value.trim();
- if(sid.length!=6) return alert("6-digit SOB ID");
- let c=calc();
- if(c.tot==0) return alert("Combo select karo");
-
- let rec={
-  id:Date.now().toString(),
-  user:u,
-  sobId:sid,
-  combo:NAMES[c.idx],
-  adults:c.a,
-  children:document.getElementById("children").value,
-  tpu:c.tpuV,
-  oepl:c.oeplV,
-  paepl:c.paeplV,
-  total:c.tot,
-  date:new Date().toLocaleString()
- };
-
- try{
-  let r=await fetch(API);
-  let old=await r.json();
-  if(Array.isArray(old)) allData=old;
- }catch(e){allData=[]}
- if(!Array.isArray(allData)) allData=[];
- allData.push(rec);
- await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(allData)});
- alert("LIVE SAVED\nUser:"+u+"\nSOB:"+sid+"\nAd:"+c.a+" Ch:"+rec.children+"\nTPU Rs"+c.tpuV+" OEPL Rs"+c.oeplV+" PAEPL Rs"+c.paeplV+"\nTOTAL Rs"+c.tot);
- document.getElementById("sobId").value="";
- loadLive();
-}
-
-function exportExcel(){
- if(!allData.length) return alert("Pehle Load Live dabao");
- let csv="User,SOB ID,Combo,Adults,Children,TPU,OEPL,PAEPL,TOTAL,Date\n";
- allData.forEach(r=>{
-  csv+= '"'+r.user+'",'+r.sobId+',"'+r.combo+'",'+r.adults+','+r.children+','+r.tpu+','+r.oepl+','+r.paepl+','+r.total+',"'+r.date+'"\n';
- });
- let blob=new Blob([csv],{type:'text/csv'});
- let a=document.createElement('a');
- a.href=URL.createObjectURL(blob);
- a.download="SOB_SPLIT_LIVE_TPU_OEPL_PAEPL.csv";
- a.click();
-}
-
-function resetAll(){
- document.getElementById("adults").value="";
- document.getElementById("children").value="";
- document.getElementById("children").disabled=false;
- document.getElementById("comboSel").selectedIndex=0;
- calc();
-}
-calc();
-</script>
-</body>
-</html>
+<option value="">Select Combo with Price</option>
+<option value="0">1 Explorer - Adult 170 Child 80 + 40+89</option>
+<option value="1">2 Eco Adventure - 170/80 + 0+227</option>
+<option value="2">3 Eco Fun - 170/80 + 28+200</option>
+<option value="3">4 Snow Adventure - 170/80 + 255+0</option>
+<option value="4">5 Aastha - 470/400 + 0+100</option>
