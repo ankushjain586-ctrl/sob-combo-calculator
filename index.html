@@ -4,7 +4,7 @@
 body{margin:0;background:#ede8ff;font-family:system-ui;padding:12px}
 .header{background:#000;border-radius:20px;padding:14px;text-align:center;margin-bottom:12px}
 .header img{height:75px}
-.header h2{color:#ff3b3b;margin:8px 0 2px;font-size:18px;letter-spacing:1px}
+.header h2{color:#ff3b3b;margin:8px 0 2px;font-size:18px}
 .header p{color:#fff;margin:0;font-size:11px;letter-spacing:2px}
 .btn{border:none;border-radius:20px;padding:10px 16px;font-weight:700;color:#fff;cursor:pointer;font-size:13px}
 .card{background:#fff;border-radius:20px;padding:16px;margin:10px 0;box-shadow:0 2px 10px #0001}
@@ -12,16 +12,14 @@ body{margin:0;background:#ede8ff;font-family:system-ui;padding:12px}
 .row2{display:flex;gap:10px;margin:12px 0}
 .box{flex:1;background:#f5f1ff;border-radius:14px;padding:10px;text-align:center;border:2px solid #b8b0db}
 .box input{width:100%;padding:12px;border-radius:10px;border:2px solid #777;font-size:22px;font-weight:900;text-align:center;box-sizing:border-box;margin-top:5px}
+.box input:disabled{background:#ddd;color:#888;border-color:#999}
 .yellow{background:#ffe14d;border-radius:16px;padding:14px;margin:12px 0}
 .r{display:flex;justify-content:space-between;padding:6px 0;font-weight:800;font-size:15px}
 .inp{width:100%;padding:14px;border-radius:12px;border:1.5px solid #aaa;font-weight:700;box-sizing:border-box;margin:6px 0}
 table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #ccc;padding:6px;text-align:center}th{background:#e8e4ff}
+.del{border:none;background:#ff1a1a;color:#fff;padding:5px 10px;border-radius:8px;font-weight:800;cursor:pointer}
 .print-head{display:none}
-@media print{
-.no-print{display:none} body{background:#fff}
-.print-head{display:flex;align-items:center;gap:12px;border-bottom:2px solid #000;padding-bottom:10px;margin-bottom:10px}
-.print-head img{height:60px}
-}
+@media print{.no-print{display:none} body{background:#fff}.print-head{display:flex;align-items:center;gap:12px;border-bottom:2px solid #000;padding-bottom:10px;margin-bottom:10px}.print-head img{height:60px}}
 </style></head>
 <body>
 
@@ -38,7 +36,6 @@ table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid 
 
 <div class="card">
 <input id="username" class="inp" placeholder="Apna Name Likho" oninput="filterReport()">
-
 <select class="sel" id="comboSel" onchange="calc()">
 <option value="">-- Combo Select Karo --</option>
 <option value="0">1. Explorer - 299 / 209</option>
@@ -46,7 +43,7 @@ table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid 
 <option value="2">3. Eco Fun - 398 / 308</option>
 <option value="3">4. Snow Adventure - 425 / 335</option>
 <option value="4">5. Aastha - 570 / 500</option>
-<option value="5">6. Adventure - 699 / NA</option>
+<option value="5">6. Adventure - 699 / NA (No Child)</option>
 <option value="6">7. Namah - 700 / 525</option>
 <option value="7">8. Viewing Fun - 775 / 585</option>
 <option value="8">9. Symbolic Play - 769 / 579</option>
@@ -55,12 +52,12 @@ table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid 
 <option value="11">12. Mini Blast - 969 / 779</option>
 <option value="12">13. All in Fun - 1100 / 925</option>
 <option value="13">14. Divine Rush - 1550 / 975</option>
-<option value="14">15. Ultimate Mega - 4249 / NA</option>
+<option value="14">15. Ultimate Mega - 4249 / NA (No Child)</option>
 </select>
 
 <div class="row2">
 <div class="box"><b>ADULT</b><input id="adults" type="number" placeholder="0" oninput="calc()"></div>
-<div class="box"><b>CHILD</b><input id="children" type="number" placeholder="0" oninput="calc()"></div>
+<div class="box"><b>CHILD</b><input id="children" type="number" placeholder="0" oninput="calc()"><small id="childMsg" style="color:#c00;font-weight:700"></small></div>
 </div>
 
 <div class="yellow">
@@ -68,7 +65,7 @@ table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid 
 <div class="r"><span>Offspring Amount</span><b id="oepl">Rs 0</b></div>
 <div class="r"><span>Pinnacle Amount</span><b id="paepl">Rs 0</b></div>
 <hr>
-<div class="r"><b>TOTAL COLLECTION</b><b id="total" style="background:#000;color:#ffe14d;padding:6px 14px;border-radius:8px">Rs 0</b></div>
+<div class="r"><b>TOTAL</b><b id="total" style="background:#000;color:#ffe14d;padding:6px 14px;border-radius:8px">Rs 0</b></div>
 <div id="note" style="font-size:11px;margin-top:6px;font-weight:600"></div>
 </div>
 
@@ -83,7 +80,7 @@ table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid 
 <b id="reportTitle">Meri Aaj Ki Report</b>
 <div class="no-print" style="display:flex;gap:6px">
 <button class="btn" style="background:#5a2ec0" onclick="loadLive()">Load</button>
-<button class="btn" style="background:#000" onclick="doPrint()">Print Report</button>
+<button class="btn" style="background:#000" onclick="doPrint()">Print</button>
 </div>
 </div>
 <div id="reportTable" style="margin-top:10px;overflow:auto"></div>
@@ -95,45 +92,30 @@ const API="https://api.npoint.io/86455d8f8fd1e7f18d6c";
 const DATA=[[170,80,40,89],[170,80,0,227],[170,80,28,200],[170,80,255,0],[470,400,0,100],[170,0,0,529],[650,475,0,50],[470,280,155,150],[470,280,249,50],[170,80,199,520],[470,380,105,350],[670,480,199,100],[450,275,200,450],[1450,875,0,100],[1500,300,449,2300]];
 const NAMES=["Explorer","Eco Adv","Eco Fun","Snow Adv","Aastha","Adventure","Namah","Viewing Fun","Symbolic","Ultimate Play","Delight","Mini Blast","All in Fun","Divine Rush","Ultimate Mega"];
 let allData=[];
+
 function calc(){
- let v=comboSel.value; if(v===""){tpu.innerText="Rs 0";oepl.innerText="Rs 0";paepl.innerText="Rs 0";total.innerText="Rs 0";note.innerText="";return {tot:0};}
- v=+v; let d=DATA[v]; let a=+adults.value||0; let ce=children; let c=+ce.value||0;
- if(d[1]==0){c=0; ce.value="N/A"; ce.disabled=true;} else { if(ce.value=="N/A")ce.value=""; ce.disabled=false; }
+ let v=comboSel.value;
+ if(v===""){tpu.innerText="Rs 0";oepl.innerText="Rs 0";paepl.innerText="Rs 0";total.innerText="Rs 0";note.innerText="";childMsg.innerText="";children.disabled=false;children.value="";return {tot:0};}
+ v=+v; let d=DATA[v]; let a=+adults.value||0; let ce=children;
+ // NA LOGIC - Agar child price 0 hai to block
+ if(d[1]==0){
+   ce.value=""; ce.placeholder="NA"; ce.disabled=true; childMsg.innerText="Child Not Allowed";
+ } else {
+   if(ce.disabled){ce.value="";} ce.disabled=false; ce.placeholder="0"; childMsg.innerText="";
+ }
+ let c = ce.disabled? 0 : (+ce.value||0);
  let tv=a*d[0]+c*d[1]; let ov=(a+c)*d[2]; let pv=(a+c)*d[3]; let tt=tv+ov+pv;
  tpu.innerText="Rs "+tv; oepl.innerText="Rs "+ov; paepl.innerText="Rs "+pv; total.innerText="Rs "+tt;
- note.innerText=`TPU ${a}x${d[0]}+${ce.value=="N/A"?0:c}x${d[1]}=${tv} | Off ${(a+c)}x${d[2]}=${ov} | Pin ${(a+c)}x${d[3]}=${pv}`;
+ note.innerText=`TPU ${a}x${d[0]}+${c}x${d[1]}=${tv} | Off ${(a+c)}x${d[2]}=${ov} | Pin ${(a+c)}x${d[3]}=${pv}`;
  return {tot:tt,tpuV:tv,oeplV:ov,paeplV:pv,a,c,idx:v};
 }
+
 async function loadLive(){try{let r=await fetch(API);allData=await r.json();if(!Array.isArray(allData))allData=[];}catch(e){allData=[]}filterReport();}
+
 function filterReport(){
  let u=username.value.trim().toLowerCase();
  if(!u){reportTable.innerHTML="<small>Name likho fir Load dabao</small>";reportTotal.innerText="";return;}
  let myData=allData.filter(x=>(x.user||"").toLowerCase()==u);
  if(!myData.length){reportTable.innerHTML="Koi SOB save nahi hai";reportTotal.innerText="";return;}
- let h='<table><tr><th>SOB ID</th><th>Combo</th><th>Ad/Ch</th><th>TPU</th><th>Off</th><th>Pin</th><th>Total</th></tr>';
- let sum=0,sumTPU=0,sumOff=0,sumPin=0;
- myData.slice().reverse().forEach(r=>{sum+=+r.total||0;sumTPU+=+r.tpu||0;sumOff+=+r.oepl||0;sumPin+=+r.paepl||0;h+=`<tr><td>${r.sobId}</td><td>${r.combo}</td><td>${r.adults}/${r.children}</td><td>${r.tpu}</td><td>${r.oepl}</td><td>${r.paepl}</td><td><b>${r.total}</b></td></tr>`;});
- h+='</table>';reportTable.innerHTML=h;
- reportTotal.innerHTML=`TPU: Rs ${sumTPU} | Off: Rs ${sumOff} | Pin: Rs ${sumPin} | <span style="background:#000;color:#ffe14d;padding:4px 10px;border-radius:8px">TOTAL: Rs ${sum}</span>`;
- reportTitle.innerText=`Report: ${username.value} - ${myData.length} SOB`;
-}
-async function saveSOB(){
- let u=username.value.trim(); if(!u)return alert("Name likho");
- let sid=sobId.value.trim(); if(sid.length!=6)return alert("6 Digit SOB ID");
- let c=calc(); if(c.tot==0)return alert("Combo select karo");
- let rec={id:Date.now().toString(),user:u,sobId:sid,combo:NAMES[c.idx],adults:c.a,children:children.value,tpu:c.tpuV,oepl:c.oeplV,paepl:c.paeplV,total:c.tot,date:new Date().toLocaleString()};
- try{let r=await fetch(API);let old=await r.json();if(Array.isArray(old))allData=old;}catch(e){}
- if(!Array.isArray(allData))allData=[]; allData.push(rec);
- await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(allData)});
- alert("SAVE HO GAYA - SOB: "+sid+" Total Rs "+c.tot);
- sobId.value=""; adults.value=""; children.value=""; calc(); filterReport();
-}
-function doPrint(){
- document.getElementById('printUser').innerText=username.value;
- document.getElementById('printDate').innerText=new Date().toLocaleString();
- window.print();
-}
-calc();
-</script>
-</body>
-</html>
+ let h='<table><tr><th>SOB ID</th><th>Combo</th><th>Ad/Ch</th><th>TPU</th><th>Off</th><th>Pin</th><th>Total</th><th class="no-print">Action</th></tr>';
+ let sum=0,sumTPU=0,sumOff=0,sum
