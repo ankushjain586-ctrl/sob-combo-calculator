@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOB FINAL - Only WOK NAM</title>
+<title>SOB - Price + WOK NAM</title>
 <style>
 body{margin:0;background:#eef2ff;font-family:system-ui;padding:10px}
 .btn{border:none;border-radius:12px;padding:10px 14px;font-weight:700;color:#fff;font-size:13px;cursor:pointer;flex:1}
@@ -35,7 +35,24 @@ table{width:100%;border-collapse:collapse;font-size:11px}th,td{border:1px solid 
 <select class="input" id="userListDropdown" onchange="selectUserFromList()"><option value="">-- All Users --</option></select>
 <div class="info" id="infoBar"><span id="uName"></span> | <span style="color:#ff8a00">WOK: <span id="wokTotal">0</span></span> | <span style="color:#7b5cff">NAM: <span id="namTotal">0</span></span></div>
 <div class="title">SOB coMboS calculator</div>
-<select class="input" id="comboSel" onchange="calc()"><option value="">Select Combo</option><option value="0">1. Explorer [NAM]</option><option value="1">2. Eco Adventure</option><option value="2">3. Eco Fun [NAM]</option><option value="3">4. Snow Adventure</option><option value="4">5. Aastha [WOK+NAM]</option><option value="5">6. Adventure 699 [N/A]</option><option value="6">7. Namah [WOK+NAM]</option><option value="7">8. Viewing Fun [WOK]</option><option value="8">9. Symbolic Play [WOK]</option><option value="9">10. Ultimate Play [NAM]</option><option value="10">11. Delight [WOK]</option><option value="11">12. Mini Blast [WOK+NAM]</option><option value="12">13. All in fun [WOK+NAM]</option><option value="13">14. Divine Rush [WOK+NAM]</option><option value="14">15. Ultimate Mega [WOK+NAM+N/A]</option></select>
+<select class="input" id="comboSel" onchange="calc()">
+<option value="">Select Combo</option>
+<option value="0">1. Explorer 299/209 [NAM]</option>
+<option value="1">2. Eco Adventure 397/307</option>
+<option value="2">3. Eco Fun 398/308 [NAM]</option>
+<option value="3">4. Snow Adventure 425/335</option>
+<option value="4">5. Aastha 570/500 [WOK+NAM]</option>
+<option value="5">6. Adventure 699 [N/A]</option>
+<option value="6">7. Namah 700/525 [WOK+NAM]</option>
+<option value="7">8. Viewing Fun 775/585 [WOK]</option>
+<option value="8">9. Symbolic Play 769/579 [WOK]</option>
+<option value="9">10. Ultimate Play 889/799 [NAM]</option>
+<option value="10">11. Delight 925/835 [WOK]</option>
+<option value="11">12. Mini Blast 969/779 [WOK+NAM]</option>
+<option value="12">13. All in fun 1100/925 [WOK+NAM]</option>
+<option value="13">14. Divine Rush 1550/975 [WOK+NAM]</option>
+<option value="14">15. Ultimate Mega 4249 [WOK+NAM+N/A]</option>
+</select>
 <input class="input" id="adults" type="number" placeholder="No. of Adults" oninput="calc()">
 <input class="input" id="children" type="number" placeholder="No. of Children" oninput="calc()">
 <div class="card"><div class="row"><span>TPU</span><span id="tpu">₹ 0</span></div><div class="row"><span>OEPL</span><span id="oepl">₹ 0</span></div><div class="row"><span>PAEPL</span><span id="paepl">₹ 0</span></div><div class="row"><span>TOTAL</span><span class="total-pill" id="total">₹ 0</span></div><div class="row" style="font-size:12px;color:#888"><span id="catInfo"></span></div></div>
@@ -46,8 +63,8 @@ table{width:100%;border-collapse:collapse;font-size:11px}th,td{border:1px solid 
 const API="https://api.npoint.io/86455d8f8fd1e7f18d6c";
 const DATA=[[170,80,40,89],[170,80,0,227],[170,80,28,200],[170,80,255,0],[470,400,0,100],[170,0,0,529],[650,475,0,50],[470,280,155,150],[470,280,249,50],[170,80,199,520],[470,380,105,350],[670,480,199,100],[450,275,200,450],[1450,875,0,100],[1500,0,449,2300]];
 const NAMES=["Explorer","Eco Adventure","Eco Fun","Snow Adventure","Aastha","Adventure","Namah","Viewing Fun","Symbolic Play","Ultimate Play","Delight","Mini Blast","All in fun","Divine Rush","Ultimate Mega"];
-const HAS_WOK=[0,0,0,0,1,0,1,1,1,1,1];
-const HAS_NAM=[1,0,1,0,1,0,1,0,0,1,0,1,1,1,1];
+const HAS_WOK=[0,0,0,0,1,0,1,1,1,0,1,1,1,1,1];
+const HAS_NAM=[1,0,1,0,0,1,0,1,1,1,1];
 let allData=[]; let selectedUser="";
 function calc(){
   let idx=document.getElementById('comboSel').value; if(idx===""){tpu.innerText='₹ 0';oepl.innerText='₹ 0';paepl.innerText='₹ 0';total.innerText='₹ 0';catInfo.innerText='';return {tot:0};}
