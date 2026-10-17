@@ -3,170 +3,133 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SOB Company Wise</title>
+<title>SOB</title>
 <style>
-body{margin:0;background:#eef3fb;font-family:system-ui;padding:10px}
-.btn{border:none;padding:10px 16px;border-radius:20px;font-weight:800;color:#fff;cursor:pointer}
-.card{background:#fff;border-radius:20px;padding:14px;margin:12px 0;box-shadow:0 6px 18px #0001}
-.sel,.inp{width:100%;padding:14px;border-radius:18px;border:none;box-shadow:0 4px 10px #0001;font-weight:700}
-.row2{display:flex;gap:10px}
-.box{flex:1;background:#fff;border-radius:18px;padding:10px;text-align:center;box-shadow:0 4px 10px #0001}
-.box input{width:100%;padding:12px;border-radius:12px;border:1.5px solid #aaa;font-size:20px;font-weight:900;text-align:center}
-.yellow{background:#fff;border-radius:22px;padding:16px;box-shadow:0 8px 20px #0001;border:2px solid #ffd000}
-.r{display:flex;justify-content:space-between;font-weight:800;padding:6px 0}
-.total-badge{background:#000;color:#ffe14d;padding:8px 18px;border-radius:12px}
-.company-rate{font-size:11px;background:#f0e6ff;padding:8px;border-radius:10px;margin-top:8px;font-weight:700}
+body{margin:0;background:#ede8ff;font-family:system-ui;padding:12px}
+.header{background:#000;border-radius:20px;padding:16px;text-align:center;margin-bottom:12px}
+.header img{height:110px;width:auto;max-width:100%}
+.btn{border:none;border-radius:20px;padding:10px 16px;font-weight:700;color:#fff;cursor:pointer;font-size:13px}
+.card{background:#fff;border-radius:20px;padding:16px;margin:10px 0;box-shadow:0 2px 10px #0001}
+.sel{width:100%;padding:14px;border-radius:12px;border:1.5px solid #aaa;font-weight:700}
+.row2{display:flex;gap:10px;margin:12px 0}
+.box{flex:1;background:#f5f1ff;border-radius:14px;padding:10px;text-align:center;border:2px solid #b8b0db}
+.box input{width:100%;padding:12px;border-radius:10px;border:2px solid #777;font-size:22px;font-weight:900;text-align:center;box-sizing:border-box;margin-top:5px}
+.yellow{background:#ffe14d;border-radius:16px;padding:14px;margin:12px 0}
+.r{display:flex;justify-content:space-between;padding:6px 0;font-weight:800}
+.inp{width:100%;padding:14px;border-radius:12px;border:1.5px solid #aaa;font-weight:700;box-sizing:border-box;margin:6px 0}
 table{width:100%;border-collapse:collapse;font-size:12px}
 th,td{border:1px solid #ccc;padding:6px;text-align:center}
-th{background:#6a3be0;color:#fff}
-.del{border:none;background:#ff1a1a;color:#fff;padding:4px 8px;border-radius:6px}
-.user-chip{display:inline-block;background:#6a3be0;color:#fff;padding:6px 12px;border-radius:20px;margin:3px;font-size:12px;font-weight:700;cursor:pointer}
+th{background:#e8e4ff}
+.del{border:none;background:#ff1a1a;color:#fff;padding:5px 10px;border-radius:8px;font-weight:800;cursor:pointer}
+.user-chip{display:inline-block;background:#5a2ec0;color:#fff;padding:6px 12px;border-radius:20px;margin:3px;font-size:12px;font-weight:700;cursor:pointer}
 .user-chip.active{background:#000;color:#ffe14d}
-.print-all{border:none;background:#fff;padding:12px 16px;border-radius:22px;font-weight:900;box-shadow:0 4px 10px #0001;min-width:130px}
-@media print{.no-print{display:none!important}}
+.print-head{display:none}
+@media print{
+ .no-print{display:none!important}
+ .print-head{display:flex!important;justify-content:space-between;border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:10px}
+ body{background:#fff}
+}
 </style>
 </head>
 <body>
-
-<div style="text-align:center;font-size:26px;font-weight:900">SOB - Company Wise</div>
-
+<div class="header no-print"><img src="logo.jpg"><div style="color:#ffe14d;font-weight:800;margin-top:8px;letter-spacing:2px">SOB DAILY CALCULATOR</div></div>
 <div class="card no-print">
-<input id="username" class="inp" placeholder="Enter Username"><br><br>
-<select class="sel" id="comboSel">
-<option value="">-- Combo Select Karo --</option>
-<option value="0">1. Explorer</option>
-<option value="1">2. Eco Adventure</option>
-<option value="2">3. Eco Fun</option>
-<option value="3">4. Snow Adventure</option>
-<option value="4">5. Aastha</option>
-<option value="5">6. Adventure</option>
-<option value="6">7. Namah</option>
-<option value="7">8. Viewing Fun</option>
-<option value="8">9. Symbolic Play</option>
-<option value="9">10. Ultimate Play</option>
-<option value="10">11. Delight</option>
-<option value="11">12. Mini Blast</option>
-<option value="12">13. All in Fun</option>
-<option value="13">14. Divine Rush</option>
-<option value="14">15. Ultimate Mega</option>
-</select>
-<div id="rateInfo" class="company-rate">Combo select karo - Company rate dikhega</div><br>
-<div class="row2">
-<div class="box"><b>Adults</b><input id="adults" type="number" placeholder="0"></div>
-<div class="box"><b>Children</b><input id="children" type="number" placeholder="0"><small id="childMsg" style="color:#c00;font-weight:700"></small></div>
-</div><br>
-<div class="yellow">
-<div class="r"><span>TPU</span><b id="tpu">₹ 0</b></div>
-<div class="r"><span>OEPL</span><b id="oepl">₹ 0</b></div>
-<div class="r"><span>PAEPL</span><b id="paepl">₹ 0</b></div><hr>
-<div class="r"><span>TOTAL</span><b id="total" class="total-badge">₹ 0</b></div>
-<div id="note" style="font-size:11px;margin-top:8px;font-weight:700"></div>
-</div><br>
-<div style="display:flex;gap:8px">
-<input id="sobId" class="inp" placeholder="Enter 6-digit SOB ID" maxlength="6" style="flex:1">
-<button class="btn" style="background:#155fdc" onclick="saveSOB()">Save SOB</button>
-</div>
+<input id="username" class="inp" placeholder="Apna Name Likho" oninput="filterReport()">
+<select class="sel" id="comboSel"><option value="">-- Combo Select Karo --</option><option value="0">1. Explorer - 299 / 209</option><option value="1">2. Eco Adventure - 397 / 307</option><option value="2">3. Eco Fun - 398 / 308</option><option value="3">4. Snow Adventure - 425 / 335</option><option value="4">5. Aastha - 570 / 500</option><option value="5">6. Adventure - 699 / NA</option><option value="6">7. Namah - 700 / 525</option><option value="7">8. Viewing Fun - 775 / 585</option><option value="8">9. Symbolic Play - 769 / 579</option><option value="9">10. Ultimate Play - 889 / 799</option><option value="10">11. Delight - 925 / 835</option><option value="11">12. Mini Blast - 969 / 779</option><option value="12">13. All in Fun - 1100 / 925</option><option value="13">14. Divine Rush - 1550 / 975</option><option value="14">15. Ultimate Mega - 4249 / NA</option></select>
+<div class="row2"><div class="box"><b>ADULT</b><input id="adults" type="number" placeholder="0"></div><div class="box"><b>CHILD</b><input id="children" type="number" placeholder="0"><small id="childMsg" style="color:#c00;font-weight:700"></small></div></div>
+<div class="yellow"><div class="r"><span>TPU</span><b id="tpu">Rs 0</b></div><div class="r"><span>Offspring</span><b id="oepl">Rs 0</b></div><div class="r"><span>Pinnacle</span><b id="paepl">Rs 0</b></div><hr><div class="r"><b>TOTAL</b><b id="total" style="background:#000;color:#ffe14d;padding:6px 14px;border-radius:8px">Rs 0</b></div><div id="note" style="font-size:11px;margin-top:6px;font-weight:600"></div></div>
+<div style="display:flex;gap:8px"><input id="sobId" class="inp" placeholder="6 Digit SOB ID" maxlength="6" style="flex:1"><button class="btn" style="background:#5a2ec0;padding:14px 20px" onclick="saveSOB()">SAVE</button></div>
 </div>
 
 <div class="card" id="printArea">
-<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
-<b id="reportTitle">Company Wise Report</b>
-<div class="no-print" style="display:flex;gap:8px">
-<button class="btn" style="background:#fff;color:#000;box-shadow:0 4px 10px #0001" onclick="window.print()">Print</button>
-<select id="printAll" class="print-all" onchange="selectUser(this.value)"><option value="ALL">ALL</option></select>
-</div>
-</div>
+<div class="print-head"><b id="printUser">SOB REPORT</b><span id="printDate"></span></div>
+<div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><b id="reportTitle">Report</b><div class="no-print" style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn" style="background:#ff9800" id="historyBtn" onclick="toggleHistory()">Puri History</button><button class="btn" style="background:#5a2ec0" onclick="loadLive()">Load</button><button class="btn" style="background:#0a7e07" onclick="exportExcel()">Excel</button><button class="btn" style="background:#000" onclick="window.print()">Print</button></div></div>
 <div class="no-print" id="todayInfo" style="margin:8px 0;font-weight:800;font-size:12px;background:#e0ffe0;padding:6px 10px;border-radius:8px"></div>
-<div class="no-print" id="userList"></div>
-<div class="no-print" style="display:flex;gap:6px;margin:8px 0">
-<button class="btn" style="background:#ff9800" id="historyBtn" onclick="toggleHistory()">Puri History</button>
-<button class="btn" style="background:#0a7e07" onclick="exportExcel()">Excel</button>
-<button class="btn" style="background:#5a2ec0" onclick="loadLive()">Load</button>
-</div>
-<div id="reportTable" style="overflow:auto;margin-top:10px"></div>
-<div id="reportTotal" style="margin-top:12px;font-weight:900;padding:12px;background:#000;color:#ffe14d;border-radius:12px;line-height:22px"></div>
+<div class="no-print" id="userList" style="margin:10px 0"></div>
+<div id="reportTable" style="margin-top:10px;overflow:auto"></div>
+<div id="reportTotal" style="margin-top:12px;font-weight:900;text-align:right;font-size:14px;line-height:22px"></div>
 </div>
 
 <script>
 const API="https://api.npoint.io/86455d8f8fd1e7f18d6c";
 const DATA=[[170,80,40,89],[170,80,0,227],[170,80,28,200],[170,80,255,0],[470,400,0,100],[170,0,0,529],[650,475,0,50],[470,280,155,150],[470,280,249,50],[170,80,199,520],[470,380,105,350],[670,480,199,100],[450,275,200,450],[1450,875,0,100],[1500,300,449,2300]];
 const NAMES=["Explorer","Eco Adv","Eco Fun","Snow Adv","Aastha","Adventure","Namah","Viewing Fun","Symbolic","Ultimate Play","Delight","Mini Blast","All in Fun","Divine Rush","Ultimate Mega"];
-let allData=[],selectedUser="ALL",TODAY=new Date().toISOString().split('T')[0],showHistory=false;
+let allData=[];let selectedUser="ALL";let TODAY=new Date().toISOString().split('T')[0];let showHistory=false;
 
 function calc(){
-let v=comboSel.value;
-if(v===""){tpu.innerText="₹ 0";oepl.innerText="₹ 0";paepl.innerText="₹ 0";total.innerText="₹ 0";rateInfo.innerText="Combo select karo";children.disabled=false;return{tot:0}}
-v=+v;let d=DATA[v];
-rateInfo.innerHTML="<b>"+NAMES[v]+"</b> Rate - TPU ₹"+d[0]+"/"+d[1]+" | OEPL ₹"+d[2]+" | PAEPL ₹"+d[3];
-let a=parseInt(adults.value)||0;
-let childEl=children;
-if(d[1]==0){childEl.value="";childEl.disabled=true;childMsg.innerText="Child Not Allowed"}else{childEl.disabled=false;childMsg.innerText=""}
-let c=childEl.disabled?0:(parseInt(childEl.value)||0);
-let tv=a*d[0]+c*d[1],ov=(a+c)*d[2],pv=(a+c)*d[3],tt=tv+ov+pv;
-tpu.innerText="₹ "+tv;oepl.innerText="₹ "+ov;paepl.innerText="₹ "+pv;total.innerText="₹ "+tt;
-note.innerText="Split: TPU "+a+"x"+d[0]+"+"+c+"x"+d[1]+"="+tv+" | OEPL "+(a+c)+"x"+d[2]+"="+ov+" | PAEPL "+(a+c)+"x"+d[3]+"="+pv;
-return{tot:tt,tpuV:tv,oeplV:ov,paeplV:pv,a,c,idx:v}
+ let v=document.getElementById('comboSel').value;
+ if(v===""){document.getElementById('tpu').innerText="Rs 0";document.getElementById('oepl').innerText="Rs 0";document.getElementById('paepl').innerText="Rs 0";document.getElementById('total').innerText="Rs 0";document.getElementById('note').innerText="";document.getElementById('children').disabled=false;return{tot:0};}
+ v=+v;let d=DATA[v];let a=parseInt(document.getElementById('adults').value)||0;let childEl=document.getElementById('children');
+ if(d[1]==0){childEl.value="";childEl.placeholder="NA";childEl.disabled=true;document.getElementById('childMsg').innerText="Child Not Allowed";}else{childEl.disabled=false;childEl.placeholder="0";document.getElementById('childMsg').innerText="";}
+ let c=childEl.disabled?0:(parseInt(childEl.value)||0);
+ let tv=a*d[0]+c*d[1];let ov=(a+c)*d[2];let pv=(a+c)*d[3];let tt=tv+ov+pv;
+ document.getElementById('tpu').innerText="Rs "+tv;document.getElementById('oepl').innerText="Rs "+ov;document.getElementById('paepl').innerText="Rs "+pv;document.getElementById('total').innerText="Rs "+tt;
+ document.getElementById('note').innerText=`TPU ${a}x${d[0]}+${c}x${d[1]}=${tv} | Off ${(a+c)}x${d[2]}=${ov} | Pin ${(a+c)}x${d[3]}=${pv}`;
+ return{tot:tt,tpuV:tv,oeplV:ov,paeplV:pv,a,c,idx:v};
 }
-comboSel.addEventListener('change',calc);adults.addEventListener('input',calc);children.addEventListener('input',calc);
-
-function toggleHistory(){showHistory=!showHistory;historyBtn.innerText=showHistory?'Aaj ki Dikhao':'Puri History';buildUserList();filterReport()}
-async function loadLive(){try{let r=await fetch(API);allData=await r.json();if(!Array.isArray(allData))allData=[]}catch(e){allData=[]}buildUserList();filterReport()}
-
+document.getElementById('comboSel').addEventListener('change',calc);document.getElementById('adults').addEventListener('input',calc);document.getElementById('children').addEventListener('input',calc);
+function toggleHistory(){showHistory=!showHistory;document.getElementById('historyBtn').innerText=showHistory?'Aaj ki Dikhao':'Puri History';buildUserList();filterReport();}
+async function loadLive(){try{let r=await fetch(API);allData=await r.json();if(!Array.isArray(allData))allData=[];}catch(e){allData=[]}buildUserList();filterReport();}
 function buildUserList(){
-let base=showHistory?allData:allData.filter(x=>x.dateKey==TODAY || !x.dateKey);
-let users=[...new Set(base.map(x=>x.user).filter(Boolean))];
-let html='<span class="user-chip '+(selectedUser=="ALL"?"active":"")+'" onclick="selectUser(\'ALL\')">ALL ('+base.length+')</span>';
-users.forEach(u=>{let cnt=base.filter(x=>x.user==u).length;html+='<span class="user-chip '+(selectedUser==u?"active":"")+'" onclick="selectUser(\''+u+'\')">'+u+' ('+cnt+')</span>'});
-userList.innerHTML=html;
-todayInfo.innerText=showHistory?'History - '+allData.length+' records':'Aaj: '+TODAY+' - '+base.length+' SOB';
-let sel=printAll;sel.innerHTML='<option value="ALL">ALL</option>';
-users.forEach(u=>{let cnt=base.filter(x=>x.user==u).length;sel.innerHTML+='<option value="'+u+'">'+u+' ('+cnt+')</option>'});
-sel.value=selectedUser;
+ let base=showHistory?allData:allData.filter(x=>!x.dateKey||x.dateKey==TODAY);
+ let users=[...new Set(base.map(x=>x.user).filter(Boolean))];
+ let html='<span class="user-chip '+(selectedUser=="ALL"?"active":"")+'" onclick="selectUser(\'ALL\')">ALL ('+base.length+')</span>';
+ users.forEach(u=>{let cnt=base.filter(x=>x.user==u).length;html+='<span class="user-chip '+(selectedUser==u?"active":"")+'" onclick="selectUser(\''+u+'\')">'+u+' ('+cnt+')</span>';});
+ document.getElementById('userList').innerHTML=html;
+ document.getElementById('todayInfo').innerText=showHistory?`📅 History - Total ${allData.length} records`:`📅 Aaj: ${TODAY} - Aaj ki report`;
 }
-
-function selectUser(u){selectedUser=u;if(u!="ALL")username.value=u;else username.value="";buildUserList();filterReport()}
-function getFiltered(){let f=allData;if(!showHistory)f=f.filter(x=>x.dateKey==TODAY || !x.dateKey);if(selectedUser!="ALL")f=f.filter(x=>x.user==selectedUser);return f}
+function selectUser(u){selectedUser=u;if(u!="ALL")document.getElementById('username').value=u;buildUserList();filterReport();}
+function getFiltered(){let f=allData;if(!showHistory){f=f.filter(x=>!x.dateKey||x.dateKey==TODAY);}let uname=document.getElementById('username').value.trim();if(selectedUser!="ALL")f=f.filter(x=>x.user==selectedUser);else if(uname)f=f.filter(x=>x.user.toLowerCase().includes(uname.toLowerCase()));return f;}
 
 function filterReport(){
-let filtered=getFiltered();
-if(!filtered.length){reportTable.innerHTML=showHistory?"Koi SOB nahi":"Aaj ("+TODAY+") ki koi report nahi";reportTotal.innerText="";return}
-if(selectedUser=="ALL"){
-let users=[...new Set(filtered.map(x=>x.user))];let html="";let grand={t:0,o:0,p:0,tot:0};
-users.forEach(u=>{let uData=filtered.filter(x=>x.user==u);let s={t:0,o:0,p:0,tot:0};uData.forEach(r=>{s.t+=+r.tpu||0;s.o+=+r.oepl||0;s.p+=+r.paepl||0;s.tot+=+r.total||0});grand.t+=s.t;grand.o+=s.o;grand.p+=s.p;grand.tot+=s.tot;
-html+='<div style="margin-top:10px;padding:8px;background:#e8e4ff;border-radius:8px;font-weight:900;font-size:12px">'+u+' - '+uData.length+' SOB | TPU ₹'+s.t+' | OEPL ₹'+s.o+' | PAEPL ₹'+s.p+' | TOTAL ₹'+s.tot+'</div><table><tr><th>SOB ID</th><th>Combo</th><th>Ad/Ch</th><th>TPU</th><th>OEPL</th><th>PAEPL</th><th>Total</th><th class="no-print">Del</th></tr>';
-uData.slice().reverse().forEach(r=>{html+='<tr><td>'+r.sobId+'</td><td>'+r.combo+'</td><td>'+r.adults+'/'+r.children+'</td><td>'+(r.tpu||0)+'</td><td>'+(r.oepl||0)+'</td><td>'+(r.paepl||0)+'</td><td><b>'+r.total+'</b></td><td class="no-print"><button class="del" onclick="deleteSOB(\''+r.id+'\')">X</button></td></tr>'});
-html+='</table>';
-});
-reportTable.innerHTML=html;reportTotal.innerHTML='COMPANY WISE GRAND TOTAL - TPU: ₹ '+grand.t+' | OEPL: ₹ '+grand.o+' | PAEPL: ₹ '+grand.p+' | GRAND TOTAL: ₹ '+grand.tot;return;
-}
-let h='<table><tr><th>SOB ID</th><th>Combo</th><th>Ad/Ch</th><th>TPU</th><th>OEPL</th><th>PAEPL</th><th>Total</th><th class="no-print">Del</th></tr>';let sumT=0,sumO=0,sumP=0,sumA=0;
-filtered.slice().reverse().forEach(r=>{sumT+=+r.tpu||0;sumO+=+r.oepl||0;sumP+=+r.paepl||0;sumA+=+r.total||0;h+='<tr><td>'+r.sobId+'</td><td>'+r.combo+'</td><td>'+r.adults+'/'+r.children+'</td><td>'+(r.tpu||0)+'</td><td>'+(r.oepl||0)+'</td><td>'+(r.paepl||0)+'</td><td><b>'+r.total+'</b></td><td class="no-print"><button class="del" onclick="deleteSOB(\''+r.id+'\')">X</button></td></tr>'});
-h+='</table>';reportTable.innerHTML=h;reportTotal.innerHTML='COMPANY WISE TOTAL - TPU: ₹ '+sumT+' | OEPL: ₹ '+sumO+' | PAEPL: ₹ '+sumP+' | TOTAL: ₹ '+sumA;
+ let filtered=getFiltered();
+ if(!filtered.length){document.getElementById('reportTable').innerHTML=showHistory?"Koi SOB nahi":`Aaj (${TODAY}) ki koi report nahi`;document.getElementById('reportTotal').innerText="";return;}
+ let sumT=0,sumO=0,sumP=0,sumAll=0;
+ filtered.forEach(r=>{sumT+=+r.tpu||0;sumO+=+r.oepl||0;sumP+=+r.paepl||0;sumAll+=+r.total||0;});
+
+ if(selectedUser=="ALL"){
+   let users=[...new Set(filtered.map(x=>x.user))];let html="";let grand={t:0,o:0,p:0,tot:0};
+   users.forEach(u=>{
+     let uData=filtered.filter(x=>x.user==u);
+     let s={t:0,o:0,p:0,tot:0};uData.forEach(r=>{s.t+=+r.tpu||0;s.o+=+r.oepl||0;s.p+=+r.paepl||0;s.tot+=+r.total||0;});
+     grand.t+=s.t;grand.o+=s.o;grand.p+=s.p;grand.tot+=s.tot;
+     html+=`<div style="margin-top:12px;padding:8px;background:#000;color:#ffe14d;border-radius:10px;font-weight:900"> ${u} - ${uData.length} SOB | TPU ${s.t} | Off ${s.o} | Pin ${s.p} | TOTAL Rs ${s.tot} </div>`;
+     html+='<table><tr><th>SOB ID</th><th>Combo</th><th>Ad/Ch</th><th>TPU</th><th>Off</th><th>Pin</th><th>Total</th><th class="no-print">Del</th></tr>';
+     uData.slice().reverse().forEach(r=>{html+=`<tr><td>${r.sobId}</td><td>${r.combo}</td><td>${r.adults}/${r.children}</td><td>${r.tpu||0}</td><td>${r.oepl||0}</td><td>${r.paepl||0}</td><td><b>${r.total}</b></td><td class="no-print"><button class="del" onclick="deleteSOB('${r.id}')">X</button></td></tr>`;});
+     html+='</table>';
+   });
+   document.getElementById('reportTable').innerHTML=html;
+   document.getElementById('reportTotal').innerHTML=`TPU: Rs ${grand.t} | Offspring: Rs ${grand.o} | Pinnacle: Rs ${grand.p} | <span style="background:#000;color:#ffe14d;padding:6px 12px;border-radius:8px">GRAND TOTAL: Rs ${grand.tot}</span>`;
+   return;
+ }
+ let h='<table><tr><th>SOB ID</th><th>Combo</th><th>Ad/Ch</th><th>TPU</th><th>Off</th><th>Pin</th><th>Total</th><th class="no-print">Del</th></tr>';
+ filtered.slice().reverse().forEach(r=>{h+=`<tr><td>${r.sobId}</td><td>${r.combo}</td><td>${r.adults}/${r.children}</td><td>${r.tpu||0}</td><td>${r.oepl||0}</td><td>${r.paepl||0}</td><td><b>${r.total}</b></td><td class="no-print"><button class="del" onclick="deleteSOB('${r.id}')">X</button></td></tr>`;});
+ h+='</table>';
+ document.getElementById('reportTable').innerHTML=h;
+ document.getElementById('reportTotal').innerHTML=`TPU: Rs ${sumT} | Offspring: Rs ${sumO} | Pinnacle: Rs ${sumP} | <span style="background:#000;color:#ffe14d;padding:6px 12px;border-radius:8px">TOTAL: Rs ${sumAll}</span>`;
 }
 
 async function saveSOB(){
-let u=username.value.trim();if(!u)return alert("Username likho");
-let sid=sobId.value.trim();if(sid.length!=6)return alert("6 Digit ID");
-let c=calc();if(c.tot==0)return alert("Combo select karo");
-let childVal=children.disabled?"NA":c.c;
-let rec={id:Date.now().toString(),user:u,sobId:sid,combo:NAMES[c.idx],adults:c.a,children:childVal,tpu:c.tpuV,oepl:c.oeplV,paepl:c.paeplV,total:c.tot,date:new Date().toLocaleString(),dateKey:TODAY};
-try{let r=await fetch(API);let old=await r.json();if(Array.isArray(old))allData=old}catch(e){}
-if(!Array.isArray(allData))allData=[];allData.push(rec);
-await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(allData)});
-alert("SAVE - "+sid);sobId.value="";adults.value="";children.value="";calc();selectedUser=u;buildUserList();filterReport();
+ let u=document.getElementById('username').value.trim();if(!u)return alert("Name likho");
+ let sid=document.getElementById('sobId').value.trim();if(sid.length!=6)return alert("6 Digit SOB ID");
+ let c=calc();if(c.tot==0)return alert("Combo select karo");
+ let childVal=document.getElementById('children').disabled?"NA":c.c;
+ let rec={id:Date.now().toString(),user:u,sobId:sid,combo:NAMES[c.idx],adults:c.a,children:childVal,tpu:c.tpuV,oepl:c.oeplV,paepl:c.paeplV,total:c.tot,date:new Date().toLocaleString(),dateKey:TODAY};
+ try{let r=await fetch(API);let old=await r.json();if(Array.isArray(old))allData=old;}catch(e){}
+ if(!Array.isArray(allData))allData=[];allData.push(rec);
+ await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(allData)});
+ alert("SAVE - "+sid+" Total Rs "+c.tot);document.getElementById('sobId').value="";document.getElementById('adults').value="";document.getElementById('children').value="";calc();selectedUser=u;buildUserList();filterReport();
 }
-
-async function deleteSOB(id){if(!confirm("DELETE?"))return;allData=allData.filter(x=>x.id!=id);await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(allData)});buildUserList();filterReport()}
-
+async function deleteSOB(id){let rec=allData.find(x=>x.id==id);if(!rec)return;if(!confirm("DELETE "+rec.sobId+"?"))return;allData=allData.filter(x=>x.id!=id);await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(allData)});buildUserList();filterReport();}
 function exportExcel(){
-let f=getFiltered();if(!f.length)return alert("No data");
-let rows=[["SOB ID","User","Combo","Ad","Ch","TPU","OEPL","PAEPL","TOTAL","Date"]];
-f.forEach(r=>rows.push([r.sobId,r.user,r.combo,r.adults,r.children,r.tpu||0,r.oepl||0,r.paepl||0,r.total,r.date]));
-let csv=rows.map(r=>r.map(v=>'"'+v+'"').join(",")).join("\n");
-let a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download='SOB_CompanyWise_'+TODAY+'.csv';a.click()
+ let filtered=getFiltered();if(!filtered.length)return alert("Koi data nahi");
+ let rows=[["SOB ID","User","Combo","Ad","Ch","TPU","Off","Pin","TOTAL","Date"]];
+ filtered.forEach(r=>rows.push([r.sobId,r.user,r.combo,r.adults,r.children,r.tpu||0,r.oepl||0,r.paepl||0,r.total,r.date]));
+ let csv=rows.map(r=>r.map(v=>`"${v}"`).join(",")).join("\n");let blob=new Blob([csv],{type:"text/csv"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`SOB_${TODAY}.csv`;a.click();
 }
-
 calc();loadLive();
+// Print header update
+setInterval(()=>{let u=selectedUser=="ALL"?"ALL":selectedUser;document.getElementById('printUser').innerText="SOB Report - "+u;document.getElementById('printDate').innerText=TODAY;document.getElementById('reportTitle').innerText=`Report: ${u} - ${getFiltered().length} SOB`;},1000);
 </script>
 </body>
 </html>
