@@ -1,68 +1,163 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SOB</title>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SOB Daily Calculator</title>
 <style>
 body{margin:0;background:#ede8ff;font-family:system-ui;padding:12px}
 .header{background:#000;border-radius:20px;padding:16px;text-align:center;margin-bottom:12px}
-.header img{height:110px;width:auto;max-width:100%;object-fit:contain}
+.header img{height:110px;width:auto;max-width:100%}
 .btn{border:none;border-radius:20px;padding:10px 16px;font-weight:700;color:#fff;cursor:pointer;font-size:13px}
 .card{background:#fff;border-radius:20px;padding:16px;margin:10px 0;box-shadow:0 2px 10px #0001}
-.sel{width:100%;padding:14px;border-radius:12px;border:1.5px solid #aaa;font-weight:700;font-size:14px}
-.row2{display:flex;gap:10px;margin:12px 0}.box{flex:1;background:#f5f1ff;border-radius:14px;padding:10px;text-align:center;border:2px solid #b8b0db}
+.sel{width:100%;padding:14px;border-radius:12px;border:1.5px solid #aaa;font-weight:700}
+.row2{display:flex;gap:10px;margin:12px 0}
+.box{flex:1;background:#f5f1ff;border-radius:14px;padding:10px;text-align:center;border:2px solid #b8b0db}
 .box input{width:100%;padding:12px;border-radius:10px;border:2px solid #777;font-size:22px;font-weight:900;text-align:center;box-sizing:border-box;margin-top:5px}
-.box input:disabled{background:#ddd;color:#888;border-color:#999}
-.yellow{background:#ffe14d;border-radius:16px;padding:14px;margin:12px 0}.r{display:flex;justify-content:space-between;padding:6px 0;font-weight:800;font-size:15px}
+.box input:disabled{background:#ddd}
+.yellow{background:#ffe14d;border-radius:16px;padding:14px;margin:12px 0}
+.r{display:flex;justify-content:space-between;padding:6px 0;font-weight:800}
 .inp{width:100%;padding:14px;border-radius:12px;border:1.5px solid #aaa;font-weight:700;box-sizing:border-box;margin:6px 0}
-table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #ccc;padding:6px;text-align:center}th{background:#e8e4ff}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{border:1px solid #ccc;padding:6px;text-align:center}
+th{background:#e8e4ff}
 .del{border:none;background:#ff1a1a;color:#fff;padding:5px 10px;border-radius:8px;font-weight:800;cursor:pointer}
 .user-chip{display:inline-block;background:#5a2ec0;color:#fff;padding:6px 12px;border-radius:20px;margin:3px;font-size:12px;font-weight:700;cursor:pointer}
 .user-chip.active{background:#000;color:#ffe14d}
 .print-head{display:none}
-@media print{body *{visibility:hidden}#printArea,#printArea *{visibility:visible}#printArea{position:absolute;left:0;top:0;width:100%;padding:0}.no-print{display:none!important}.print-head{display:flex!important;align-items:center;gap:12px;border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:8px}.print-head img{height:60px}}
-</style></head>
+@media print{
+ body *{visibility:hidden}
+ #printArea,#printArea *{visibility:visible}
+ #printArea{position:absolute;left:0;top:0;width:100%}
+ .no-print{display:none!important}
+ .print-head{display:flex!important;justify-content:space-between;border-bottom:2px solid #000;padding-bottom:8px}
+}
+</style>
+</head>
 <body>
-<div class="header no-print"><img src="logo.jpg"><div style="color:#ffe14d;font-weight:800;margin-top:8px;font-size:13px;letter-spacing:2px">SOB DAILY CALCULATOR</div></div>
+
+<div class="header no-print">
+<img src="logo.jpg">
+<div style="color:#ffe14d;font-weight:800;margin-top:8px;letter-spacing:2px">SOB DAILY CALCULATOR</div>
+</div>
+
 <div class="card no-print">
 <input id="username" class="inp" placeholder="Apna Name Likho" oninput="filterReport()">
-<select class="sel" id="comboSel"><option value="">-- Combo Select Karo --</option>
-<option value="0">1. Explorer - 299 / 209</option><option value="1">2. Eco Adventure - 397 / 307</option><option value="2">3. Eco Fun - 398 / 308</option><option value="3">4. Snow Adventure - 425 / 335</option><option value="4">5. Aastha - 570 / 500</option><option value="5">6. Adventure - 699 / NA</option><option value="6">7. Namah - 700 / 525</option><option value="7">8. Viewing Fun - 775 / 585</option><option value="8">9. Symbolic Play - 769 / 579</option><option value="9">10. Ultimate Play - 889 / 799</option><option value="10">11. Delight - 925 / 835</option><option value="11">12. Mini Blast - 969 / 779</option><option value="12">13. All in Fun - 1100 / 925</option><option value="13">14. Divine Rush - 1550 / 975</option><option value="14">15. Ultimate Mega - 4249 / NA</option></select>
-<div class="row2"><div class="box"><b>ADULT</b><input id="adults" type="number" placeholder="0"></div><div class="box"><b>CHILD</b><input id="children" type="number" placeholder="0"><small id="childMsg" style="color:#c00;font-weight:700"></small></div></div>
-<div class="yellow"><div class="r"><span>TPU</span><b id="tpu">Rs 0</b></div><div class="r"><span>Offspring</span><b id="oepl">Rs 0</b></div><div class="r"><span>Pinnacle</span><b id="paepl">Rs 0</b></div><hr><div class="r"><b>TOTAL</b><b id="total" style="background:#000;color:#ffe14d;padding:6px 14px;border-radius:8px">Rs 0</b></div><div id="note" style="font-size:11px;margin-top:6px;font-weight:600"></div></div>
-<div style="display:flex;gap:8px"><input id="sobId" class="inp" placeholder="6 Digit SOB ID" maxlength="6" style="flex:1"><button class="btn" style="background:#5a2ec0;padding:14px 20px" onclick="saveSOB()">SAVE</button></div></div>
+<select class="sel" id="comboSel">
+<option value="">-- Combo Select Karo --</option>
+<option value="0">1. Explorer - 299 / 209</option>
+<option value="1">2. Eco Adventure - 397 / 307</option>
+<option value="2">3. Eco Fun - 398 / 308</option>
+<option value="3">4. Snow Adventure - 425 / 335</option>
+<option value="4">5. Aastha - 570 / 500</option>
+<option value="5">6. Adventure - 699 / NA</option>
+<option value="6">7. Namah - 700 / 525</option>
+<option value="7">8. Viewing Fun - 775 / 585</option>
+<option value="8">9. Symbolic Play - 769 / 579</option>
+<option value="9">10. Ultimate Play - 889 / 799</option>
+<option value="10">11. Delight - 925 / 835</option>
+<option value="11">12. Mini Blast - 969 / 779</option>
+<option value="12">13. All in Fun - 1100 / 925</option>
+<option value="13">14. Divine Rush - 1550 / 975</option>
+<option value="14">15. Ultimate Mega - 4249 / NA</option>
+</select>
+
+<div class="row2">
+<div class="box"><b>ADULT</b><input id="adults" type="number" placeholder="0"></div>
+<div class="box"><b>CHILD</b><input id="children" type="number" placeholder="0"><small id="childMsg" style="color:#c00;font-weight:700"></small></div>
+</div>
+
+<div class="yellow">
+<div class="r"><span>TPU</span><b id="tpu">Rs 0</b></div>
+<div class="r"><span>Offspring</span><b id="oepl">Rs 0</b></div>
+<div class="r"><span>Pinnacle</span><b id="paepl">Rs 0</b></div><hr>
+<div class="r"><b>TOTAL</b><b id="total" style="background:#000;color:#ffe14d;padding:6px 14px;border-radius:8px">Rs 0</b></div>
+<div id="note" style="font-size:11px;margin-top:6px;font-weight:600"></div>
+</div>
+
+<div style="display:flex;gap:8px">
+<input id="sobId" class="inp" placeholder="6 Digit SOB ID" maxlength="6" style="flex:1">
+<button class="btn" style="background:#5a2ec0;padding:14px 20px" onclick="saveSOB()">SAVE</button>
+</div>
+</div>
+
 <div class="card" id="printArea">
-<div class="print-head"><img src="logo.jpg"><div><b id="printUser"></b><br><span id="printDate"></span></div></div>
-<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><b id="reportTitle">Report</b><div class="no-print" style="display:flex;gap:6px"><button class="btn" style="background:#5a2ec0" onclick="loadLive()">Load</button><button class="btn" style="background:#0a7e07" onclick="exportExcel()">Excel</button><button class="btn" style="background:#000" onclick="doPrint()">Print</button></div></div>
+<div class="print-head"><b id="printUser"></b><span id="printDate"></span></div>
+<div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
+<b id="reportTitle">Report</b>
+<div class="no-print" style="display:flex;gap:6px;flex-wrap:wrap">
+<button class="btn" style="background:#ff9800" id="historyBtn" onclick="toggleHistory()">Puri History</button>
+<button class="btn" style="background:#5a2ec0" onclick="loadLive()">Load</button>
+<button class="btn" style="background:#0a7e07" onclick="exportExcel()">Excel</button>
+<button class="btn" style="background:#000" onclick="doPrint()">Print</button>
+</div>
+</div>
+<div class="no-print" id="todayInfo" style="margin:8px 0;font-weight:800;font-size:12px;background:#e0ffe0;padding:6px 10px;border-radius:8px"></div>
 <div class="no-print" id="userList" style="margin:10px 0"></div>
 <div id="reportTable" style="margin-top:10px;overflow:auto"></div>
-<div id="reportTotal" style="margin-top:10px;font-weight:900;text-align:right;font-size:15px"></div></div>
+<div id="reportTotal" style="margin-top:10px;font-weight:900;text-align:right"></div>
+</div>
+
 <script>
 const API="https://api.npoint.io/86455d8f8fd1e7f18d6c";
 const DATA=[[170,80,40,89],[170,80,0,227],[170,80,28,200],[170,80,255,0],[470,400,0,100],[170,0,0,529],[650,475,0,50],[470,280,155,150],[470,280,249,50],[170,80,199,520],[470,380,105,350],[670,480,199,100],[450,275,200,450],[1450,875,0,100],[1500,300,449,2300]];
 const NAMES=["Explorer","Eco Adv","Eco Fun","Snow Adv","Aastha","Adventure","Namah","Viewing Fun","Symbolic","Ultimate Play","Delight","Mini Blast","All in Fun","Divine Rush","Ultimate Mega"];
 let allData=[];let selectedUser="ALL";
+let TODAY=new Date().toISOString().split('T')[0];
+let showHistory=false;
+
 function calc(){
- let comboEl=document.getElementById('comboSel');let adultsEl=document.getElementById('adults');let childrenEl=document.getElementById('children');
- let tpuEl=document.getElementById('tpu');let oeplEl=document.getElementById('oepl');let paeplEl=document.getElementById('paepl');let totalEl=document.getElementById('total');
- let noteEl=document.getElementById('note');let childMsgEl=document.getElementById('childMsg');
- let v=comboEl.value;if(v===""){tpuEl.innerText="Rs 0";oeplEl.innerText="Rs 0";paeplEl.innerText="Rs 0";totalEl.innerText="Rs 0";noteEl.innerText="";childMsgEl.innerText="";childrenEl.disabled=false;return{tot:0};}
- v=+v;let d=DATA[v];let a=parseInt(adultsEl.value)||0;
- if(d[1]==0){childrenEl.value="";childrenEl.placeholder="NA";childrenEl.disabled=true;childMsgEl.innerText="Child Not Allowed";}else{childrenEl.disabled=false;childrenEl.placeholder="0";childMsgEl.innerText="";}
- let c=childrenEl.disabled?0:(parseInt(childrenEl.value)||0);
+ let v=document.getElementById('comboSel').value;
+ if(v===""){document.getElementById('tpu').innerText="Rs 0";document.getElementById('oepl').innerText="Rs 0";document.getElementById('paepl').innerText="Rs 0";document.getElementById('total').innerText="Rs 0";document.getElementById('note').innerText="";document.getElementById('childMsg').innerText="";document.getElementById('children').disabled=false;return{tot:0};}
+ v=+v;let d=DATA[v];let a=parseInt(document.getElementById('adults').value)||0;
+ let childEl=document.getElementById('children');
+ if(d[1]==0){childEl.value="";childEl.placeholder="NA";childEl.disabled=true;document.getElementById('childMsg').innerText="Child Not Allowed";}
+ else{childEl.disabled=false;childEl.placeholder="0";document.getElementById('childMsg').innerText="";}
+ let c=childEl.disabled?0:(parseInt(childEl.value)||0);
  let tv=a*d[0]+c*d[1];let ov=(a+c)*d[2];let pv=(a+c)*d[3];let tt=tv+ov+pv;
- tpuEl.innerText="Rs "+tv;oeplEl.innerText="Rs "+ov;paeplEl.innerText="Rs "+pv;totalEl.innerText="Rs "+tt;
- noteEl.innerText=`TPU ${a}x${d[0]}+${c}x${d[1]}=${tv} | Off ${(a+c)}x${d[2]}=${ov} | Pin ${(a+c)}x${d[3]}=${pv}`;
+ document.getElementById('tpu').innerText="Rs "+tv;
+ document.getElementById('oepl').innerText="Rs "+ov;
+ document.getElementById('paepl').innerText="Rs "+pv;
+ document.getElementById('total').innerText="Rs "+tt;
+ document.getElementById('note').innerText=`TPU ${a}x${d[0]}+${c}x${d[1]}=${tv} | Off ${(a+c)}x${d[2]}=${ov} | Pin ${(a+c)}x${d[3]}=${pv}`;
  return{tot:tt,tpuV:tv,oeplV:ov,paeplV:pv,a,c,idx:v};
 }
 document.getElementById('comboSel').addEventListener('change',calc);
 document.getElementById('adults').addEventListener('input',calc);
 document.getElementById('children').addEventListener('input',calc);
-async function loadLive(){try{let r=await fetch(API);allData=await r.json();if(!Array.isArray(allData))allData=[];}catch(e){allData=[]}buildUserList();filterReport();}
-function buildUserList(){let users=[...new Set(allData.map(x=>x.user).filter(Boolean))];let html='<span class="user-chip '+(selectedUser=="ALL"?"active":"")+'" onclick="selectUser(\'ALL\')">ALL ('+allData.length+')</span>';users.forEach(u=>{let cnt=allData.filter(x=>x.user==u).length;html+='<span class="user-chip '+(selectedUser==u?"active":"")+'" onclick="selectUser(\''+u+'\')">'+u+' ('+cnt+')</span>';});document.getElementById('userList').innerHTML=html;}
+
+function toggleHistory(){
+ showHistory=!showHistory;
+ document.getElementById('historyBtn').innerText=showHistory?'Aaj ki Dikhao':'Puri History';
+ buildUserList();filterReport();
+}
+async function loadLive(){
+ try{let r=await fetch(API);allData=await r.json();if(!Array.isArray(allData))allData=[];}catch(e){allData=[]}
+ buildUserList();filterReport();
+}
+function buildUserList(){
+ let base=showHistory?allData:allData.filter(x=>!x.dateKey||x.dateKey==TODAY);
+ let users=[...new Set(base.map(x=>x.user).filter(Boolean))];
+ let html='<span class="user-chip '+(selectedUser=="ALL"?"active":"")+'" onclick="selectUser(\'ALL\')">ALL ('+base.length+')</span>';
+ users.forEach(u=>{let cnt=base.filter(x=>x.user==u).length;html+='<span class="user-chip '+(selectedUser==u?"active":"")+'" onclick="selectUser(\''+u+'\')">'+u+' ('+cnt+')</span>';});
+ document.getElementById('userList').innerHTML=html;
+ document.getElementById('todayInfo').innerText=showHistory?`📅 History Mode - Total ${allData.length} records`:`📅 Aaj: ${TODAY} - Sirf aaj ki report`;
+}
 function selectUser(u){selectedUser=u;if(u!="ALL")document.getElementById('username').value=u;else document.getElementById('username').value="";buildUserList();filterReport();}
-function filterReport(){
- let filtered=allData;let uname=document.getElementById('username').value.trim();
+function getFiltered(){
+ let filtered=allData;
+ if(!showHistory){filtered=filtered.filter(x=>!x.dateKey||x.dateKey==TODAY);}
+ let uname=document.getElementById('username').value.trim();
  if(selectedUser!="ALL")filtered=filtered.filter(x=>x.user==selectedUser);
  else if(uname)filtered=filtered.filter(x=>x.user.toLowerCase().includes(uname.toLowerCase()));
- if(!filtered.length){document.getElementById('reportTable').innerHTML="Koi SOB save nahi hai";document.getElementById('reportTotal').innerText="";document.getElementById('reportTitle').innerText="Report - "+selectedUser;return;}
+ return filtered;
+}
+function filterReport(){
+ let filtered=getFiltered();
+ if(!filtered.length){
+   document.getElementById('reportTable').innerHTML=showHistory?"Koi SOB save nahi hai":`Aaj (${TODAY}) ki koi report nahi hai. History ke liye button dabao.`;
+   document.getElementById('reportTotal').innerText="";return;
+ }
  if(selectedUser=="ALL"){
    let users=[...new Set(filtered.map(x=>x.user))];let finalHtml="";let grandTotal=0;
    users.forEach(u=>{
@@ -73,28 +168,44 @@ function filterReport(){
      finalHtml+='</table>';
    });
    document.getElementById('reportTable').innerHTML=finalHtml;
-   document.getElementById('reportTotal').innerHTML=`<span style="background:#000;color:#ffe14d;padding:6px 12px;border-radius:8px">GRAND TOTAL: Rs ${grandTotal} (${filtered.length} SOB)</span>`;
-   document.getElementById('reportTitle').innerText=`Report: ALL - ${filtered.length} SOB`;return;
+   document.getElementById('reportTotal').innerHTML=`GRAND TOTAL: Rs ${grandTotal} (${filtered.length} SOB)`;
+   return;
  }
- let h='<table><tr><th>SOB ID</th><th>User</th><th>Combo</th><th>Ad/Ch</th><th>TPU</th><th>Off</th><th>Pin</th><th>Total</th><th class="no-print">Action</th></tr>';let sum=0,sumTPU=0,sumOff=0,sumPin=0;filtered.slice().reverse().forEach(r=>{sum+=+r.total||0;sumTPU+=+r.tpu||0;sumOff+=+r.oepl||0;sumPin+=+r.paepl||0;h+=`<tr><td>${r.sobId}</td><td>${r.user}</td><td>${r.combo}</td><td>${r.adults}/${r.children}</td><td>${r.tpu||0}</td><td>${r.oepl||0}</td><td>${r.paepl||0}</td><td><b>${r.total}</b></td><td class="no-print"><button class="del" onclick="deleteSOB('${r.id}')">DELETE</button></td></tr>`;});h+='</table>';document.getElementById('reportTable').innerHTML=h;document.getElementById('reportTotal').innerHTML=`TPU: Rs ${sumTPU} | Off: Rs ${sumOff} | Pin: Rs ${sumPin} | <span style="background:#000;color:#ffe14d;padding:4px 10px;border-radius:8px">TOTAL: Rs ${sum}</span>`;document.getElementById('reportTitle').innerText=`Report: ${selectedUser} - ${filtered.length} SOB`;
+ let h='<table><tr><th>SOB ID</th><th>User</th><th>Combo</th><th>Ad/Ch</th><th>TPU</th><th>Off</th><th>Pin</th><th>Total</th><th class="no-print">Action</th></tr>';let sum=0;filtered.slice().reverse().forEach(r=>{sum+=+r.total||0;h+=`<tr><td>${r.sobId}</td><td>${r.user}</td><td>${r.combo}</td><td>${r.adults}/${r.children}</td><td>${r.tpu||0}</td><td>${r.oepl||0}</td><td>${r.paepl||0}</td><td><b>${r.total}</b></td><td class="no-print"><button class="del" onclick="deleteSOB('${r.id}')">DELETE</button></td></tr>`;});h+='</table>';document.getElementById('reportTable').innerHTML=h;document.getElementById('reportTotal').innerText=`TOTAL: Rs ${sum}`;
 }
-async function saveSOB(){let u=document.getElementById('username').value.trim();if(!u)return alert("Name likho");let sid=document.getElementById('sobId').value.trim();if(sid.length!=6)return alert("6 Digit SOB ID");let c=calc();if(c.tot==0)return alert("Combo select karo");let childVal=document.getElementById('children').disabled?"NA":c.c;let rec={id:Date.now().toString(),user:u,sobId:sid,combo:NAMES[c.idx],adults:c.a,children:childVal,tpu:c.tpuV,oepl:c.oeplV,paepl:c.paeplV,total:c.tot,date:new Date().toLocaleString()};try{let r=await fetch(API);let old=await r.json();if(Array.isArray(old))allData=old;}catch(e){}if(!Array.isArray(allData))allData=[];allData.push(rec);await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(allData)});alert("SAVE HO GAYA - SOB: "+sid+" Total Rs "+c.tot);document.getElementById('sobId').value="";document.getElementById('adults').value="";document.getElementById('children').value="";calc();selectedUser=u;buildUserList();filterReport();}
-async function deleteSOB(id){let rec=allData.find(x=>x.id==id);if(!rec)return;if(!confirm("DELETE karna hai? SOB: "+rec.sobId))return;allData=allData.filter(x=>x.id!=id);await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(allData)});alert("DELETE ho gaya - "+rec.sobId);buildUserList();filterReport();}
-function doPrint(){let u=selectedUser=="ALL"?document.getElementById('username').value||"ALL":selectedUser;document.getElementById('printUser').innerText="User: "+u;document.getElementById('printDate').innerText=new Date().toLocaleString();setTimeout(()=>window.print(),300);}
+async function saveSOB(){
+ let u=document.getElementById('username').value.trim();if(!u)return alert("Name likho");
+ let sid=document.getElementById('sobId').value.trim();if(sid.length!=6)return alert("6 Digit SOB ID");
+ let c=calc();if(c.tot==0)return alert("Combo select karo");
+ let childVal=document.getElementById('children').disabled?"NA":c.c;
+ let rec={id:Date.now().toString(),user:u,sobId:sid,combo:NAMES[c.idx],adults:c.a,children:childVal,tpu:c.tpuV,oepl:c.oeplV,paepl:c.paeplV,total:c.tot,date:new Date().toLocaleString(),dateKey:TODAY};
+ try{let r=await fetch(API);let old=await r.json();if(Array.isArray(old))allData=old;}catch(e){}
+ if(!Array.isArray(allData))allData=[];allData.push(rec);
+ await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(allData)});
+ alert("SAVE HO GAYA - SOB: "+sid+" Date: "+TODAY);
+ document.getElementById('sobId').value="";document.getElementById('adults').value="";document.getElementById('children').value="";calc();selectedUser=u;buildUserList();filterReport();
+}
+async function deleteSOB(id){
+ let rec=allData.find(x=>x.id==id);if(!rec)return;if(!confirm("DELETE karna hai? SOB: "+rec.sobId))return;
+ allData=allData.filter(x=>x.id!=id);
+ await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(allData)});
+ buildUserList();filterReport();
+}
+function doPrint(){
+ let u=selectedUser=="ALL"?document.getElementById('username').value||"ALL":selectedUser;
+ document.getElementById('printUser').innerText="User: "+u;
+ document.getElementById('printDate').innerText=(showHistory?'History':TODAY)+' - '+new Date().toLocaleString();
+ setTimeout(()=>window.print(),300);
+}
 function exportExcel(){
- let filtered=allData;let uname=document.getElementById('username').value.trim();
- if(selectedUser!="ALL")filtered=filtered.filter(x=>x.user==selectedUser);
- else if(uname)filtered=filtered.filter(x=>x.user.toLowerCase().includes(uname.toLowerCase()));
- if(!filtered.length)return alert("Koi data nahi");
- let rows=[["SOB ID","User","Combo","Adult","Child","TPU","Offspring","Pinnacle","TOTAL","Date"]];
- let g={tpu:0,off:0,pin:0,tot:0};
- if(selectedUser=="ALL"){
-   let users=[...new Set(filtered.map(x=>x.user))];
-   users.forEach(u=>{let uData=filtered.filter(x=>x.user==u);uData.forEach(r=>{rows.push([r.sobId,r.user,r.combo,r.adults,r.children,r.tpu||0,r.oepl||0,r.paepl||0,r.total,r.date]);g.tpu+=+r.tpu||0;g.off+=+r.oepl||0;g.pin+=+r.paepl||0;g.tot+=+r.total||0;});rows.push(["","","","","","",`TOTAL ${u}:`,"",uData.reduce((s,x)=>s+(+x.total||0),0),""]);});
- }else{filtered.forEach(r=>{rows.push([r.sobId,r.user,r.combo,r.adults,r.children,r.tpu||0,r.oepl||0,r.paepl||0,r.total,r.date]);g.tpu+=+r.tpu||0;g.off+=+r.oepl||0;g.pin+=+r.paepl||0;g.tot+=+r.total||0;});}
- rows.push([]);rows.push(["","","","","","GRAND TPU","GRAND Off","GRAND Pin","GRAND TOTAL",""]);rows.push(["","","","","",g.tpu,g.off,g.pin,g.tot,""]);
+ let filtered=getFiltered();if(!filtered.length)return alert("Koi data nahi");
+ let rows=[["SOB ID","User","Combo","Adult","Child","TPU","Off","Pin","TOTAL","Date","DateKey"]];
+ let g=0;filtered.forEach(r=>{rows.push([r.sobId,r.user,r.combo,r.adults,r.children,r.tpu||0,r.oepl||0,r.paepl||0,r.total,r.date,r.dateKey||""]);g+=+r.total||0;});
+ rows.push([]);rows.push(["","","","","","","","","GRAND TOTAL",g,""]);
  let csv=rows.map(r=>r.map(v=>`"${(v+"").replace(/"/g,'""')}"`).join(",")).join("\n");
- let blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});let url=URL.createObjectURL(blob);let a=document.createElement("a");a.href=url;a.download=`SOB_${selectedUser}_${new Date().toLocaleDateString()}.csv`;document.body.appendChild(a);a.click();document.body.removeChild(a);
+ let blob=new Blob([csv],{type:"text/csv"});let url=URL.createObjectURL(blob);let a=document.createElement("a");a.href=url;a.download=`SOB_${TODAY}.csv`;a.click();
 }
 calc();loadLive();
-</script></body></html>
+</script>
+</body>
+</html>
