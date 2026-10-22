@@ -1,51 +1,78 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>SOB Calculator + Activities</title>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOB Calculator - Old Display + Activities Print</title>
 <style>
-body{font-family:Arial;background:#fef6f0;margin:0;padding:10px}
-.header{background:#7a1e1e;color:#fff;text-align:center;padding:12px;border-radius:10px}
-.btn{background:#7a1e1e;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;margin:2px}
-table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,.1)}
-th{background:#7a1e1e;color:#fff;padding:6px;font-size:11px}
-td{border:1px solid #eee;padding:5px;font-size:11px;text-align:center}
-.act{text-align:left!important;font-size:10px;background:#fffaf5}
-.total-row{background:#ffe8d6;font-weight:bold}
-input,select{width:95%;padding:3px;font-size:11px}
-</style></head><body>
-<div class="header"><h2 style="margin:0">SOB Calculator + Activities Amount (12 Oct Final)</h2><p style="margin:4px 0 0;font-size:11px">TPU + Offspring(OEPL) + Pinnacle(PAEPL) + Total + Activities Breakup</p></div>
-<div style="background:#fff;padding:8px;margin:10px 0;border-radius:8px"><button class="btn" onclick="addRow()">+ Add Row</button><button class="btn" onclick="calc()">Calculate</button><button class="btn" onclick="clearAll()">Clear</button></div>
-<table><thead><tr><th>#</th><th style="width:20%">Combo</th><th>Adult</th><th>Child</th><th>TPU</th><th>OEPL Off</th><th>PAEPL Pin</th><th>Total</th><th style="width:30%">ACTIVITIES AMOUNTS</th></tr></thead>
-<tbody id="tbody"></tbody><tfoot><tr class="total-row"><td colspan="2">TOTAL</td><td id="tA">0</td><td id="tC">0</td><td id="tTPU">0</td><td id="tOff">0</td><td id="tPin">0</td><td id="tTot">0</td><td id="tAct" style="text-align:left;font-size:10px"></td></tr></tfoot></table>
+*{box-sizing:border-box}
+body{font-family:Arial, sans-serif; background:#fdf6ef; margin:0; padding:0}
+.header{background:#7a1e1e; color:#fff; padding:16px; text-align:center; border-radius:0 0 12px 12px}
+.header h1{margin:0; font-size:22px}
+.header p{margin:5px 0 0; font-size:12px; opacity:0.9}
+.container{padding:12px}
+.btn{background:#7a1e1e; color:#fff; border:none; padding:8px 14px; border-radius:6px; cursor:pointer; margin:3px; font-size:13px}
+.btn-print{background:#0a7a1e}
+table{width:100%; border-collapse:collapse; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.08); border-radius:8px; overflow:hidden}
+th{background:#7a1e1e; color:#fff; padding:8px 4px; font-size:11px; text-align:center}
+td{border:1px solid #e5ddd3; padding:6px 4px; font-size:11px; text-align:center}
+input,select{width:96%; padding:5px; border:1px solid #ccc; border-radius:5px; font-size:11px}
+.act{text-align:left!important; font-size:10px; line-height:1.35; background:#fff8ee}
+.total-row{background:#ffe8d6; font-weight:bold}
+@media print{
+  body{background:#fff; -webkit-print-color-adjust:exact; print-color-adjust:exact}
+  .no-print{display:none!important}
+  th{background:#7a1e1e!important; color:#fff!important}
+  .total-row{background:#ffe8d6!important}
+  @page{margin:10mm; size:A4 landscape}
+}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>SOB Calculator + Activities Amount</h1>
+<p>Purana Display | Print Sheet me Activities Amounts ka Breakup</p>
+</div>
+<div class="container">
+<div class="no-print" style="margin:12px 0">
+<button class="btn" onclick="addRow()">+ Add Row</button>
+<button class="btn" onclick="calc()">Calculate</button>
+<button class="btn" onclick="clearAll()">Clear</button>
+<button class="btn btn-print" onclick="window.print()">🖨️ Print / Save PDF</button>
+</div>
+<table><thead><tr><th>#</th><th style="width:22%">Combo Name</th><th>Adult</th><th>Child</th><th>TPU</th><th>OEPL Off</th><th>PAEPL Pin</th><th>Total</th><th style="width:30%">ACTIVITIES' AMOUNTS (Print me ayega)</th></tr></thead>
+<tbody id="tbody"></tbody><tfoot><tr class="total-row"><td colspan="2">TOTAL</td><td id="tA">0</td><td id="tC">0</td><td id="tTPU">0</td><td id="tOff">0</td><td id="tPin">0</td><td id="tTot">0</td><td id="tAct" class="act">-</td></tr></tfoot></table>
+</div>
 <script>
 const combos=[
-{Name:"Explorer Combo",Park:170,VG:0,Snow:0,Food:0,Souvenir:0,Wax:40,Eyelusion:40,any4:0,any10:0,GoKart:0,Bungee:0,Pick1:0,Pick2:0,Pick3:0,WG:49,D12:0,TPU:170,Off:40,Pin:89,Total:299,Child:209},
-{Name:"Eco Adventure Combo",Park:170,VG:0,Snow:0,Food:0,Souvenir:0,Wax:0,Eyelusion:0,any4:177,any10:0,GoKart:0,Bungee:0,Pick1:50,Pick2:0,Pick3:0,WG:0,D12:0,TPU:170,Off:0,Pin:227,Total:397,Child:307},
-{Name:"Eco Fun Combo",Park:170,VG:0,Snow:0,Food:0,Souvenir:0,Wax:28,Eyelusion:0,any4:0,any10:0,GoKart:0,Bungee:0,Pick1:0,Pick2:0,Pick3:0,WG:0,D12:200,TPU:170,Off:28,Pin:200,Total:398,Child:308},
-{Name:"Snow Adventure Combo",Park:170,VG:0,Snow:255,Food:0,Souvenir:0,Wax:0,Eyelusion:0,any4:0,any10:0,GoKart:0,Bungee:0,Pick1:0,Pick2:0,Pick3:0,WG:0,D12:0,TPU:170,Off:255,Pin:0,Total:425,Child:335},
-{Name:"Aastha  Combo",Park:170,VG:0,Snow:0,Food:0,Souvenir:0,Wax:0,Eyelusion:50,any4:0,any10:0,GoKart:0,Bungee:0,Pick1:0,Pick2:50,Pick3:0,WG:0,D12:0,TPU:470,Off:0,Pin:100,Total:570,Child:500},
-{Name:"Adventure Combo",Park:170,VG:0,Snow:0,Food:0,Souvenir:0,Wax:0,Eyelusion:0,any4:0,any10:279,GoKart:150,Bungee:0,Pick1:0,Pick2:0,Pick3:100,WG:0,D12:0,TPU:170,Off:0,Pin:529,Total:699,Child:0},
-{Name:"Namah Combo",Park:150,VG:200,Snow:0,Food:0,Souvenir:0,Wax:0,Eyelusion:0,any4:0,any10:0,GoKart:0,Bungee:0,Pick1:50,Pick2:0,Pick3:0,WG:0,D12:0,TPU:650,Off:0,Pin:50,Total:700,Child:525},
-{Name:"Viewing Fun Combo",Park:170,VG:200,Snow:0,Food:45,Souvenir:60,Wax:50,Eyelusion:50,any4:0,any10:0,GoKart:0,Bungee:0,Pick1:0,Pick2:100,Pick3:0,WG:0,D12:0,TPU:470,Off:155,Pin:150,Total:775,Child:585},
-{Name:"Symbolic Play Combo",Park:170,VG:200,Snow:200,Food:49,Souvenir:0,Wax:0,Eyelusion:0,any4:0,any10:0,GoKart:0,Bungee:0,Pick1:50,Pick2:0,Pick3:0,WG:0,D12:0,TPU:470,Off:249,Pin:50,Total:769,Child:579},
-{Name:"Ultimate Play Combo",Park:170,VG:0,Snow:199,Food:0,Souvenir:0,Wax:0,Eyelusion:0,any4:200,any10:0,GoKart:0,Bungee:0,Pick1:50,Pick2:0,Pick3:0,WG:70,D12:200,TPU:170,Off:199,Pin:520,Total:889,Child:799},
-{Name:"Delight Combo",Park:170,VG:0,Snow:0,Food:45,Souvenir:60,Wax:0,Eyelusion:50,any4:0,any10:0,GoKart:0,Bungee:0,Pick1:0,Pick2:100,Pick3:0,WG:0,D12:200,TPU:470,Off:105,Pin:350,Total:925,Child:835},
-{Name:"Mini Blast Combo",Park:170,VG:200,Snow:0,Food:50,Souvenir:99,Wax:50,Eyelusion:0,any4:0,any10:0,GoKart:0,Bungee:0,Pick1:0,Pick2:100,Pick3:0,WG:0,D12:0,TPU:670,Off:199,Pin:100,Total:969,Child:779},
-{Name:"All in fun Combo",Park:150,VG:200,Snow:200,Food:0,Souvenir:0,Wax:0,Eyelusion:0,any4:200,any10:0,GoKart:0,Bungee:0,Pick1:50,Pick2:0,Pick3:0,WG:0,D12:200,TPU:450,Off:200,Pin:450,Total:1100,Child:925},
-{Name:"Divine Rush Combo",Park:150,VG:200,Snow:0,Food:0,Souvenir:0,Wax:0,Eyelusion:0,any4:0,any10:0,GoKart:0,Bungee:0,Pick1:0,Pick2:0,Pick3:100,WG:0,D12:0,TPU:1450,Off:0,Pin:100,Total:1550,Child:975},
-{Name:"Ultimate Mega Combo",Park:150,VG:200,Snow:150,Food:99,Souvenir:100,Wax:50,Eyelusion:50,any4:0,any10:300,GoKart:150,Bungee:1500,Pick1:0,Pick2:0,Pick3:100,WG:0,D12:150,TPU:1500,Off:449,Pin:2300,Total:4249,Child:0},
+{N:"Explorer Combo",C:"CMB0066",S:0,F:0,Sv:0,W:40,E:40,A4:0,A10:0,G:0,B:0,P:0,WG:49,D12:0,TPU:170,Off:40,Pin:89,Tot:299,Ch:209},
+{N:"Eco Adventure Combo",C:"CMB0051",S:0,F:0,Sv:0,W:0,E:0,A4:177,A10:0,G:0,B:0,P:50,WG:0,D12:0,TPU:170,Off:0,Pin:227,Tot:397,Ch:307},
+{N:"Eco Fun Combo",C:"CMB0052",S:0,F:0,Sv:0,W:28,E:0,A4:0,A10:0,G:0,B:0,P:0,WG:0,D12:200,TPU:170,Off:28,Pin:200,Tot:398,Ch:308},
+{N:"Snow Adventure Combo",C:"CMB0053",S:255,F:0,Sv:0,W:0,E:0,A4:0,A10:0,G:0,B:0,P:0,WG:0,D12:0,TPU:170,Off:255,Pin:0,Tot:425,Ch:335},
+{N:"Aastha Combo",C:"CMB0067",S:0,F:0,Sv:0,W:0,E:50,A4:0,A10:0,G:0,B:0,P:50,WG:0,D12:0,TPU:470,Off:0,Pin:100,Tot:570,Ch:500},
+{N:"Adventure Combo",C:"CMB0057",S:0,F:0,Sv:0,W:0,E:0,A4:0,A10:279,G:150,B:0,P:100,WG:0,D12:0,TPU:170,Off:0,Pin:529,Tot:699,Ch:0},
+{N:"Namah Combo",C:"CMB0056",S:0,F:0,Sv:0,W:0,E:0,A4:0,A10:0,G:0,B:0,P:50,WG:0,D12:0,TPU:650,Off:0,Pin:50,Tot:700,Ch:525},
+{N:"Viewing Fun Combo",C:"CMB0069",S:0,F:45,Sv:60,W:50,E:50,A4:0,A10:0,G:0,B:0,P:100,WG:0,D12:0,TPU:470,Off:155,Pin:150,Tot:775,Ch:585},
+{N:"Symbolic Play Combo",C:"CMB0070",S:200,F:49,Sv:0,W:0,E:0,A4:0,A10:0,G:0,B:0,P:50,WG:0,D12:0,TPU:470,Off:249,Pin:50,Tot:769,Ch:579},
+{N:"Ultimate Play Combo",C:"CMB0071",S:199,F:0,Sv:0,W:0,E:0,A4:200,A10:0,G:0,B:0,P:50,WG:70,D12:200,TPU:170,Off:199,Pin:520,Tot:889,Ch:799},
+{N:"Delight Combo",C:"CMB0068",S:0,F:45,Sv:60,W:0,E:50,A4:0,A10:0,G:0,B:0,P:100,WG:0,D12:200,TPU:470,Off:105,Pin:350,Tot:925,Ch:835},
+{N:"Mini Blast Combo",C:"CMB0072",S:0,F:50,Sv:99,W:50,E:0,A4:0,A10:0,G:0,B:0,P:100,WG:0,D12:0,TPU:670,Off:199,Pin:100,Tot:969,Ch:779},
+{N:"All in fun Combo",C:"CMB0073",S:200,F:0,Sv:0,W:0,E:0,A4:200,A10:0,G:0,B:0,P:50,WG:0,D12:200,TPU:450,Off:200,Pin:450,Tot:1100,Ch:925},
+{N:"Divine Rush Combo",C:"CMB0061",S:0,F:0,Sv:0,W:0,E:0,A4:0,A10:0,G:0,B:0,P:100,WG:0,D12:0,TPU:1450,Off:0,Pin:100,Tot:1550,Ch:975},
+{N:"Ultimate Mega Combo",C:"CMB0076",S:150,F:99,Sv:100,W:50,E:50,A4:0,A10:300,G:150,B:1500,P:100,WG:0,D12:150,TPU:1500,Off:449,Pin:2300,Tot:4249,Ch:0},
 ];
 let rc=0;
 function addRow(){
  rc++;
  let tb=document.getElementById('tbody');
  let tr=document.createElement('tr');
- tr.innerHTML=`<td>${rc}</td><td><select class="combo" onchange="calc()"><option value="">Select</option>${combos.map((c,i)=>`<option value="${i}">${c.Name} - ${c.Total}/-</option>`).join('')}</select></td><td><input type="number" class="ad" value="1" min="0" oninput="calc()"></td><td><input type="number" class="ch" value="0" min="0" oninput="calc()"></td><td class="tpu">0</td><td class="oe">0</td><td class="pa">0</td><td class="tot">0</td><td class="act act">-</td>`;
+ tr.innerHTML=`<td>${rc}</td><td><select class="combo" onchange="calc()"><option value="">Select Combo</option>${combos.map((c,i)=>`<option value="${i}">${c.N} (${c.C}) - ${c.Tot}/-</option>`).join('')}</select></td><td><input type="number" class="ad" value="1" min="0" oninput="calc()"></td><td><input type="number" class="ch" value="0" min="0" oninput="calc()"></td><td class="tpu">0</td><td class="oe">0</td><td class="pa">0</td><td class="tot">0</td><td class="act">-</td>`;
  tb.appendChild(tr);
 }
 function calc(){
  let sA=0,sC=0,sTPU=0,sOff=0,sPin=0,sTot=0; let agg={};
  document.querySelectorAll('#tbody tr').forEach(row=>{
-  let sel=row.querySelector('.combo'); let idx=sel.value;
+  let idx=row.querySelector('.combo').value;
   if(idx===""){ row.querySelector('.tpu').innerText=0; row.querySelector('.oe').innerText=0; row.querySelector('.pa').innerText=0; row.querySelector('.tot').innerText=0; row.querySelector('.act').innerText="-"; return; }
   let c=combos[idx];
   let ad=parseInt(row.querySelector('.ad').value)||0;
@@ -53,26 +80,26 @@ function calc(){
   let tpu=c.TPU*ad;
   let off=c.Off*ad;
   let pin=c.Pin*ad;
-  let tot=c.Total*ad + c.Child*ch;
+  let tot=c.Tot*ad + c.Ch*ch;
   row.querySelector('.tpu').innerText=tpu;
   row.querySelector('.oe').innerText=off;
   row.querySelector('.pa').innerText=pin;
   row.querySelector('.tot').innerText=tot;
   sA+=ad; sC+=ch; sTPU+=tpu; sOff+=off; sPin+=pin; sTot+=tot;
   let parts=[];
-  if(c.Snow){ parts.push(`OEPL -> Snow:${c.Snow*ad}`); agg['Snow']=(agg['Snow']||0)+c.Snow*ad; }
-  if(c.Wax){ parts.push(`OEPL -> Wax:${c.Wax*ad}`); agg['Wax']=(agg['Wax']||0)+c.Wax*ad; }
-  if(c.Food){ parts.push(`OEPL -> Food:${c.Food*ad}`); agg['Food']=(agg['Food']||0)+c.Food*ad; }
-  if(c.Souvenir){ parts.push(`OEPL -> Souvenir:${c.Souvenir*ad}`); agg['Souvenir']=(agg['Souvenir']||0)+c.Souvenir*ad; }
+  if(c.S){ parts.push(`OEPL -> Snow:${c.S*ad}`); agg['Snow']=(agg['Snow']||0)+c.S*ad; }
+  if(c.W){ parts.push(`OEPL -> Wax:${c.W*ad}`); agg['Wax']=(agg['Wax']||0)+c.W*ad; }
+  if(c.F){ parts.push(`OEPL -> Food:${c.F*ad}`); agg['Food']=(agg['Food']||0)+c.F*ad; }
+  if(c.Sv){ parts.push(`OEPL -> Souv:${c.Sv*ad}`); agg['Souv']=(agg['Souv']||0)+c.Sv*ad; }
   let pa=[];
-  if(c.Eyelusion){ pa.push(`Eyelusion:${c.Eyelusion*ad}`); agg['Eyelusion']=(agg['Eyelusion']||0)+c.Eyelusion*ad; }
-  if(c.any4){ pa.push(`any4:${c.any4*ad}`); agg['any4']=(agg['any4']||0)+c.any4*ad; }
-  if(c.any10){ pa.push(`any10:${c.any10*ad}`); agg['any10']=(agg['any10']||0)+c.any10*ad; }
-  if(c.GoKart){ pa.push(`GoKart:${c.GoKart*ad}`); agg['GoKart']=(agg['GoKart']||0)+c.GoKart*ad; }
-  if(c.Bungee){ pa.push(`Bungee:${c.Bungee*ad}`); agg['Bungee']=(agg['Bungee']||0)+c.Bungee*ad; }
+  if(c.E){ pa.push(`Eyelusion:${c.E*ad}`); agg['Eyelusion']=(agg['Eyelusion']||0)+c.E*ad; }
+  if(c.A4){ pa.push(`any4:${c.A4*ad}`); agg['any4']=(agg['any4']||0)+c.A4*ad; }
+  if(c.A10){ pa.push(`any10:${c.A10*ad}`); agg['any10']=(agg['any10']||0)+c.A10*ad; }
+  if(c.G){ pa.push(`GoKart:${c.G*ad}`); agg['GoKart']=(agg['GoKart']||0)+c.G*ad; }
+  if(c.B){ pa.push(`Bungee:${c.B*ad}`); agg['Bungee']=(agg['Bungee']||0)+c.B*ad; }
   if(c.D12){ pa.push(`12D:${c.D12*ad}`); agg['12D']=(agg['12D']||0)+c.D12*ad; }
-  if(c.WG){ pa.push(`W.Ganesha:${c.WG*ad}`); agg['WG']=(agg['WG']||0)+c.WG*ad; }
-  let pick=c.Pick1+c.Pick2+c.Pick3; if(pick){ pa.push(`Pick/Drop:${pick*ad}`); agg['Pick']=(agg['Pick']||0)+pick*ad; }
+  if(c.WG){ pa.push(`W.Gan:${c.WG*ad}`); agg['WG']=(agg['WG']||0)+c.WG*ad; }
+  if(c.P){ pa.push(`Pick/Drop:${c.P*ad}`); agg['Pick']=(agg['Pick']||0)+c.P*ad; }
   let txt=parts.join(' | ');
   if(pa.length){ if(txt) txt+=' | '; txt+='PAEPL -> '+pa.join(' | '); }
   row.querySelector('.act').innerText=txt||'-';
@@ -83,7 +110,8 @@ function calc(){
  document.getElementById('tOff').innerText=sOff;
  document.getElementById('tPin').innerText=sPin;
  document.getElementById('tTot').innerText=sTot;
- let aStr=[]; for(let k in agg) aStr.push(k+':'+agg[k]); document.getElementById('tAct').innerText=aStr.join(' | ');
+ let aStr=[]; for(let k in agg) aStr.push(k+':'+agg[k]);
+ document.getElementById('tAct').innerText=aStr.join(' | ')||'-';
 }
 function clearAll(){ document.getElementById('tbody').innerHTML=''; rc=0; addRow(); addRow(); addRow(); calc(); }
 addRow(); addRow(); addRow(); calc();
