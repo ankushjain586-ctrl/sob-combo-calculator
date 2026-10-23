@@ -2,16 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>SOB Calculator - Split OEPL PAEPL</title>
+<title>SOB Calculator - Print + Live Users</title>
 <style>
 body{margin:0;font-family:Arial,sans-serif;background:#eef2ff}
-.top{display:flex;justify-content:space-between;padding:10px;gap:6px}
+.top{display:flex;justify-content:space-between;padding:10px;gap:6px;flex-wrap:wrap}
 .top button{border:none;padding:8px 12px;border-radius:20px;font-weight:bold;color:#fff;font-size:12px;cursor:pointer}
-.kr{background:#ff6a00} .nam{background:#5a2ca0} .all{background:#7c5cff}
+.kr{background:#ff6a00} .nam{background:#5a2ca0} .all{background:#7c5cff} .print{background:#0a7a1e}
 .user-bar{display:flex;align-items:center;justify-content:center;gap:8px;margin:10px}
-.user-bar .name{background:#fff;padding:8px 28px;border-radius:20px;font-weight:bold}
+.user-bar .name{background:#fff;padding:8px 28px;border-radius:20px;font-weight:bold;min-width:80px;text-align:center}
 .load{background:#1e5eff;color:#fff;border:none;padding:8px 18px;border-radius:20px;font-weight:bold}
-.stats{background:#fff;margin:10px;padding:10px;border-radius:14px;text-align:center;font-weight:bold;font-size:13px;box-shadow:0 2px 6px rgba(0,0,0,0.08)}
+.live-box{background:linear-gradient(135deg,#fff,#e8f5e9);margin:10px;padding:12px;border-radius:14px;border:2px solid #0a7a1e;box-shadow:0 2px 6px rgba(0,0,0,0.08)}
+.live-title{font-weight:900;font-size:13px;color:#0a7a1e;margin-bottom:6px;text-align:center}
+.live-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px}
+.live-item{background:#fff;padding:6px 8px;border-radius:8px;text-align:center;border:1px solid #ddd}
 .title{text-align:center;font-size:22px;font-weight:900;margin:12px 0}
 .select-box, .input-box{background:#fff;margin:10px;padding:12px;border-radius:20px;box-shadow:0 2px 6px rgba(0,0,0,0.08)}
 .select-box select{width:100%;border:none;font-size:15px;background:transparent;outline:none}
@@ -19,6 +22,7 @@ body{margin:0;font-family:Arial,sans-serif;background:#eef2ff}
 .result-box{background:#fff;margin:10px;padding:16px;border-radius:20px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
 .row-main{display:flex;justify-content:space-between;padding:8px 0;font-size:16px;font-weight:700;border-bottom:1px dashed #eee}
 .row-detail{font-size:11px;color:#555;line-height:1.5;padding:2px 0 6px 12px;background:#f8fbff;margin-bottom:4px;border-radius:6px}
+.row.total{display:flex;justify-content:space-between;padding:12px 0 2px;font-size:18px;font-weight:900;border-top:1px solid #ccc;margin-top:8px}
 .badge{background:#fff;border:2px solid #ffb700;padding:6px 18px;border-radius:20px;font-weight:900}
 .small{font-size:11px;color:#666;margin-top:8px}
 .activities{background:#fff8e6;border:2px solid #ffcc33;margin-top:14px;padding:14px;border-radius:14px}
@@ -26,33 +30,58 @@ body{margin:0;font-family:Arial,sans-serif;background:#eef2ff}
 .act-item{font-size:12px;padding:4px 0;line-height:1.4;border-bottom:1px dashed #ffe8a0}
 .act-oe{color:#0a5a2a;font-weight:600} .act-pa{color:#7a1e1e;font-weight:600}
 .sob-input{background:#fff;margin:10px;padding:12px;border-radius:20px}
-.sob-input input{width:100%;border:none;outline:none;font-size:14px}
-@media print{.no-print{display:none!important} body{background:#fff} }
+.action-bar{display:flex;gap:8px;padding:10px;justify-content:center;flex-wrap:wrap}
+.action-bar button{border:none;padding:10px 18px;border-radius:20px;font-weight:bold;color:#fff;cursor:pointer;font-size:13px}
+.btn-save{background:#1a5cff} .btn-reset{background:#ff6a00} .btn-print{background:#0a7a1e}
+@media print{.no-print{display:none!important} body{background:#fff} @page{margin:10mm}}
 </style>
 </head>
 <body>
-<div class="top no-print"><button class="kr">🌍 Krishna</button><button class="nam">🔱 NAM</button><button class="all">📄 All Report</button></div>
-<div class="user-bar no-print"><span>☀️ Hi,</span><span class="name">Kajal</span><button class="load">Load</button></div>
-<div class="stats no-print"><span style="color:#1e5eff">Kajal</span> ke 0 | 🌍Krishna:0 | 🔱NAM:0 | All Users: 1 | Total All:1</div>
+<div class="top no-print">
+<button class="kr">🌍 Krishna</button>
+<button class="nam">🔱 NAM</button>
+<button class="all" onclick="showLive()">📄 All Report</button>
+<button class="print" onclick="window.print()">🖨️ Print</button>
+</div>
+<div class="user-bar no-print">
+<span>🌞 Hi,</span>
+<input id="userName" class="name" value="Kajal" onchange="updateLive()">
+<button class="load" onclick="calc()">Load</button>
+</div>
+<div class="live-box" id="liveBox">
+<div class="live-title">🔴 LIVE - Sare Users ka Report</div>
+<div class="live-grid" id="liveGrid">
+<div class="live-item"><b id="liveKajal">Kajal: 0</b><br><span style="font-size:10px">Today: 0</span></div>
+<div class="live-item"><b>🌍 Krishna: <span id="liveKrishna">0</span></b><br><span style="font-size:10px">Live</span></div>
+<div class="live-item"><b>🔱 NAM: <span id="liveNam">0</span></b><br><span style="font-size:10px">Live</span></div>
+<div class="live-item"><b>All Users: <span id="liveAll">1</span></b><br><span style="font-size:10px">Total: <span id="liveTotal">1</span></span></div>
+</div>
+<div style="text-align:center;margin-top:8px;font-size:10px;color:#666">Last Update: <span id="lastUpdate"></span> | Print me Activities Split ayega</div>
+</div>
 <div class="title">SOB coMboS calculator</div>
 <div class="select-box"><select id="combo" onchange="calc()"></select></div>
 <div class="input-box"><input type="number" id="adult" value="1" min="0" placeholder="No. of Adult" oninput="calc()"></div>
 <div class="input-box" style="border:2px solid #000"><input type="number" id="child" value="0" min="0" placeholder="No. of Children" oninput="calc()"></div>
-<div class="result-box">
+<div class="result-box" id="printArea">
 <div class="row-main"><span>TPU</span><b id="tpu">₹ 0</b></div>
 <div id="tpuDetail" class="row-detail"></div>
 <div class="row-main"><span>OEPL (Offspring)</span><b id="oepl">₹ 0</b></div>
 <div id="oeplDetail" class="row-detail">-</div>
 <div class="row-main"><span>PAEPL (Pinnacle)</span><b id="paepl">₹ 0</b></div>
 <div id="paeplDetail" class="row-detail">-</div>
-<div class="row total" style="display:flex;justify-content:space-between;padding:12px 0 2px;font-size:18px;font-weight:900;border-top:1px solid #ccc;margin-top:8px"><span>TOTAL</span><span class="badge" id="total">₹ 0</span></div>
+<div class="row total"><span>TOTAL</span><span class="badge" id="total">₹ 0</span></div>
 <div class="small" id="breakdown">-</div>
 <div class="activities">
 <h3>📋 ACTIVITIES' AMOUNTS - SPLIT (Print me ayega)</h3>
 <div id="actList">-</div>
 </div>
 </div>
-<div class="sob-input no-print"><input placeholder="Enter 6-digit SOB ID"></div>
+<div class="sob-input no-print"><input id="sobId" placeholder="Enter 6-digit SOB ID"></div>
+<div class="action-bar no-print">
+<button class="btn-save" onclick="saveAndLive()">💾 Save</button>
+<button class="btn-reset" onclick="resetAll()">🔄 Reset</button>
+<button class="btn-print" onclick="window.print()">🖨️ Print Sheet (Activities Split ke saath)</button>
+</div>
 <script>
 const combos=[
 {Num:1,Name:"Explorer Combo",Snow:0,Food:0,Sv:0,Wax:40,E:40,A4:0,A10:0,G:0,B:0,P:0,WG:49,D12:0,TPU:170,Off:40,Pin:89,Tot:299,Ch:209},
@@ -72,52 +101,49 @@ const combos=[
 {Num:15,Name:"Ultimate Mega Combo",Snow:150,Food:99,Sv:100,Wax:50,E:50,A4:0,A10:300,G:150,B:1500,P:100,WG:0,D12:150,TPU:1500,Off:449,Pin:2300,Tot:4249,Ch:0},
 ];
 const sel=document.getElementById('combo');
-combos.forEach((c,i)=>{
-  let opt=document.createElement('option');
-  opt.value=i;
-  opt.text=`${c.Num}. ${c.Name} - ₹${c.Tot}/₹${c.Ch}`;
-  if(c.Num===4) opt.selected=true;
-  sel.appendChild(opt);
-});
+combos.forEach((c,i)=>{let opt=document.createElement('option');opt.value=i;opt.text=`${c.Num}. ${c.Name} - ₹${c.Tot}/₹${c.Ch}`;if(c.Num===4) opt.selected=true;sel.appendChild(opt);});
+let liveData=JSON.parse(localStorage.getItem('sob_live_v2')||'{"Kajal":0,"Krishna":0,"NAM":0,"Total":1}');
+function updateLiveDisplay(){
+  document.getElementById('liveKajal').innerText=document.getElementById('userName').value+': '+(liveData[document.getElementById('userName').value]||0);
+  document.getElementById('liveKrishna').innerText=liveData.Krishna||0;
+  document.getElementById('liveNam').innerText=liveData.NAM||0;
+  let all=Object.values(liveData).reduce((a,b)=>a+b,0);
+  document.getElementById('liveAll').innerText=Object.keys(liveData).length;
+  document.getElementById('liveTotal').innerText=all;
+  document.getElementById('lastUpdate').innerText=new Date().toLocaleTimeString();
+}
+function saveAndLive(){
+  let name=document.getElementById('userName').value||'Kajal';
+  liveData[name]=(liveData[name]||0)+1;
+  liveData.Total=(liveData.Total||0)+1;
+  localStorage.setItem('sob_live_v2',JSON.stringify(liveData));
+  updateLiveDisplay();
+  alert('Saved! '+name+' ka count badh gaya. Live box me dekho.');
+  calc();
+}
+function showLive(){updateLiveDisplay();document.getElementById('liveBox').scrollIntoView({behavior:'smooth'});}
+function updateLive(){updateLiveDisplay();}
+function resetAll(){document.getElementById('adult').value=1;document.getElementById('child').value=0;calc();}
 function calc(){
-  let idx=sel.value; if(idx==="") return;
+  let idx=sel.value;if(idx==="")return;
   let c=combos[idx];
   let ad=parseInt(document.getElementById('adult').value)||0;
   let ch=parseInt(document.getElementById('child').value)||0;
-  let tpu=c.TPU*ad;
-  let oe=c.Off*ad;
-  let pa=c.Pin*ad;
-  let tot=c.Tot*ad + c.Ch*ch;
+  let tpu=c.TPU*ad;let oe=c.Off*ad;let pa=c.Pin*ad;let tot=c.Tot*ad + c.Ch*ch;
   document.getElementById('tpu').innerText='₹ '+tpu;
   document.getElementById('oepl').innerText='₹ '+oe;
   document.getElementById('paepl').innerText='₹ '+pa;
   document.getElementById('total').innerText='₹ '+tot;
   document.getElementById('breakdown').innerText=`${ad} Ad x ₹${c.Tot} + ${ch} Ch x ₹${c.Ch}`;
   document.getElementById('tpuDetail').innerHTML=`Park + VG + NAM = ₹${c.TPU} x ${ad} = ₹${tpu}`;
-  let oeParts=[];
-  if(c.Snow) oeParts.push(`Snow Park: ₹${c.Snow} x ${ad} = ₹${c.Snow*ad}`);
-  if(c.Wax) oeParts.push(`Wax Museum: ₹${c.Wax} x ${ad} = ₹${c.Wax*ad}`);
-  if(c.Food) oeParts.push(`Food Coupon: ₹${c.Food} x ${ad} = ₹${c.Food*ad}`);
-  if(c.Sv) oeParts.push(`Souvenir: ₹${c.Sv} x ${ad} = ₹${c.Sv*ad}`);
-  document.getElementById('oeplDetail').innerHTML= oeParts.length ? oeParts.join('<br>') : 'No OEPL activities';
-  let paParts=[];
-  if(c.E) paParts.push(`Eyelusion (Mayalok): ₹${c.E} x ${ad} = ₹${c.E*ad}`);
-  if(c.A4) paParts.push(`GameZone - Any 4 Rides: ₹${c.A4} x ${ad} = ₹${c.A4*ad}`);
-  if(c.A10) paParts.push(`GameZone - Any 10 Rides: ₹${c.A10} x ${ad} = ₹${c.A10*ad}`);
-  if(c.G) paParts.push(`GameZone - Go Karting: ₹${c.G} x ${ad} = ₹${c.G*ad}`);
-  if(c.B) paParts.push(`GameZone - Bungee Jumping: ₹${c.B} x ${ad} = ₹${c.B*ad}`);
-  if(c.WG) paParts.push(`World of Ganesha (Mayalok): ₹${c.WG} x ${ad} = ₹${c.WG*ad}`);
-  if(c.D12) paParts.push(`Mayalok - 12D + MM + HH: ₹${c.D12} x ${ad} = ₹${c.D12*ad}`);
-  if(c.P) paParts.push(`Pick/Drop: ₹${c.P} x ${ad} = ₹${c.P*ad}`);
-  document.getElementById('paeplDetail').innerHTML= paParts.length ? paParts.join('<br>') : 'No PAEPL activities';
-  let fullHtml='';
-  oeParts.forEach(p=> fullHtml+=`<div class="act-item act-oe">OEPL → ${p}</div>`);
-  paParts.forEach(p=> fullHtml+=`<div class="act-item act-pa">PAEPL → ${p}</div>`);
-  if(!fullHtml) fullHtml='No activities';
+  let oeParts=[];if(c.Snow)oeParts.push(`Snow Park: ₹${c.Snow} x ${ad} = ₹${c.Snow*ad}`);if(c.Wax)oeParts.push(`Wax Museum: ₹${c.Wax} x ${ad} = ₹${c.Wax*ad}`);if(c.Food)oeParts.push(`Food Coupon: ₹${c.Food} x ${ad} = ₹${c.Food*ad}`);if(c.Sv)oeParts.push(`Souvenir: ₹${c.Sv} x ${ad} = ₹${c.Sv*ad}`);
+  document.getElementById('oeplDetail').innerHTML=oeParts.length?oeParts.join('<br>'):'No OEPL activities';
+  let paParts=[];if(c.E)paParts.push(`Eyelusion (Mayalok): ₹${c.E} x ${ad} = ₹${c.E*ad}`);if(c.A4)paParts.push(`GameZone - Any 4 Rides: ₹${c.A4} x ${ad} = ₹${c.A4*ad}`);if(c.A10)paParts.push(`GameZone - Any 10 Rides: ₹${c.A10} x ${ad} = ₹${c.A10*ad}`);if(c.G)paParts.push(`GameZone - Go Karting: ₹${c.G} x ${ad} = ₹${c.G*ad}`);if(c.B)paParts.push(`GameZone - Bungee Jumping: ₹${c.B} x ${ad} = ₹${c.B*ad}`);if(c.WG)paParts.push(`World of Ganesha (Mayalok): ₹${c.WG} x ${ad} = ₹${c.WG*ad}`);if(c.D12)paParts.push(`Mayalok - 12D + MM + HH: ₹${c.D12} x ${ad} = ₹${c.D12*ad}`);if(c.P)paParts.push(`Pick/Drop: ₹${c.P} x ${ad} = ₹${c.P*ad}`);
+  document.getElementById('paeplDetail').innerHTML=paParts.length?paParts.join('<br>'):'No PAEPL activities';
+  let fullHtml='';oeParts.forEach(p=>fullHtml+=`<div class="act-item act-oe">OEPL → ${p}</div>`);paParts.forEach(p=>fullHtml+=`<div class="act-item act-pa">PAEPL → ${p}</div>`);
+  if(!fullHtml)fullHtml='No activities';
   fullHtml+=`<div style="margin-top:8px; padding-top:8px; border-top:2px solid #ffcc33; font-weight:bold; font-size:12px">TOTAL Activities Amount = ₹${oe+pa} (OEPL ₹${oe} + PAEPL ₹${pa})</div>`;
   document.getElementById('actList').innerHTML=fullHtml;
 }
-calc();
-</script>
-</body>
-</html>
+updateLiveDisplay();calc();
+</script></body></html>
