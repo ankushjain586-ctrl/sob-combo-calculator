@@ -1,125 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOB coMboS calculator - Old + Activities</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SOB Calculator - Split OEPL PAEPL</title>
 <style>
-*{box-sizing:border-box}
-body{font-family:'Segoe UI',Arial,sans-serif; background:#eef3ff; margin:0; padding:0}
-.top-bar{display:flex; justify-content:space-between; padding:10px; gap:6px}
-.top-btn{border:none; padding:8px 14px; border-radius:20px; font-size:13px; font-weight:bold; cursor:pointer; color:#fff}
-.krishna{background:#ff6a00}
-.nam{background:#4a1a8a}
-.report{background:#7a5cff}
-.user-row{display:flex; align-items:center; gap:8px; padding:0 12px; margin:10px 0}
-.user-input{flex:1; background:#fff; border-radius:20px; padding:8px 14px; text-align:center; border:none; box-shadow:0 1px 3px rgba(0,0,0,0.1)}
-.load-btn{background:#1a5cff; color:#fff; border:none; padding:8px 18px; border-radius:20px; font-weight:bold}
-.stats{background:#fff; margin:10px 12px; border-radius:16px; padding:10px; text-align:center; font-size:13px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.08)}
-.title{text-align:center; font-size:22px; font-weight:800; margin:14px 0}
-.combo-select{background:#fff; margin:0 12px; border-radius:16px; padding:12px; border:none; width:calc(100% - 24px); font-size:15px}
-.num-input{background:#fff; margin:10px 12px; border-radius:16px; padding:12px; border:none; width:calc(100% - 24px); font-size:15px}
-.card{background:#fff; margin:12px; border-radius:18px; padding:14px 16px; box-shadow:0 3px 10px rgba(0,0,0,0.08)}
-.row{display:flex; justify-content:space-between; padding:8px 0; font-size:15px; font-weight:600}
-.total-row{display:flex; justify-content:space-between; padding:10px 0 2px; font-size:16px; font-weight:800; border-top:1px solid #ccc; margin-top:6px}
-.total-badge{background:#fff; border:2px solid #ffcc00; border-radius:18px; padding:4px 14px; font-weight:800}
-.activities{background:#fff8e1; border:1px dashed #ffb300; border-radius:12px; padding:10px; margin-top:10px; font-size:11px; line-height:1.4}
-.activities b{color:#7a1e1e; font-size:12px}
-@media print{
-  body{background:#fff; -webkit-print-color-adjust:exact; print-color-adjust:exact}
-  .no-print{display:none!important}
-  .card{box-shadow:none; border:1px solid #ddd}
-  .activities{background:#fff8e1!important; border:1px solid #ffb300!important; display:block!important}
-}
+body{margin:0;font-family:Arial,sans-serif;background:#eef2ff}
+.top{display:flex;justify-content:space-between;padding:10px;gap:6px}
+.top button{border:none;padding:8px 12px;border-radius:20px;font-weight:bold;color:#fff;font-size:12px;cursor:pointer}
+.kr{background:#ff6a00} .nam{background:#5a2ca0} .all{background:#7c5cff}
+.user-bar{display:flex;align-items:center;justify-content:center;gap:8px;margin:10px}
+.user-bar .name{background:#fff;padding:8px 28px;border-radius:20px;font-weight:bold}
+.load{background:#1e5eff;color:#fff;border:none;padding:8px 18px;border-radius:20px;font-weight:bold}
+.stats{background:#fff;margin:10px;padding:10px;border-radius:14px;text-align:center;font-weight:bold;font-size:13px;box-shadow:0 2px 6px rgba(0,0,0,0.08)}
+.title{text-align:center;font-size:22px;font-weight:900;margin:12px 0}
+.select-box, .input-box{background:#fff;margin:10px;padding:12px;border-radius:20px;box-shadow:0 2px 6px rgba(0,0,0,0.08)}
+.select-box select{width:100%;border:none;font-size:15px;background:transparent;outline:none}
+.input-box input{width:100%;border:none;font-size:15px;outline:none}
+.result-box{background:#fff;margin:10px;padding:16px;border-radius:20px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.row-main{display:flex;justify-content:space-between;padding:8px 0;font-size:16px;font-weight:700;border-bottom:1px dashed #eee}
+.row-detail{font-size:11px;color:#555;line-height:1.5;padding:2px 0 6px 12px;background:#f8fbff;margin-bottom:4px;border-radius:6px}
+.badge{background:#fff;border:2px solid #ffb700;padding:6px 18px;border-radius:20px;font-weight:900}
+.small{font-size:11px;color:#666;margin-top:8px}
+.activities{background:#fff8e6;border:2px solid #ffcc33;margin-top:14px;padding:14px;border-radius:14px}
+.activities h3{margin:0 0 8px;font-size:13px;color:#7a1e1e}
+.act-item{font-size:12px;padding:4px 0;line-height:1.4;border-bottom:1px dashed #ffe8a0}
+.act-oe{color:#0a5a2a;font-weight:600} .act-pa{color:#7a1e1e;font-weight:600}
+.sob-input{background:#fff;margin:10px;padding:12px;border-radius:20px}
+.sob-input input{width:100%;border:none;outline:none;font-size:14px}
+@media print{.no-print{display:none!important} body{background:#fff} }
 </style>
 </head>
 <body>
-<div class="top-bar no-print">
-<button class="top-btn krishna">🌍 Krishna</button>
-<button class="top-btn nam">🔱 NAM</button>
-<button class="top-btn report" onclick="window.print()">📄 All Report</button>
-</div>
-<div class="user-row no-print">
-<span>🌞 Hi,</span>
-<input id="userName" class="user-input" value="Kajal">
-<button class="load-btn" onclick="calc()">Load</button>
-</div>
-<h1 class="title">SOB coMboS calculator</h1>
-<select id="combo" class="combo-select" onchange="calc()"></select>
-<input id="adult" type="number" class="num-input" placeholder="No. of Adult" value="1" min="0" oninput="calc()">
-<input id="child" type="number" class="num-input" placeholder="No. of Children" value="0" min="0" oninput="calc()">
-<div class="card" id="resultCard">
-<div class="row"><span>TPU</span><span id="tpuVal">₹ 0</span></div>
-<div class="row"><span>OEPL</span><span id="oeplVal">₹ 0</span></div>
-<div class="row"><span>PAEPL</span><span id="paeplVal">₹ 0</span></div>
-<div class="total-row"><span>TOTAL</span><span class="total-badge" id="totalVal">₹ 0</span></div>
-<div style="font-size:11px;color:#666;margin-top:6px" id="calcText">0 Ad x ₹0 + 0 Ch x ₹0</div>
-<div class="activities" id="activitiesBox">
-<b>📊 ACTIVITIES' AMOUNTS (Print Sheet me ayega):</b>
-<div id="actText" style="margin-top:6px">-</div>
+<div class="top no-print"><button class="kr">🌍 Krishna</button><button class="nam">🔱 NAM</button><button class="all">📄 All Report</button></div>
+<div class="user-bar no-print"><span>☀️ Hi,</span><span class="name">Kajal</span><button class="load">Load</button></div>
+<div class="stats no-print"><span style="color:#1e5eff">Kajal</span> ke 0 | 🌍Krishna:0 | 🔱NAM:0 | All Users: 1 | Total All:1</div>
+<div class="title">SOB coMboS calculator</div>
+<div class="select-box"><select id="combo" onchange="calc()"></select></div>
+<div class="input-box"><input type="number" id="adult" value="1" min="0" placeholder="No. of Adult" oninput="calc()"></div>
+<div class="input-box" style="border:2px solid #000"><input type="number" id="child" value="0" min="0" placeholder="No. of Children" oninput="calc()"></div>
+<div class="result-box">
+<div class="row-main"><span>TPU</span><b id="tpu">₹ 0</b></div>
+<div id="tpuDetail" class="row-detail"></div>
+<div class="row-main"><span>OEPL (Offspring)</span><b id="oepl">₹ 0</b></div>
+<div id="oeplDetail" class="row-detail">-</div>
+<div class="row-main"><span>PAEPL (Pinnacle)</span><b id="paepl">₹ 0</b></div>
+<div id="paeplDetail" class="row-detail">-</div>
+<div class="row total" style="display:flex;justify-content:space-between;padding:12px 0 2px;font-size:18px;font-weight:900;border-top:1px solid #ccc;margin-top:8px"><span>TOTAL</span><span class="badge" id="total">₹ 0</span></div>
+<div class="small" id="breakdown">-</div>
+<div class="activities">
+<h3>📋 ACTIVITIES' AMOUNTS - SPLIT (Print me ayega)</h3>
+<div id="actList">-</div>
 </div>
 </div>
-<div class="no-print" style="text-align:center; margin:14px">
-<button style="background:#1a5cff;color:#fff;border:none;padding:12px 30px;border-radius:20px;font-weight:bold" onclick="calc()">Save</button>
-<button style="background:#ff8c00;color:#fff;border:none;padding:12px 30px;border-radius:20px;font-weight:bold;margin-left:10px" onclick="clearAll()">Reset</button><br>
-<button style="background:#0a7a1e;color:#fff;border:none;padding:12px 30px;border-radius:20px;font-weight:bold;margin-top:10px;width:90%" onclick="window.print()">🖨️ Print Sheet (Activities ke saath)</button>
-</div>
+<div class="sob-input no-print"><input placeholder="Enter 6-digit SOB ID"></div>
 <script>
 const combos=[
-{Num:1,Name:"Explorer Combo",Code:"CMB0066",Snow:0,Food:0,Souvenir:0,Wax:40,Eyelusion:40,any4:0,any10:0,GoKart:0,Bungee:0,Pick:0,WG:49,D12:0,TPU:170,Off:40,Pin:89,Tot:299,Ch:209},
-{Num:2,Name:"Eco Adventure Combo",Code:"CMB0051",Snow:0,Food:0,Souvenir:0,Wax:0,Eyelusion:0,any4:177,any10:0,GoKart:0,Bungee:0,Pick:50,WG:0,D12:0,TPU:170,Off:0,Pin:227,Tot:397,Ch:307},
-{Num:3,Name:"Eco Fun Combo",Code:"CMB0052",Snow:0,Food:0,Souvenir:0,Wax:28,Eyelusion:0,any4:0,any10:0,GoKart:0,Bungee:0,Pick:0,WG:0,D12:200,TPU:170,Off:28,Pin:200,Tot:398,Ch:308},
-{Num:4,Name:"Snow Adventure Combo",Code:"CMB0053",Snow:255,Food:0,Souvenir:0,Wax:0,Eyelusion:0,any4:0,any10:0,GoKart:0,Bungee:0,Pick:0,WG:0,D12:0,TPU:170,Off:255,Pin:0,Tot:425,Ch:335},
-{Num:8,Name:"Viewing Fun Combo",Code:"CMB0069",Snow:0,Food:45,Souvenir:60,Wax:50,Eyelusion:50,any4:0,any10:0,GoKart:0,Bungee:0,Pick:100,WG:0,D12:0,TPU:470,Off:155,Pin:150,Tot:775,Ch:585},
-{Num:13,Name:"All in fun Combo",Code:"CMB0073",Snow:200,Food:0,Souvenir:0,Wax:0,Eyelusion:0,any4:200,any10:0,GoKart:0,Bungee:0,Pick:50,WG:0,D12:200,TPU:450,Off:200,Pin:450,Tot:1100,Ch:925},
-{Num:15,Name:"Ultimate Mega Combo",Code:"CMB0076",Snow:150,Food:99,Souvenir:100,Wax:50,Eyelusion:50,any4:0,any10:300,GoKart:150,Bungee:1500,Pick:100,WG:0,D12:150,TPU:1500,Off:449,Pin:2300,Tot:4249,Ch:0},
+{Num:1,Name:"Explorer Combo",Snow:0,Food:0,Sv:0,Wax:40,E:40,A4:0,A10:0,G:0,B:0,P:0,WG:49,D12:0,TPU:170,Off:40,Pin:89,Tot:299,Ch:209},
+{Num:2,Name:"Eco Adventure Combo",Snow:0,Food:0,Sv:0,Wax:0,E:0,A4:177,A10:0,G:0,B:0,P:50,WG:0,D12:0,TPU:170,Off:0,Pin:227,Tot:397,Ch:307},
+{Num:3,Name:"Eco Fun Combo",Snow:0,Food:0,Sv:0,Wax:28,E:0,A4:0,A10:0,G:0,B:0,P:0,WG:0,D12:200,TPU:170,Off:28,Pin:200,Tot:398,Ch:308},
+{Num:4,Name:"Snow Adventure Combo",Snow:255,Food:0,Sv:0,Wax:0,E:0,A4:0,A10:0,G:0,B:0,P:0,WG:0,D12:0,TPU:170,Off:255,Pin:0,Tot:425,Ch:335},
+{Num:5,Name:"Aastha Combo",Snow:0,Food:0,Sv:0,Wax:0,E:50,A4:0,A10:0,G:0,B:0,P:50,WG:0,D12:0,TPU:470,Off:0,Pin:100,Tot:570,Ch:500},
+{Num:6,Name:"Adventure Combo",Snow:0,Food:0,Sv:0,Wax:0,E:0,A4:0,A10:279,G:150,B:0,P:100,WG:0,D12:0,TPU:170,Off:0,Pin:529,Tot:699,Ch:0},
+{Num:7,Name:"Namah Combo",Snow:0,Food:0,Sv:0,Wax:0,E:0,A4:0,A10:0,G:0,B:0,P:50,WG:0,D12:0,TPU:650,Off:0,Pin:50,Tot:700,Ch:525},
+{Num:8,Name:"Viewing Fun Combo",Snow:0,Food:45,Sv:60,Wax:50,E:50,A4:0,A10:0,G:0,B:0,P:100,WG:0,D12:0,TPU:470,Off:155,Pin:150,Tot:775,Ch:585},
+{Num:9,Name:"Symbolic Play Combo",Snow:200,Food:49,Sv:0,Wax:0,E:0,A4:0,A10:0,G:0,B:0,P:50,WG:0,D12:0,TPU:470,Off:249,Pin:50,Tot:769,Ch:579},
+{Num:10,Name:"Ultimate Play Combo",Snow:199,Food:0,Sv:0,Wax:0,E:0,A4:200,A10:0,G:0,B:0,P:50,WG:70,D12:200,TPU:170,Off:199,Pin:520,Tot:889,Ch:799},
+{Num:11,Name:"Delight Combo",Snow:0,Food:45,Sv:60,Wax:0,E:50,A4:0,A10:0,G:0,B:0,P:100,WG:0,D12:200,TPU:470,Off:105,Pin:350,Tot:925,Ch:835},
+{Num:12,Name:"Mini Blast Combo",Snow:0,Food:50,Sv:99,Wax:50,E:0,A4:0,A10:0,G:0,B:0,P:100,WG:0,D12:0,TPU:670,Off:199,Pin:100,Tot:969,Ch:779},
+{Num:13,Name:"All in fun Combo",Snow:200,Food:0,Sv:0,Wax:0,E:0,A4:200,A10:0,G:0,B:0,P:50,WG:0,D12:200,TPU:450,Off:200,Pin:450,Tot:1100,Ch:925},
+{Num:14,Name:"Divine Rush Combo",Snow:0,Food:0,Sv:0,Wax:0,E:0,A4:0,A10:0,G:0,B:0,P:100,WG:0,D12:0,TPU:1450,Off:0,Pin:100,Tot:1550,Ch:975},
+{Num:15,Name:"Ultimate Mega Combo",Snow:150,Food:99,Sv:100,Wax:50,E:50,A4:0,A10:300,G:150,B:1500,P:100,WG:0,D12:150,TPU:1500,Off:449,Pin:2300,Tot:4249,Ch:0},
 ];
-const comboSel=document.getElementById('combo');
+const sel=document.getElementById('combo');
 combos.forEach((c,i)=>{
- let opt=document.createElement('option');
- opt.value=i;
- opt.text=`${c.Num}. ${c.Name} - ₹${c.Tot}/₹${c.Ch}`;
- if(c.Num===4) opt.selected=true;
- comboSel.appendChild(opt);
+  let opt=document.createElement('option');
+  opt.value=i;
+  opt.text=`${c.Num}. ${c.Name} - ₹${c.Tot}/₹${c.Ch}`;
+  if(c.Num===4) opt.selected=true;
+  sel.appendChild(opt);
 });
 function calc(){
- let idx=comboSel.value;
- if(idx==="") return;
- let c=combos[idx];
- let ad=parseInt(document.getElementById('adult').value)||0;
- let ch=parseInt(document.getElementById('child').value)||0;
- let tpu=c.TPU*ad;
- let oepl=c.Off*ad;
- let paepl=c.Pin*ad;
- let total=c.Tot*ad + c.Ch*ch;
- document.getElementById('tpuVal').innerText=`₹ ${tpu}`;
- document.getElementById('oeplVal').innerText=`₹ ${oepl}`;
- document.getElementById('paeplVal').innerText=`₹ ${paepl}`;
- document.getElementById('totalVal').innerText=`₹ ${total}`;
- document.getElementById('calcText').innerText=`${ad} Ad x ₹${c.Tot} + ${ch} Ch x ₹${c.Ch}`;
- let parts=[];
- if(c.Snow) parts.push(`OEPL -> Snow Park: ${c.Snow*ad}`);
- if(c.Wax) parts.push(`OEPL -> Wax Museum: ${c.Wax*ad}`);
- if(c.Food) parts.push(`OEPL -> Food: ${c.Food*ad}`);
- if(c.Souvenir) parts.push(`OEPL -> Souvenir: ${c.Souvenir*ad}`);
- let pa=[];
- if(c.Eyelusion) pa.push(`Eyelusion: ${c.Eyelusion*ad}`);
- if(c.any4) pa.push(`any 4 Rides: ${c.any4*ad}`);
- if(c.any10) pa.push(`any 10 Rides: ${c.any10*ad}`);
- if(c.GoKart) pa.push(`Go Kart: ${c.GoKart*ad}`);
- if(c.Bungee) pa.push(`Bungee: ${c.Bungee*ad}`);
- if(c.D12) pa.push(`12D+MM+HH: ${c.D12*ad}`);
- if(c.WG) pa.push(`World Ganesha: ${c.WG*ad}`);
- if(c.P) pa.push(`Pick/Drop: ${c.P*ad}`);
- let txt="";
- if(parts.length) txt+=parts.join(' | ') + '\n';
- if(pa.length){ if(txt) txt+='\n'; txt+='PAEPL -> ' + pa.join(' | '); }
- document.getElementById('actText').innerText=txt||"-";
-}
-function clearAll(){
- document.getElementById('adult').value=1;
- document.getElementById('child').value=0;
- calc();
+  let idx=sel.value; if(idx==="") return;
+  let c=combos[idx];
+  let ad=parseInt(document.getElementById('adult').value)||0;
+  let ch=parseInt(document.getElementById('child').value)||0;
+  let tpu=c.TPU*ad;
+  let oe=c.Off*ad;
+  let pa=c.Pin*ad;
+  let tot=c.Tot*ad + c.Ch*ch;
+  document.getElementById('tpu').innerText='₹ '+tpu;
+  document.getElementById('oepl').innerText='₹ '+oe;
+  document.getElementById('paepl').innerText='₹ '+pa;
+  document.getElementById('total').innerText='₹ '+tot;
+  document.getElementById('breakdown').innerText=`${ad} Ad x ₹${c.Tot} + ${ch} Ch x ₹${c.Ch}`;
+  document.getElementById('tpuDetail').innerHTML=`Park + VG + NAM = ₹${c.TPU} x ${ad} = ₹${tpu}`;
+  let oeParts=[];
+  if(c.Snow) oeParts.push(`Snow Park: ₹${c.Snow} x ${ad} = ₹${c.Snow*ad}`);
+  if(c.Wax) oeParts.push(`Wax Museum: ₹${c.Wax} x ${ad} = ₹${c.Wax*ad}`);
+  if(c.Food) oeParts.push(`Food Coupon: ₹${c.Food} x ${ad} = ₹${c.Food*ad}`);
+  if(c.Sv) oeParts.push(`Souvenir: ₹${c.Sv} x ${ad} = ₹${c.Sv*ad}`);
+  document.getElementById('oeplDetail').innerHTML= oeParts.length ? oeParts.join('<br>') : 'No OEPL activities';
+  let paParts=[];
+  if(c.E) paParts.push(`Eyelusion (Mayalok): ₹${c.E} x ${ad} = ₹${c.E*ad}`);
+  if(c.A4) paParts.push(`GameZone - Any 4 Rides: ₹${c.A4} x ${ad} = ₹${c.A4*ad}`);
+  if(c.A10) paParts.push(`GameZone - Any 10 Rides: ₹${c.A10} x ${ad} = ₹${c.A10*ad}`);
+  if(c.G) paParts.push(`GameZone - Go Karting: ₹${c.G} x ${ad} = ₹${c.G*ad}`);
+  if(c.B) paParts.push(`GameZone - Bungee Jumping: ₹${c.B} x ${ad} = ₹${c.B*ad}`);
+  if(c.WG) paParts.push(`World of Ganesha (Mayalok): ₹${c.WG} x ${ad} = ₹${c.WG*ad}`);
+  if(c.D12) paParts.push(`Mayalok - 12D + MM + HH: ₹${c.D12} x ${ad} = ₹${c.D12*ad}`);
+  if(c.P) paParts.push(`Pick/Drop: ₹${c.P} x ${ad} = ₹${c.P*ad}`);
+  document.getElementById('paeplDetail').innerHTML= paParts.length ? paParts.join('<br>') : 'No PAEPL activities';
+  let fullHtml='';
+  oeParts.forEach(p=> fullHtml+=`<div class="act-item act-oe">OEPL → ${p}</div>`);
+  paParts.forEach(p=> fullHtml+=`<div class="act-item act-pa">PAEPL → ${p}</div>`);
+  if(!fullHtml) fullHtml='No activities';
+  fullHtml+=`<div style="margin-top:8px; padding-top:8px; border-top:2px solid #ffcc33; font-weight:bold; font-size:12px">TOTAL Activities Amount = ₹${oe+pa} (OEPL ₹${oe} + PAEPL ₹${pa})</div>`;
+  document.getElementById('actList').innerHTML=fullHtml;
 }
 calc();
-</script></body></html>
+</script>
+</body>
+</html>
