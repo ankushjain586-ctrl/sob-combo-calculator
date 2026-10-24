@@ -2,148 +2,127 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>SOB Calculator - Print + Live Users</title>
+<title>Summary of SOB - Final</title>
 <style>
-body{margin:0;font-family:Arial,sans-serif;background:#eef2ff}
-.top{display:flex;justify-content:space-between;padding:10px;gap:6px;flex-wrap:wrap}
-.top button{border:none;padding:8px 12px;border-radius:20px;font-weight:bold;color:#fff;font-size:12px;cursor:pointer}
-.kr{background:#ff6a00} .nam{background:#5a2ca0} .all{background:#7c5cff} .print{background:#0a7a1e}
-.user-bar{display:flex;align-items:center;justify-content:center;gap:8px;margin:10px}
-.user-bar .name{background:#fff;padding:8px 28px;border-radius:20px;font-weight:bold;min-width:80px;text-align:center}
-.load{background:#1e5eff;color:#fff;border:none;padding:8px 18px;border-radius:20px;font-weight:bold}
-.live-box{background:linear-gradient(135deg,#fff,#e8f5e9);margin:10px;padding:12px;border-radius:14px;border:2px solid #0a7a1e;box-shadow:0 2px 6px rgba(0,0,0,0.08)}
-.live-title{font-weight:900;font-size:13px;color:#0a7a1e;margin-bottom:6px;text-align:center}
-.live-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px}
-.live-item{background:#fff;padding:6px 8px;border-radius:8px;text-align:center;border:1px solid #ddd}
-.title{text-align:center;font-size:22px;font-weight:900;margin:12px 0}
-.select-box, .input-box{background:#fff;margin:10px;padding:12px;border-radius:20px;box-shadow:0 2px 6px rgba(0,0,0,0.08)}
-.select-box select{width:100%;border:none;font-size:15px;background:transparent;outline:none}
-.input-box input{width:100%;border:none;font-size:15px;outline:none}
-.result-box{background:#fff;margin:10px;padding:16px;border-radius:20px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
-.row-main{display:flex;justify-content:space-between;padding:8px 0;font-size:16px;font-weight:700;border-bottom:1px dashed #eee}
-.row-detail{font-size:11px;color:#555;line-height:1.5;padding:2px 0 6px 12px;background:#f8fbff;margin-bottom:4px;border-radius:6px}
-.row.total{display:flex;justify-content:space-between;padding:12px 0 2px;font-size:18px;font-weight:900;border-top:1px solid #ccc;margin-top:8px}
-.badge{background:#fff;border:2px solid #ffb700;padding:6px 18px;border-radius:20px;font-weight:900}
-.small{font-size:11px;color:#666;margin-top:8px}
-.activities{background:#fff8e6;border:2px solid #ffcc33;margin-top:14px;padding:14px;border-radius:14px}
-.activities h3{margin:0 0 8px;font-size:13px;color:#7a1e1e}
-.act-item{font-size:12px;padding:4px 0;line-height:1.4;border-bottom:1px dashed #ffe8a0}
-.act-oe{color:#0a5a2a;font-weight:600} .act-pa{color:#7a1e1e;font-weight:600}
-.sob-input{background:#fff;margin:10px;padding:12px;border-radius:20px}
-.action-bar{display:flex;gap:8px;padding:10px;justify-content:center;flex-wrap:wrap}
-.action-bar button{border:none;padding:10px 18px;border-radius:20px;font-weight:bold;color:#fff;cursor:pointer;font-size:13px}
-.btn-save{background:#1a5cff} .btn-reset{background:#ff6a00} .btn-print{background:#0a7a1e}
-@media print{.no-print{display:none!important} body{background:#fff} @page{margin:10mm}}
+body{margin:0;font-family:Arial,sans-serif;background:#fde8c0;padding:6px}
+.h{background:#d68c2a;color:#000;padding:10px;text-align:center;font-weight:900;border:2px solid #000;font-size:14px}
+.box{background:#fff;border:2px solid #000;margin-top:6px}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{border:1px solid #000;padding:5px;text-align:center}
+th{background:#f9c87c;font-size:10px}
+td{font-size:11px}
+td input{width:52px;border:1px solid #888;border-radius:4px;padding:3px;text-align:center}
+.total{background:#fde8c0;font-weight:900}
+.grand{background:#f9b84a;font-weight:900}
+.bar{background:#4a1a1a;color:#fff;padding:8px;border-radius:6px;text-align:center;font-weight:900;margin:8px 0;font-size:13px}
+.manual{background:#fff;border:2px solid #000;padding:8px;border-radius:6px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.grid input{width:100%;box-sizing:border-box;border:1px solid #888;border-radius:5px;padding:6px;font-size:12px}
+.btns{display:flex;gap:6px;justify-content:center;margin:8px 0}
+.btns button{border:none;padding:8px 14px;border-radius:18px;font-weight:bold;color:#fff;font-size:11px}
+.g{background:#0a7a1e} .c{background:#1e5eff} .p{background:#ff6a00}
+.report{background:#fff;padding:10px;border:2px solid #000;white-space:pre-wrap;font-family:monospace;font-size:11px;line-height:1.5}
 </style>
 </head>
 <body>
-<div class="top no-print">
-<button class="kr">🌍 Krishna</button>
-<button class="nam">🔱 NAM</button>
-<button class="all" onclick="showLive()">📄 All Report</button>
-<button class="print" onclick="window.print()">🖨️ Print</button>
+<div class="h">Summary of SOB</div>
+<div class="box">
+<table>
+<tr><th rowspan="2">DATE</th><th rowspan="2">PARTICULAR</th><th colspan="3">FOOTFALL (Nos)</th><th>MTD<br>Oct-26</th></tr>
+<tr><th>ADULT</th><th>CHILD</th><th>Total</th><th>Total</th></tr>
+<tr><td rowspan="7"><input type="date" id="dt" value="2026-10-22"><div id="dtShow" style="font-size:10px;margin-top:3px">22/10/2026</div></td>
+<td style="text-align:left">PARK ENTRY</td><td><input type="number" id="pe_a" value="597"></td><td><input type="number" id="pe_c" value="77"></td><td id="pe_t">674</td><td><input type="number" id="pe_m" value="22231"></td></tr>
+<tr><td style="text-align:left">270FT + 280FT</td><td><input type="number" id="ft_a" value="327"></td><td><input type="number" id="ft_c" value="42"></td><td id="ft_t">369</td><td><input type="number" id="ft_m" value="12876"></td></tr>
+<tr><td style="text-align:left">JALAABHISHEK</td><td><input type="number" id="jal_a" value="0"></td><td><input type="number" id="jal_c" value="0"></td><td id="jal_t">0</td><td><input type="number" id="jal_m" value="81"></td></tr>
+<tr><td style="text-align:left">EXPRESS TICKET</td><td><input type="number" id="exp_a" value="0"></td><td><input type="number" id="exp_c" value="0"></td><td id="exp_t">0</td><td><input type="number" id="exp_m" value="24"></td></tr>
+<tr><td style="text-align:left">AATMA MANTHAN</td><td><input type="number" id="am_a" value="4"></td><td><input type="number" id="am_c" value="0"></td><td id="am_t">4</td><td><input type="number" id="am_m" value="561"></td></tr>
+<tr><td style="text-align:left">AATMA M.,270+280FT</td><td><input type="number" id="amft_a" value="38"></td><td><input type="number" id="amft_c" value="5"></td><td id="amft_t">43</td><td><input type="number" id="amft_m" value="2104"></td></tr>
+<tr><td style="text-align:left">AATMA M+ JALAABHISHEK</td><td><input type="number" id="amj_a" value="0"></td><td><input type="number" id="amj_c" value="0"></td><td id="amj_t">0</td><td><input type="number" id="amj_m" value="266"></td></tr>
+<tr class="total"><td colspan="2">TOTAL PARK ENTRY</td><td id="ta">966</td><td id="tc">124</td><td id="tt">1090</td><td id="tm">38143</td></tr>
+<tr class="grand"><td colspan="3">COLLECTION DETAILS</td><td>PARTICULAR</td><td colspan="2">TICKET SALE (INR)</td></tr>
+<tr><td colspan="3"></td><td>TOTAL</td><td colspan="2"><input type="number" id="coll" value="325535" style="width:90px"> <b id="collS">325,535</b></td></tr>
+</table>
 </div>
-<div class="user-bar no-print">
-<span>🌞 Hi,</span>
-<input id="userName" class="name" value="Kajal" onchange="updateLive()">
-<button class="load" onclick="calc()">Load</button>
-</div>
-<div class="live-box" id="liveBox">
-<div class="live-title">🔴 LIVE - Sare Users ka Report</div>
-<div class="live-grid" id="liveGrid">
-<div class="live-item"><b id="liveKajal">Kajal: 0</b><br><span style="font-size:10px">Today: 0</span></div>
-<div class="live-item"><b>🌍 Krishna: <span id="liveKrishna">0</span></b><br><span style="font-size:10px">Live</span></div>
-<div class="live-item"><b>🔱 NAM: <span id="liveNam">0</span></b><br><span style="font-size:10px">Live</span></div>
-<div class="live-item"><b>All Users: <span id="liveAll">1</span></b><br><span style="font-size:10px">Total: <span id="liveTotal">1</span></span></div>
-</div>
-<div style="text-align:center;margin-top:8px;font-size:10px;color:#666">Last Update: <span id="lastUpdate"></span> | Print me Activities Split ayega</div>
-</div>
-<div class="title">SOB coMboS calculator</div>
-<div class="select-box"><select id="combo" onchange="calc()"></select></div>
-<div class="input-box"><input type="number" id="adult" value="1" min="0" placeholder="No. of Adult" oninput="calc()"></div>
-<div class="input-box" style="border:2px solid #000"><input type="number" id="child" value="0" min="0" placeholder="No. of Children" oninput="calc()"></div>
-<div class="result-box" id="printArea">
-<div class="row-main"><span>TPU</span><b id="tpu">₹ 0</b></div>
-<div id="tpuDetail" class="row-detail"></div>
-<div class="row-main"><span>OEPL (Offspring)</span><b id="oepl">₹ 0</b></div>
-<div id="oeplDetail" class="row-detail">-</div>
-<div class="row-main"><span>PAEPL (Pinnacle)</span><b id="paepl">₹ 0</b></div>
-<div id="paeplDetail" class="row-detail">-</div>
-<div class="row total"><span>TOTAL</span><span class="badge" id="total">₹ 0</span></div>
-<div class="small" id="breakdown">-</div>
-<div class="activities">
-<h3>📋 ACTIVITIES' AMOUNTS - SPLIT (Print me ayega)</h3>
-<div id="actList">-</div>
+
+<div class="bar">TOTAL: <span id="ba">966</span> Adult + <span id="bc">124</span> Child = <span id="bt">1090</span> | MTD <span id="bmt">38143</span></div>
+
+<div class="manual">
+<div style="font-size:11px;font-weight:900;margin-bottom:5px">📝 Manual Entry (WhatsApp Report)</div>
+<div class="grid">
+<div><input type="number" id="nam" placeholder="NAM Form" value="1"></div>
+<div><input type="number" id="vgn" placeholder="VG NAA NAM Form" value="395"></div>
+<div><input type="number" id="loy" placeholder="Loyalty Card" value="60"></div>
+<div><input type="number" id="sch" placeholder="School Contact" value="6"></div>
+<div><input type="number" id="goo" placeholder="Google Review" value="2"></div>
+<div><input type="number" id="vid" placeholder="Video Feedback" value="0"></div>
+<div><input type="number" id="trip" placeholder="Trip Advisors" value="2"></div>
 </div>
 </div>
-<div class="sob-input no-print"><input id="sobId" placeholder="Enter 6-digit SOB ID"></div>
-<div class="action-bar no-print">
-<button class="btn-save" onclick="saveAndLive()">💾 Save</button>
-<button class="btn-reset" onclick="resetAll()">🔄 Reset</button>
-<button class="btn-print" onclick="window.print()">🖨️ Print Sheet (Activities Split ke saath)</button>
-</div>
+
+<div class="btns"><button class="g" onclick="gen()">✅ Generate</button><button class="c" onclick="copyR()">📋 Copy</button><button class="p" onclick="window.print()">🖨️ Print</button></div>
+
+<div class="report" id="rep"></div>
+
 <script>
-const combos=[
-{Num:1,Name:"Explorer Combo",Snow:0,Food:0,Sv:0,Wax:40,E:40,A4:0,A10:0,G:0,B:0,P:0,WG:49,D12:0,TPU:170,Off:40,Pin:89,Tot:299,Ch:209},
-{Num:2,Name:"Eco Adventure Combo",Snow:0,Food:0,Sv:0,Wax:0,E:0,A4:177,A10:0,G:0,B:0,P:50,WG:0,D12:0,TPU:170,Off:0,Pin:227,Tot:397,Ch:307},
-{Num:3,Name:"Eco Fun Combo",Snow:0,Food:0,Sv:0,Wax:28,E:0,A4:0,A10:0,G:0,B:0,P:0,WG:0,D12:200,TPU:170,Off:28,Pin:200,Tot:398,Ch:308},
-{Num:4,Name:"Snow Adventure Combo",Snow:255,Food:0,Sv:0,Wax:0,E:0,A4:0,A10:0,G:0,B:0,P:0,WG:0,D12:0,TPU:170,Off:255,Pin:0,Tot:425,Ch:335},
-{Num:5,Name:"Aastha Combo",Snow:0,Food:0,Sv:0,Wax:0,E:50,A4:0,A10:0,G:0,B:0,P:50,WG:0,D12:0,TPU:470,Off:0,Pin:100,Tot:570,Ch:500},
-{Num:6,Name:"Adventure Combo",Snow:0,Food:0,Sv:0,Wax:0,E:0,A4:0,A10:279,G:150,B:0,P:100,WG:0,D12:0,TPU:170,Off:0,Pin:529,Tot:699,Ch:0},
-{Num:7,Name:"Namah Combo",Snow:0,Food:0,Sv:0,Wax:0,E:0,A4:0,A10:0,G:0,B:0,P:50,WG:0,D12:0,TPU:650,Off:0,Pin:50,Tot:700,Ch:525},
-{Num:8,Name:"Viewing Fun Combo",Snow:0,Food:45,Sv:60,Wax:50,E:50,A4:0,A10:0,G:0,B:0,P:100,WG:0,D12:0,TPU:470,Off:155,Pin:150,Tot:775,Ch:585},
-{Num:9,Name:"Symbolic Play Combo",Snow:200,Food:49,Sv:0,Wax:0,E:0,A4:0,A10:0,G:0,B:0,P:50,WG:0,D12:0,TPU:470,Off:249,Pin:50,Tot:769,Ch:579},
-{Num:10,Name:"Ultimate Play Combo",Snow:199,Food:0,Sv:0,Wax:0,E:0,A4:200,A10:0,G:0,B:0,P:50,WG:70,D12:200,TPU:170,Off:199,Pin:520,Tot:889,Ch:799},
-{Num:11,Name:"Delight Combo",Snow:0,Food:45,Sv:60,Wax:0,E:50,A4:0,A10:0,G:0,B:0,P:100,WG:0,D12:200,TPU:470,Off:105,Pin:350,Tot:925,Ch:835},
-{Num:12,Name:"Mini Blast Combo",Snow:0,Food:50,Sv:99,Wax:50,E:0,A4:0,A10:0,G:0,B:0,P:100,WG:0,D12:0,TPU:670,Off:199,Pin:100,Tot:969,Ch:779},
-{Num:13,Name:"All in fun Combo",Snow:200,Food:0,Sv:0,Wax:0,E:0,A4:200,A10:0,G:0,B:0,P:50,WG:0,D12:200,TPU:450,Off:200,Pin:450,Tot:1100,Ch:925},
-{Num:14,Name:"Divine Rush Combo",Snow:0,Food:0,Sv:0,Wax:0,E:0,A4:0,A10:0,G:0,B:0,P:100,WG:0,D12:0,TPU:1450,Off:0,Pin:100,Tot:1550,Ch:975},
-{Num:15,Name:"Ultimate Mega Combo",Snow:150,Food:99,Sv:100,Wax:50,E:50,A4:0,A10:300,G:150,B:1500,P:100,WG:0,D12:150,TPU:1500,Off:449,Pin:2300,Tot:4249,Ch:0},
-];
-const sel=document.getElementById('combo');
-combos.forEach((c,i)=>{let opt=document.createElement('option');opt.value=i;opt.text=`${c.Num}. ${c.Name} - ₹${c.Tot}/₹${c.Ch}`;if(c.Num===4) opt.selected=true;sel.appendChild(opt);});
-let liveData=JSON.parse(localStorage.getItem('sob_live_v2')||'{"Kajal":0,"Krishna":0,"NAM":0,"Total":1}');
-function updateLiveDisplay(){
-  document.getElementById('liveKajal').innerText=document.getElementById('userName').value+': '+(liveData[document.getElementById('userName').value]||0);
-  document.getElementById('liveKrishna').innerText=liveData.Krishna||0;
-  document.getElementById('liveNam').innerText=liveData.NAM||0;
-  let all=Object.values(liveData).reduce((a,b)=>a+b,0);
-  document.getElementById('liveAll').innerText=Object.keys(liveData).length;
-  document.getElementById('liveTotal').innerText=all;
-  document.getElementById('lastUpdate').innerText=new Date().toLocaleTimeString();
-}
-function saveAndLive(){
-  let name=document.getElementById('userName').value||'Kajal';
-  liveData[name]=(liveData[name]||0)+1;
-  liveData.Total=(liveData.Total||0)+1;
-  localStorage.setItem('sob_live_v2',JSON.stringify(liveData));
-  updateLiveDisplay();
-  alert('Saved! '+name+' ka count badh gaya. Live box me dekho.');
-  calc();
-}
-function showLive(){updateLiveDisplay();document.getElementById('liveBox').scrollIntoView({behavior:'smooth'});}
-function updateLive(){updateLiveDisplay();}
-function resetAll(){document.getElementById('adult').value=1;document.getElementById('child').value=0;calc();}
+function v(id){return parseInt(document.getElementById(id).value)||0}
 function calc(){
-  let idx=sel.value;if(idx==="")return;
-  let c=combos[idx];
-  let ad=parseInt(document.getElementById('adult').value)||0;
-  let ch=parseInt(document.getElementById('child').value)||0;
-  let tpu=c.TPU*ad;let oe=c.Off*ad;let pa=c.Pin*ad;let tot=c.Tot*ad + c.Ch*ch;
-  document.getElementById('tpu').innerText='₹ '+tpu;
-  document.getElementById('oepl').innerText='₹ '+oe;
-  document.getElementById('paepl').innerText='₹ '+pa;
-  document.getElementById('total').innerText='₹ '+tot;
-  document.getElementById('breakdown').innerText=`${ad} Ad x ₹${c.Tot} + ${ch} Ch x ₹${c.Ch}`;
-  document.getElementById('tpuDetail').innerHTML=`Park + VG + NAM = ₹${c.TPU} x ${ad} = ₹${tpu}`;
-  let oeParts=[];if(c.Snow)oeParts.push(`Snow Park: ₹${c.Snow} x ${ad} = ₹${c.Snow*ad}`);if(c.Wax)oeParts.push(`Wax Museum: ₹${c.Wax} x ${ad} = ₹${c.Wax*ad}`);if(c.Food)oeParts.push(`Food Coupon: ₹${c.Food} x ${ad} = ₹${c.Food*ad}`);if(c.Sv)oeParts.push(`Souvenir: ₹${c.Sv} x ${ad} = ₹${c.Sv*ad}`);
-  document.getElementById('oeplDetail').innerHTML=oeParts.length?oeParts.join('<br>'):'No OEPL activities';
-  let paParts=[];if(c.E)paParts.push(`Eyelusion (Mayalok): ₹${c.E} x ${ad} = ₹${c.E*ad}`);if(c.A4)paParts.push(`GameZone - Any 4 Rides: ₹${c.A4} x ${ad} = ₹${c.A4*ad}`);if(c.A10)paParts.push(`GameZone - Any 10 Rides: ₹${c.A10} x ${ad} = ₹${c.A10*ad}`);if(c.G)paParts.push(`GameZone - Go Karting: ₹${c.G} x ${ad} = ₹${c.G*ad}`);if(c.B)paParts.push(`GameZone - Bungee Jumping: ₹${c.B} x ${ad} = ₹${c.B*ad}`);if(c.WG)paParts.push(`World of Ganesha (Mayalok): ₹${c.WG} x ${ad} = ₹${c.WG*ad}`);if(c.D12)paParts.push(`Mayalok - 12D + MM + HH: ₹${c.D12} x ${ad} = ₹${c.D12*ad}`);if(c.P)paParts.push(`Pick/Drop: ₹${c.P} x ${ad} = ₹${c.P*ad}`);
-  document.getElementById('paeplDetail').innerHTML=paParts.length?paParts.join('<br>'):'No PAEPL activities';
-  let fullHtml='';oeParts.forEach(p=>fullHtml+=`<div class="act-item act-oe">OEPL → ${p}</div>`);paParts.forEach(p=>fullHtml+=`<div class="act-item act-pa">PAEPL → ${p}</div>`);
-  if(!fullHtml)fullHtml='No activities';
-  fullHtml+=`<div style="margin-top:8px; padding-top:8px; border-top:2px solid #ffcc33; font-weight:bold; font-size:12px">TOTAL Activities Amount = ₹${oe+pa} (OEPL ₹${oe} + PAEPL ₹${pa})</div>`;
-  document.getElementById('actList').innerHTML=fullHtml;
+ let pe_a=v('pe_a'),pe_c=v('pe_c'),ft_a=v('ft_a'),ft_c=v('ft_c'),jal_a=v('jal_a'),jal_c=v('jal_c'),exp_a=v('exp_a'),exp_c=v('exp_c'),am_a=v('am_a'),am_c=v('am_c'),amft_a=v('amft_a'),amft_c=v('amft_c'),amj_a=v('amj_a'),amj_c=v('amj_c');
+ let pe_t=pe_a+pe_c,ft_t=ft_a+ft_c,jal_t=jal_a+jal_c,exp_t=exp_a+exp_c,am_t=am_a+am_c,amft_t=amft_a+amft_c,amj_t=amj_a+amj_c;
+ document.getElementById('pe_t').innerText=pe_t;document.getElementById('ft_t').innerText=ft_t;document.getElementById('jal_t').innerText=jal_t;document.getElementById('exp_t').innerText=exp_t;document.getElementById('am_t').innerText=am_t;document.getElementById('amft_t').innerText=amft_t;document.getElementById('amj_t').innerText=amj_t;
+ let ta=pe_a+ft_a+jal_a+exp_a+am_a+amft_a+amj_a;
+ let tc=pe_c+ft_c+jal_c+exp_c+am_c+amft_c+amj_c;
+ let tt=ta+tc;
+ let tm=v('pe_m')+v('ft_m')+v('jal_m')+v('exp_m')+v('am_m')+v('amft_m')+v('amj_m');
+ document.getElementById('ta').innerText=ta;document.getElementById('tc').innerText=tc;document.getElementById('tt').innerText=tt;document.getElementById('tm').innerText=tm;
+ document.getElementById('ba').innerText=ta;document.getElementById('bc').innerText=tc;document.getElementById('bt').innerText=tt;document.getElementById('bmt').innerText=tm;
+ document.getElementById('collS').innerText=v('coll').toLocaleString('en-IN');
+ let d=document.getElementById('dt').value; if(d){let dt=new Date(d);document.getElementById('dtShow').innerText=String(dt.getDate()).padStart(2,'0')+'/'+String(dt.getMonth()+1).padStart(2,'0')+'/'+dt.getFullYear();}
+ return {pe_t,ft_t,jal_t,exp_t,am_t,amft_t,amj_t,ta,tc,tt,tm,coll:v('coll')}
 }
-updateLiveDisplay();calc();
-</script></body></html>
+document.querySelectorAll('input').forEach(e=>e.addEventListener('input',()=>{calc();gen();}));
+function gen(){
+ let d=calc();
+ let now=document.getElementById('dt').value?new Date(document.getElementById('dt').value):new Date();
+ let days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+ let dn=days[now.getDay()];
+ let dd=String(now.getDate()).padStart(2,'0'),mm=String(now.getMonth()+1).padStart(2,'0'),yy=now.getFullYear();
+ let txt=`*Today's Operations Summary for ${dn}  ${dd}/${mm}/${yy}*
+
+Park Entry( *PE* ) = *${d.pe_t}*
+
+Viewing Gallery ( *VG* ) = *${d.ft_t}*
+
+PE + Nij Aatma Manthan ( *NAM* ) = *${d.am_t}*
+
+PE + VG + NAM = *${d.amft_t}*
+
+VG + Nij Aatma Abhishek ( *NAA* ) = *${d.jal_t}*
+
+VG + NAM + NAA = *${d.amj_t}*
+
+VG Express = *${d.exp_t}*
+
+_Total Footfall = *${d.tt}*_
+
+* NAM Undertaking Form = *${v('nam')}* (Including below 4-year-old kids)
+
+* VG, NAA, NAM Undertaking form = *${v('vgn')}* (Including below 4-year-old kids)
+
+Total Loyalty Card = *${v('loy')}*
+
+(*Total School Contact* *${v('sch')}*
+
+Google Review = *${v('goo')}*
+
+Total Video Feedback = *${v('vid')}*
+
+Total Trip Advisors = *${v('trip')}*
+
+_Collection: Rs ${d.coll.toLocaleString('en-IN')}_`;
+ document.getElementById('rep').innerText=txt;
+}
+function copyR(){navigator.clipboard.writeText(document.getElementById('rep').innerText).then(()=>alert('Copied! WhatsApp pe paste karo'));}
+calc();gen();
+</script>
+</body>
+</html>
