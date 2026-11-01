@@ -3,105 +3,144 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOB Footfall - Correct Pattern</title>
+<title>SOB - Dynamic Footfall</title>
 <style>
-body{font-family:Arial;background:#f5f7fb;margin:0;padding:12px}
-h1{text-align:center;color:#1a2a4a;font-size:18px}
-.card{background:#fff;border-radius:10px;padding:12px;margin:12px 0;box-shadow:0 2px 6px rgba(0,0,0,0.1)}
+body{font-family:Arial;background:#f5f7fb;margin:0;padding:10px}
+h1{text-align:center;color:#1a2a4a;font-size:16px}
+.card{background:#fff;border-radius:10px;padding:10px;margin:10px 0;box-shadow:0 2px 6px rgba(0,0,0,0.1)}
 .yellow{background:#fff9c4} .orange{background:#ffe0b2} .green{background:#d1e7dd}
-input{width:60px;padding:5px;text-align:center;border:1px solid #999;border-radius:5px}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{background:#1a2a4a;color:white;padding:6px}
-td{padding:5px;border:1px solid #ddd;text-align:center}
-.final{font-weight:bold;color:#0f5132;font-size:15px}
-button{width:100%;padding:10px;background:#1a2a4a;color:white;border:none;border-radius:8px;margin-top:6px}
+input,select{padding:5px;text-align:center;border:1px solid #999;border-radius:5px}
+input{width:50px} select{width:110px;font-size:11px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:#1a2a4a;color:white;padding:5px;font-size:11px}
+td{padding:4px;border:1px solid #ddd;text-align:center}
+.final{font-weight:bold;color:#0f5132}
+button{padding:8px 12px;border:none;border-radius:6px;cursor:pointer}
+.btn-main{background:#1a2a4a;color:white;width:100%;margin-top:6px}
+.btn-add{background:#ff9800;color:white;width:100%;margin-top:8px}
+.btn-del{background:#d32f2f;color:white;padding:2px 6px;font-size:10px}
 </style>
 </head>
 <body>
-<h1>SOB - Final Footfall (Correct Pattern)</h1>
+<h1>SOB - Dynamic Footfall Calculator</h1>
 
 <div class="card yellow">
-<h3>STEP 1: Ticket Plaza</h3>
-<table>
+<h3>STEP 1: Ticket Plaza (Fixed List)</h3>
+<table id="plazaTable">
 <tr><th>Ticket</th><th>A</th><th>C</th><th>Tot</th></tr>
-<tr><td>PARK ENTRY</td><td><input id="pe_a" type="number" value="0"></td><td><input id="pe_c" type="number" value="0"></td><td id="pe_t">0</td></tr>
-<tr><td>PE+VG(280)</td><td><input id="vg_a" type="number" value="0"></td><td><input id="vg_c" type="number" value="0"></td><td id="vg_t">0</td></tr>
-<tr><td>PE+VG+NAM</td><td><input id="vgn_a" type="number" value="0"></td><td><input id="vgn_c" type="number" value="0"></td><td id="vgn_t">0</td></tr>
-<tr><td>PE+VG(2nd)</td><td><input id="vg2_a" type="number" value="0"></td><td><input id="vg2_c" type="number" value="0"></td><td id="vg2_t">0</td></tr>
-<tr><td>PE+VG+NAM+NAA</td><td><input id="vgnn_a" type="number" value="0"></td><td><input id="vgnn_c" type="number" value="0"></td><td id="vgnn_t">0</td></tr>
-<tr><td>PE+NAM</td><td><input id="pn_a" type="number" value="0"></td><td><input id="pn_c" type="number" value="0"></td><td id="pn_t">0</td></tr>
-<tr><td>PE+VG Express</td><td><input id="vge_a" type="number" value="0"></td><td><input id="vge_c" type="number" value="0"></td><td id="vge_t">0</td></tr>
 </table>
 </div>
 
 <div class="card orange">
-<h3>STEP 2: Upgrade Counter</h3>
-<table>
-<tr><th>Upgrade</th><th>A</th><th>C</th><th>Tot</th></tr>
-<tr><td>PARK->VG</td><td><input id="up1_a" type="number" value="0"></td><td><input id="up1_c" type="number" value="0"></td><td id="up1_t">0</td></tr>
-<tr><td>VG->NAM</td><td><input id="up2_a" type="number" value="0"></td><td><input id="up2_c" type="number" value="0"></td><td id="up2_t">0</td></tr>
+<h3>STEP 2: Upgrade Counter (Dynamic - Kitna bhi badh jaye)</h3>
+<table id="upgradeTable">
+<tr><th>From -> To</th><th>A</th><th>C</th><th>Tot</th><th>X</th></tr>
 </table>
+<button class="btn-add" onclick="addUpgradeRow()">+ Add New Upgrade Type</button>
+<p style="font-size:10px;color:#555;margin:4px 0">Example: PARK ENTRY -> PE+VG, PE+VG -> PE+VG+NAM, etc. Jitne chaho add karo.</p>
 </div>
 
 <div class="card green">
-<h3>STEP 3: FINAL REPORT - Same Pattern</h3>
-<table>
-<tr><th>Ticket (Same Pattern)</th><th>Final Count</th></tr>
-<tr><td>PARK ENTRY (PE - UP1)</td><td id="f_pe" class="final">0</td></tr>
-<tr><td>PE+VG(280) (VG + UP1 - UP2)</td><td id="f_vg" class="final">0</td></tr>
-<tr><td>PE+VG+NAM (VGN + UP2)</td><td id="f_vgn" class="final">0</td></tr>
-<tr><td>PE+VG(2nd) (As it is)</td><td id="f_vg2" class="final">0</td></tr>
-<tr><td>PE+VG+NAM+NAA (As it is)</td><td id="f_vgnn" class="final">0</td></tr>
-<tr><td>PE+NAM (As it is)</td><td id="f_pn" class="final">0</td></tr>
-<tr><td>PE+VG Express (Alag - As it is)</td><td id="f_vge" class="final">0</td></tr>
-<tr><th>GRAND TOTAL</th><th id="f_total" class="final">0</th></tr>
+<h3>STEP 3: FINAL REPORT - Auto</h3>
+<table id="finalTable">
+<tr><th>Ticket</th><th>Final</th></tr>
 </table>
-<button onclick="calc()">Calculate</button>
-<button onclick="window.print()" style="background:#0f5132">Print / Save Photo</button>
+<button class="btn-main" onclick="calc()">Calculate</button>
+<button class="btn-main" style="background:#0f5132" onclick="window.print()">Print Photo</button>
 </div>
 
 <script>
-function toInt(id){return parseInt(document.getElementById(id).value)||0}
-function calc(){
- let pe=toInt('pe_a')+toInt('pe_c');
- let vg=toInt('vg_a')+toInt('vg_c');
- let vgn=toInt('vgn_a')+toInt('vgn_c');
- let vg2=toInt('vg2_a')+toInt('vg2_c');
- let vgnn=toInt('vgnn_a')+toInt('vgnn_c');
- let pn=toInt('pn_a')+toInt('pn_c');
- let vge=toInt('vge_a')+toInt('vge_c');
- let up1=toInt('up1_a')+toInt('up1_c');
- let up2=toInt('up2_a')+toInt('up2_c');
+const plazaTickets = [
+ "PARK ENTRY",
+ "PE + VG(280 Ft)",
+ "PE + VG(280 Ft) + NAM",
+ "PE + VG(280Ft) 2nd",
+ "PE +VG +NAM +NAA",
+ "PE + NAM",
+ "PE + VG(Express)"
+];
 
- document.getElementById('pe_t').innerText=pe;
- document.getElementById('vg_t').innerText=vg;
- document.getElementById('vgn_t').innerText=vgn;
- document.getElementById('vg2_t').innerText=vg2;
- document.getElementById('vgnn_t').innerText=vgnn;
- document.getElementById('pn_t').innerText=pn;
- document.getElementById('vge_t').innerText=vge;
- document.getElementById('up1_t').innerText=up1;
- document.getElementById('up2_t').innerText=up2;
+let upgrades = [];
 
- // NAYA CORRECT LOGIC
- let f_pe = pe - up1;           // Less
- let f_vg = vg + up1 - up2;     // Add Less
- let f_vgn = vgn + up2;         // Add
- let f_vg2 = vg2;               // As it is
- let f_vgnn = vgnn;             // As it is
- let f_pn = pn;                 // As it is
- let f_vge = vge;               // Express Alag - As it is
-
- document.getElementById('f_pe').innerText=f_pe;
- document.getElementById('f_vg').innerText=f_vg;
- document.getElementById('f_vgn').innerText=f_vgn;
- document.getElementById('f_vg2').innerText=f_vg2;
- document.getElementById('f_vgnn').innerText=f_vgnn;
- document.getElementById('f_pn').innerText=f_pn;
- document.getElementById('f_vge').innerText=f_vge;
- document.getElementById('f_total').innerText = f_pe+f_vg+f_vgn+f_vg2+f_vgnn+f_pn+f_vge;
+function initPlaza(){
+ let html = "<tr><th>Ticket</th><th>A</th><th>C</th><th>Tot</th></tr>";
+ plazaTickets.forEach((t,i)=>{
+  html+=`<tr><td>${t}</td><td><input id="p_a_${i}" type="number" value="0"></td><td><input id="p_c_${i}" type="number" value="0"></td><td id="p_t_${i}">0</td></tr>`;
+ });
+ document.getElementById('plazaTable').innerHTML=html;
 }
-document.querySelectorAll('input').forEach(i=>i.addEventListener('input',calc));
+
+function addUpgradeRow(fromIdx=0,toIdx=1,a=0,c=0){
+ let idx = upgrades.length;
+ let fromOptions = plazaTickets.map((t,i)=>`<option value="${i}" ${i==fromIdx?'selected':''}>${t}</option>`).join('');
+ let toOptions = plazaTickets.map((t,i)=>`<option value="${i}" ${i==toIdx?'selected':''}>${t}</option>`).join('');
+ 
+ let tr = document.createElement('tr');
+ tr.id = `up_row_${idx}`;
+ tr.innerHTML = `
+  <td><select id="up_from_${idx}">${fromOptions}</select> -> <select id="up_to_${idx}">${toOptions}</select></td>
+  <td><input id="up_a_${idx}" type="number" value="${a}"></td>
+  <td><input id="up_c_${idx}" type="number" value="${c}"></td>
+  <td id="up_t_${idx}">0</td>
+  <td><button class="btn-del" onclick="delRow(${idx})">X</button></td>
+ `;
+ document.getElementById('upgradeTable').appendChild(tr);
+ upgrades.push(idx);
+ attachListeners();
+}
+
+function delRow(idx){
+ document.getElementById(`up_row_${idx}`)?.remove();
+ upgrades = upgrades.filter(i=>i!=idx);
+ calc();
+}
+
+function attachListeners(){
+ document.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',calc));
+ document.querySelectorAll('select').forEach(el=>el.addEventListener('change',calc));
+}
+
+function toInt(id){return parseInt(document.getElementById(id)?.value)||0}
+
+function calc(){
+ let plazaTotals = plazaTickets.map((_,i)=>{
+  let tot = toInt(`p_a_${i}`)+toInt(`p_c_${i}`);
+  let el = document.getElementById(`p_t_${i}`);
+  if(el) el.innerText=tot;
+  return tot;
+ });
+
+ let finalCounts = [...plazaTotals]; // start with same
+
+ upgrades.forEach(idx=>{
+  let fromEl = document.getElementById(`up_from_${idx}`);
+  let toEl = document.getElementById(`up_to_${idx}`);
+  if(!fromEl||!toEl) return;
+  let from = parseInt(fromEl.value);
+  let to = parseInt(toEl.value);
+  let upTot = toInt(`up_a_${idx}`)+toInt(`up_c_${idx}`);
+  let el = document.getElementById(`up_t_${idx}`);
+  if(el) el.innerText=upTot;
+
+  finalCounts[from] -= upTot; // jisse upgrade hua waha se less
+  finalCounts[to] += upTot;    // jisme hua waha add
+ });
+
+ let finalHtml = "<tr><th>Ticket</th><th>Final</th></tr>";
+ let grand=0;
+ plazaTickets.forEach((t,i)=>{
+  finalHtml+=`<tr><td>${t}</td><td class="final">${finalCounts[i]}</td></tr>`;
+  grand+=finalCounts[i];
+ });
+ finalHtml+=`<tr><th>GRAND TOTAL</th><th class="final">${grand}</th></tr>`;
+ document.getElementById('finalTable').innerHTML=finalHtml;
+}
+
+// Init
+initPlaza();
+// Default 2 upgrades as per your screenshot
+addUpgradeRow(0,1,42,1); // PARK -> VG 42+1
+addUpgradeRow(1,2,2,0);  // VG -> NAM 2+0
 calc();
 </script>
 </body>
