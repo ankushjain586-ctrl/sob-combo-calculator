@@ -1,147 +1,95 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOB - Dynamic Footfall</title>
+<title>Today's Operations Summary - SOB</title>
 <style>
-body{font-family:Arial;background:#f5f7fb;margin:0;padding:10px}
-h1{text-align:center;color:#1a2a4a;font-size:16px}
-.card{background:#fff;border-radius:10px;padding:10px;margin:10px 0;box-shadow:0 2px 6px rgba(0,0,0,0.1)}
-.yellow{background:#fff9c4} .orange{background:#ffe0b2} .green{background:#d1e7dd}
-input,select{padding:5px;text-align:center;border:1px solid #999;border-radius:5px}
-input{width:50px} select{width:110px;font-size:11px}
-table{width:100%;border-collapse:collapse;font-size:12px}
-th{background:#1a2a4a;color:white;padding:5px;font-size:11px}
-td{padding:4px;border:1px solid #ddd;text-align:center}
-.final{font-weight:bold;color:#0f5132}
-button{padding:8px 12px;border:none;border-radius:6px;cursor:pointer}
-.btn-main{background:#1a2a4a;color:white;width:100%;margin-top:6px}
-.btn-add{background:#ff9800;color:white;width:100%;margin-top:8px}
-.btn-del{background:#d32f2f;color:white;padding:2px 6px;font-size:10px}
+body{font-family:Arial;padding:12px;background:#f5f7fb;margin:0}
+h3{text-align:center;color:#1a2a4a}
+.card{background:white;padding:12px;border-radius:10px;margin:10px 0;box-shadow:0 2px 5px #ccc}
+input{width:85px;padding:7px;text-align:center;border:2px solid #1a2a4a;border-radius:6px;font-size:15px}
+.row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #eee}
+label{font-size:13px}
+textarea{width:100%;height:360px;font-size:14px;padding:10px;border-radius:8px;border:1px solid #999;box-sizing:border-box}
+button{width:100%;padding:13px;background:#1a2a4a;color:white;border:none;border-radius:8px;font-size:16px;margin-top:8px;cursor:pointer}
+.btn-green{background:#0f7a3d}
 </style>
 </head>
 <body>
-<h1>SOB - Dynamic Footfall Calculator</h1>
+<h3>Today's Operations Summary</h3>
 
-<div class="card yellow">
-<h3>STEP 1: Ticket Plaza (Fixed List)</h3>
-<table id="plazaTable">
-<tr><th>Ticket</th><th>A</th><th>C</th><th>Tot</th></tr>
-</table>
+<div class="card">
+<b>1. Ticket Plaza (TOTAL Only)</b>
+<div class="row"><label>PARK ENTRY</label><input id="pe" type="number" placeholder="3300"></div>
+<div class="row"><label>Viewing Gallery (VG)</label><input id="vg" type="number" placeholder="931"></div>
+<div class="row"><label>VG 2nd</label><input id="vg2" type="number" placeholder="250"></div>
+<div class="row"><label>VG + NAM</label><input id="vgn" type="number" placeholder="189"></div>
+<div class="row"><label>Nij Manthan</label><input id="nij" type="number" placeholder="18"></div>
+<div class="row"><label>VG+NAM+NAA</label><input id="vgnnaa" type="number" placeholder="18"></div>
+<div class="row"><label>VG+NAA</label><input id="vgnaa" type="number" placeholder="7"></div>
+<div class="row"><label>VG Express</label><input id="exp" type="number" placeholder="13"></div>
 </div>
 
-<div class="card orange">
-<h3>STEP 2: Upgrade Counter (Dynamic - Kitna bhi badh jaye)</h3>
-<table id="upgradeTable">
-<tr><th>From -> To</th><th>A</th><th>C</th><th>Tot</th><th>X</th></tr>
-</table>
-<button class="btn-add" onclick="addUpgradeRow()">+ Add New Upgrade Type</button>
-<p style="font-size:10px;color:#555;margin:4px 0">Example: PARK ENTRY -> PE+VG, PE+VG -> PE+VG+NAM, etc. Jitne chaho add karo.</p>
+<div class="card" style="background:#ffe0b2">
+<b>2. Upgrade Counter (TOTAL Only)</b>
+<div class="row"><label>PARK -> VG</label><input id="u1" type="number" placeholder="268"></div>
+<div class="row"><label>VG -> NAM</label><input id="u2" type="number" placeholder="36"></div>
+<div class="row"><label>PARK -> Nij</label><input id="u3" type="number" placeholder="4"></div>
+<div class="row"><label>NAM -> NAA</label><input id="u4" type="number" placeholder="3"></div>
+<div class="row"><label>PARK -> NAM</label><input id="u5" type="number" placeholder="1"></div>
 </div>
 
-<div class="card green">
-<h3>STEP 3: FINAL REPORT - Auto</h3>
-<table id="finalTable">
-<tr><th>Ticket</th><th>Final</th></tr>
-</table>
-<button class="btn-main" onclick="calc()">Calculate</button>
-<button class="btn-main" style="background:#0f5132" onclick="window.print()">Print Photo</button>
+<button onclick="makeReport()">Generate Final Report</button>
+
+<div class="card">
+<textarea id="finalText">Today's Operations Summary.  DATE :- 
+
+Viewing Gallery = 
+
+Viewing Gallery + Nij Aatma Manthan = 
+
+Nij Aatma Abhishek = 
+
+Viewing Gallery + Nij Aatma Abhishek + Nij Aatma Manthan = 
+
+Nij Aatma Manthan = 
+
+Park Entry = 
+
+Viewing Gallery Express:-
+
+Total Footfall = </textarea>
+<button class="btn-green" onclick="copyText()">Copy & WhatsApp Share</button>
 </div>
 
 <script>
-const plazaTickets = [
- "PARK ENTRY",
- "PE + VG(280 Ft)",
- "PE + VG(280 Ft) + NAM",
- "PE + VG(280Ft) 2nd",
- "PE +VG +NAM +NAA",
- "PE + NAM",
- "PE + VG(Express)"
-];
+function v(id){return parseInt(document.getElementById(id).value)||0}
+function makeReport(){
+ let pe=v('pe'), vg=v('vg'), vg2=v('vg2'), vgn=v('vgn'), nij=v('nij'), vgnnaa=v('vgnnaa'), vgnaa=v('vgnaa'), exp=v('exp');
+ let u1=v('u1'), u2=v('u2'), u3=v('u3'), u4=v('u4'), u5=v('u5');
 
-let upgrades = [];
+ // Final Logic
+ let f_pe = pe - u1 - u3 - u5;
+ let f_vg = vg + u1 - u2;
+ let f_vg2 = vg2;
+ let f_vgn = vgn + u2 + u5 - u4;
+ let f_nij = nij + u3;
+ let f_vgnnaa = vgnnaa + u4;
+ let f_vgnaa = vgnaa;
+ let f_exp = exp;
+ let tot = f_pe+f_vg+f_vg2+f_vgn+f_nij+f_vgnnaa+f_vgnaa+f_exp;
 
-function initPlaza(){
- let html = "<tr><th>Ticket</th><th>A</th><th>C</th><th>Tot</th></tr>";
- plazaTickets.forEach((t,i)=>{
-  html+=`<tr><td>${t}</td><td><input id="p_a_${i}" type="number" value="0"></td><td><input id="p_c_${i}" type="number" value="0"></td><td id="p_t_${i}">0</td></tr>`;
- });
- document.getElementById('plazaTable').innerHTML=html;
+ let today = new Date().toLocaleDateString('en-GB').replace(/\//g,'-');
+ let text = `Today's Operations Summary.  DATE :- ${today} \n\nViewing Gallery = ${f_vg}\n\nViewing Gallery + Nij Aatma Manthan = ${f_vgn}\n\nNij Aatma Abhishek = ${f_vgnaa}\n\nViewing Gallery + Nij Aatma Abhishek + Nij Aatma Manthan = ${f_vgnnaa}\n\nNij Aatma Manthan = ${f_nij}\n\nPark Entry = ${f_pe}\n\nViewing Gallery Express:- ${f_exp}\n\nViewing Gallery (2nd) = ${f_vg2}\n\nTotal Footfall = ${tot}`;
+
+ document.getElementById('finalText').value = text;
 }
-
-function addUpgradeRow(fromIdx=0,toIdx=1,a=0,c=0){
- let idx = upgrades.length;
- let fromOptions = plazaTickets.map((t,i)=>`<option value="${i}" ${i==fromIdx?'selected':''}>${t}</option>`).join('');
- let toOptions = plazaTickets.map((t,i)=>`<option value="${i}" ${i==toIdx?'selected':''}>${t}</option>`).join('');
- 
- let tr = document.createElement('tr');
- tr.id = `up_row_${idx}`;
- tr.innerHTML = `
-  <td><select id="up_from_${idx}">${fromOptions}</select> -> <select id="up_to_${idx}">${toOptions}</select></td>
-  <td><input id="up_a_${idx}" type="number" value="${a}"></td>
-  <td><input id="up_c_${idx}" type="number" value="${c}"></td>
-  <td id="up_t_${idx}">0</td>
-  <td><button class="btn-del" onclick="delRow(${idx})">X</button></td>
- `;
- document.getElementById('upgradeTable').appendChild(tr);
- upgrades.push(idx);
- attachListeners();
+function copyText(){
+ let t = document.getElementById('finalText').value;
+ navigator.clipboard.writeText(t);
+ window.open("https://wa.me/?text="+encodeURIComponent(t), '_blank');
 }
-
-function delRow(idx){
- document.getElementById(`up_row_${idx}`)?.remove();
- upgrades = upgrades.filter(i=>i!=idx);
- calc();
-}
-
-function attachListeners(){
- document.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',calc));
- document.querySelectorAll('select').forEach(el=>el.addEventListener('change',calc));
-}
-
-function toInt(id){return parseInt(document.getElementById(id)?.value)||0}
-
-function calc(){
- let plazaTotals = plazaTickets.map((_,i)=>{
-  let tot = toInt(`p_a_${i}`)+toInt(`p_c_${i}`);
-  let el = document.getElementById(`p_t_${i}`);
-  if(el) el.innerText=tot;
-  return tot;
- });
-
- let finalCounts = [...plazaTotals]; // start with same
-
- upgrades.forEach(idx=>{
-  let fromEl = document.getElementById(`up_from_${idx}`);
-  let toEl = document.getElementById(`up_to_${idx}`);
-  if(!fromEl||!toEl) return;
-  let from = parseInt(fromEl.value);
-  let to = parseInt(toEl.value);
-  let upTot = toInt(`up_a_${idx}`)+toInt(`up_c_${idx}`);
-  let el = document.getElementById(`up_t_${idx}`);
-  if(el) el.innerText=upTot;
-
-  finalCounts[from] -= upTot; // jisse upgrade hua waha se less
-  finalCounts[to] += upTot;    // jisme hua waha add
- });
-
- let finalHtml = "<tr><th>Ticket</th><th>Final</th></tr>";
- let grand=0;
- plazaTickets.forEach((t,i)=>{
-  finalHtml+=`<tr><td>${t}</td><td class="final">${finalCounts[i]}</td></tr>`;
-  grand+=finalCounts[i];
- });
- finalHtml+=`<tr><th>GRAND TOTAL</th><th class="final">${grand}</th></tr>`;
- document.getElementById('finalTable').innerHTML=finalHtml;
-}
-
-// Init
-initPlaza();
-// Default 2 upgrades as per your screenshot
-addUpgradeRow(0,1,42,1); // PARK -> VG 42+1
-addUpgradeRow(1,2,2,0);  // VG -> NAM 2+0
-calc();
 </script>
 </body>
 </html>
