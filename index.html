@@ -3,27 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOB Daily Footfall Calculator</title>
+<title>SOB Footfall - Correct Pattern</title>
 <style>
-body{font-family:Arial;background:#f5f7fb;margin:0;padding:15px}
-h1{text-align:center;color:#1a2a4a}
-.card{background:#fff;border-radius:12px;padding:15px;margin:15px 0;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+body{font-family:Arial;background:#f5f7fb;margin:0;padding:12px}
+h1{text-align:center;color:#1a2a4a;font-size:18px}
+.card{background:#fff;border-radius:10px;padding:12px;margin:12px 0;box-shadow:0 2px 6px rgba(0,0,0,0.1)}
 .yellow{background:#fff9c4} .orange{background:#ffe0b2} .green{background:#d1e7dd}
-input{width:70px;padding:6px;text-align:center;border:1px solid #ccc;border-radius:6px}
-table{width:100%;border-collapse:collapse}
-th{background:#1a2a4a;color:white;padding:8px}
-td{padding:6px;border:1px solid #ddd;text-align:center}
-.final{font-size:18px;font-weight:bold;color:#0f5132}
-button{width:100%;padding:12px;background:#1a2a4a;color:white;border:none;border-radius:8px;font-size:16px}
+input{width:60px;padding:5px;text-align:center;border:1px solid #999;border-radius:5px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#1a2a4a;color:white;padding:6px}
+td{padding:5px;border:1px solid #ddd;text-align:center}
+.final{font-weight:bold;color:#0f5132;font-size:15px}
+button{width:100%;padding:10px;background:#1a2a4a;color:white;border:none;border-radius:8px;margin-top:6px}
 </style>
 </head>
 <body>
-<h1>Statue of Belief - Footfall Calculator</h1>
+<h1>SOB - Final Footfall (Correct Pattern)</h1>
 
 <div class="card yellow">
-<h3>STEP 1: Ticket Plaza (Adult + Child)</h3>
+<h3>STEP 1: Ticket Plaza</h3>
 <table>
-<tr><th>Ticket</th><th>Adult</th><th>Child</th><th>Total</th></tr>
+<tr><th>Ticket</th><th>A</th><th>C</th><th>Tot</th></tr>
 <tr><td>PARK ENTRY</td><td><input id="pe_a" type="number" value="0"></td><td><input id="pe_c" type="number" value="0"></td><td id="pe_t">0</td></tr>
 <tr><td>PE+VG(280)</td><td><input id="vg_a" type="number" value="0"></td><td><input id="vg_c" type="number" value="0"></td><td id="vg_t">0</td></tr>
 <tr><td>PE+VG+NAM</td><td><input id="vgn_a" type="number" value="0"></td><td><input id="vgn_c" type="number" value="0"></td><td id="vgn_t">0</td></tr>
@@ -37,25 +37,27 @@ button{width:100%;padding:12px;background:#1a2a4a;color:white;border:none;border
 <div class="card orange">
 <h3>STEP 2: Upgrade Counter</h3>
 <table>
-<tr><th>Upgrade</th><th>Adult</th><th>Child</th><th>Total</th></tr>
-<tr><td>PARK -> VG</td><td><input id="up1_a" type="number" value="0"></td><td><input id="up1_c" type="number" value="0"></td><td id="up1_t">0</td></tr>
-<tr><td>VG -> NAM</td><td><input id="up2_a" type="number" value="0"></td><td><input id="up2_c" type="number" value="0"></td><td id="up2_t">0</td></tr>
+<tr><th>Upgrade</th><th>A</th><th>C</th><th>Tot</th></tr>
+<tr><td>PARK->VG</td><td><input id="up1_a" type="number" value="0"></td><td><input id="up1_c" type="number" value="0"></td><td id="up1_t">0</td></tr>
+<tr><td>VG->NAM</td><td><input id="up2_a" type="number" value="0"></td><td><input id="up2_c" type="number" value="0"></td><td id="up2_t">0</td></tr>
 </table>
 </div>
 
 <div class="card green">
-<h3>STEP 3: FINAL REPORT (Auto)</h3>
+<h3>STEP 3: FINAL REPORT - Same Pattern</h3>
 <table>
-<tr><th>Ticket</th><th>Final Count</th></tr>
-<tr><td>PARK ENTRY</td><td id="f_pe" class="final">0</td></tr>
-<tr><td>PE+VG All Types</td><td id="f_vg" class="final">0</td></tr>
-<tr><td>PE+VG+NAM</td><td id="f_vgn" class="final">0</td></tr>
-<tr><td>Others (NAA + PN)</td><td id="f_oth" class="final">0</td></tr>
+<tr><th>Ticket (Same Pattern)</th><th>Final Count</th></tr>
+<tr><td>PARK ENTRY (PE - UP1)</td><td id="f_pe" class="final">0</td></tr>
+<tr><td>PE+VG(280) (VG + UP1 - UP2)</td><td id="f_vg" class="final">0</td></tr>
+<tr><td>PE+VG+NAM (VGN + UP2)</td><td id="f_vgn" class="final">0</td></tr>
+<tr><td>PE+VG(2nd) (As it is)</td><td id="f_vg2" class="final">0</td></tr>
+<tr><td>PE+VG+NAM+NAA (As it is)</td><td id="f_vgnn" class="final">0</td></tr>
+<tr><td>PE+NAM (As it is)</td><td id="f_pn" class="final">0</td></tr>
+<tr><td>PE+VG Express (Alag - As it is)</td><td id="f_vge" class="final">0</td></tr>
 <tr><th>GRAND TOTAL</th><th id="f_total" class="final">0</th></tr>
 </table>
-<br>
-<button onclick="calc()">Calculate / Refresh</button>
-<button onclick="window.print()" style="background:#0f5132;margin-top:8px">Print / Save as Photo</button>
+<button onclick="calc()">Calculate</button>
+<button onclick="window.print()" style="background:#0f5132">Print / Save Photo</button>
 </div>
 
 <script>
@@ -81,17 +83,23 @@ function calc(){
  document.getElementById('up1_t').innerText=up1;
  document.getElementById('up2_t').innerText=up2;
 
- let f_pe = pe - up1;
- let f_vg = vg + vg2 + vge + up1 - up2;
- let f_vgn = vgn + up2;
- let f_oth = vgnn + pn;
- let total = f_pe + f_vg + f_vgn + f_oth;
+ // NAYA CORRECT LOGIC
+ let f_pe = pe - up1;           // Less
+ let f_vg = vg + up1 - up2;     // Add Less
+ let f_vgn = vgn + up2;         // Add
+ let f_vg2 = vg2;               // As it is
+ let f_vgnn = vgnn;             // As it is
+ let f_pn = pn;                 // As it is
+ let f_vge = vge;               // Express Alag - As it is
 
  document.getElementById('f_pe').innerText=f_pe;
  document.getElementById('f_vg').innerText=f_vg;
  document.getElementById('f_vgn').innerText=f_vgn;
- document.getElementById('f_oth').innerText=f_oth;
- document.getElementById('f_total').innerText=total;
+ document.getElementById('f_vg2').innerText=f_vg2;
+ document.getElementById('f_vgnn').innerText=f_vgnn;
+ document.getElementById('f_pn').innerText=f_pn;
+ document.getElementById('f_vge').innerText=f_vge;
+ document.getElementById('f_total').innerText = f_pe+f_vg+f_vgn+f_vg2+f_vgnn+f_pn+f_vge;
 }
 document.querySelectorAll('input').forEach(i=>i.addEventListener('input',calc));
 calc();
