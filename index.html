@@ -1,128 +1,100 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Summary of SOB - Final</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOB Daily Footfall Calculator</title>
 <style>
-body{margin:0;font-family:Arial,sans-serif;background:#fde8c0;padding:6px}
-.h{background:#d68c2a;color:#000;padding:10px;text-align:center;font-weight:900;border:2px solid #000;font-size:14px}
-.box{background:#fff;border:2px solid #000;margin-top:6px}
-table{width:100%;border-collapse:collapse;font-size:11px}
-th,td{border:1px solid #000;padding:5px;text-align:center}
-th{background:#f9c87c;font-size:10px}
-td{font-size:11px}
-td input{width:52px;border:1px solid #888;border-radius:4px;padding:3px;text-align:center}
-.total{background:#fde8c0;font-weight:900}
-.grand{background:#f9b84a;font-weight:900}
-.bar{background:#4a1a1a;color:#fff;padding:8px;border-radius:6px;text-align:center;font-weight:900;margin:8px 0;font-size:13px}
-.manual{background:#fff;border:2px solid #000;padding:8px;border-radius:6px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.grid input{width:100%;box-sizing:border-box;border:1px solid #888;border-radius:5px;padding:6px;font-size:12px}
-.btns{display:flex;gap:6px;justify-content:center;margin:8px 0}
-.btns button{border:none;padding:8px 14px;border-radius:18px;font-weight:bold;color:#fff;font-size:11px}
-.g{background:#0a7a1e} .c{background:#1e5eff} .p{background:#ff6a00}
-.report{background:#fff;padding:10px;border:2px solid #000;white-space:pre-wrap;font-family:monospace;font-size:11px;line-height:1.5}
+body{font-family:Arial;background:#f5f7fb;margin:0;padding:15px}
+h1{text-align:center;color:#1a2a4a}
+.card{background:#fff;border-radius:12px;padding:15px;margin:15px 0;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.yellow{background:#fff9c4} .orange{background:#ffe0b2} .green{background:#d1e7dd}
+input{width:70px;padding:6px;text-align:center;border:1px solid #ccc;border-radius:6px}
+table{width:100%;border-collapse:collapse}
+th{background:#1a2a4a;color:white;padding:8px}
+td{padding:6px;border:1px solid #ddd;text-align:center}
+.final{font-size:18px;font-weight:bold;color:#0f5132}
+button{width:100%;padding:12px;background:#1a2a4a;color:white;border:none;border-radius:8px;font-size:16px}
 </style>
 </head>
 <body>
-<div class="h">Summary of SOB</div>
-<div class="box">
+<h1>Statue of Belief - Footfall Calculator</h1>
+
+<div class="card yellow">
+<h3>STEP 1: Ticket Plaza (Adult + Child)</h3>
 <table>
-<tr><th rowspan="2">DATE</th><th rowspan="2">PARTICULAR</th><th colspan="3">FOOTFALL (Nos)</th><th>MTD<br>Oct-26</th></tr>
-<tr><th>ADULT</th><th>CHILD</th><th>Total</th><th>Total</th></tr>
-<tr><td rowspan="7"><input type="date" id="dt" value="2026-10-22"><div id="dtShow" style="font-size:10px;margin-top:3px">22/10/2026</div></td>
-<td style="text-align:left">PARK ENTRY</td><td><input type="number" id="pe_a" value="597"></td><td><input type="number" id="pe_c" value="77"></td><td id="pe_t">674</td><td><input type="number" id="pe_m" value="22231"></td></tr>
-<tr><td style="text-align:left">270FT + 280FT</td><td><input type="number" id="ft_a" value="327"></td><td><input type="number" id="ft_c" value="42"></td><td id="ft_t">369</td><td><input type="number" id="ft_m" value="12876"></td></tr>
-<tr><td style="text-align:left">JALAABHISHEK</td><td><input type="number" id="jal_a" value="0"></td><td><input type="number" id="jal_c" value="0"></td><td id="jal_t">0</td><td><input type="number" id="jal_m" value="81"></td></tr>
-<tr><td style="text-align:left">EXPRESS TICKET</td><td><input type="number" id="exp_a" value="0"></td><td><input type="number" id="exp_c" value="0"></td><td id="exp_t">0</td><td><input type="number" id="exp_m" value="24"></td></tr>
-<tr><td style="text-align:left">AATMA MANTHAN</td><td><input type="number" id="am_a" value="4"></td><td><input type="number" id="am_c" value="0"></td><td id="am_t">4</td><td><input type="number" id="am_m" value="561"></td></tr>
-<tr><td style="text-align:left">AATMA M.,270+280FT</td><td><input type="number" id="amft_a" value="38"></td><td><input type="number" id="amft_c" value="5"></td><td id="amft_t">43</td><td><input type="number" id="amft_m" value="2104"></td></tr>
-<tr><td style="text-align:left">AATMA M+ JALAABHISHEK</td><td><input type="number" id="amj_a" value="0"></td><td><input type="number" id="amj_c" value="0"></td><td id="amj_t">0</td><td><input type="number" id="amj_m" value="266"></td></tr>
-<tr class="total"><td colspan="2">TOTAL PARK ENTRY</td><td id="ta">966</td><td id="tc">124</td><td id="tt">1090</td><td id="tm">38143</td></tr>
-<tr class="grand"><td colspan="3">COLLECTION DETAILS</td><td>PARTICULAR</td><td colspan="2">TICKET SALE (INR)</td></tr>
-<tr><td colspan="3"></td><td>TOTAL</td><td colspan="2"><input type="number" id="coll" value="325535" style="width:90px"> <b id="collS">325,535</b></td></tr>
+<tr><th>Ticket</th><th>Adult</th><th>Child</th><th>Total</th></tr>
+<tr><td>PARK ENTRY</td><td><input id="pe_a" type="number" value="0"></td><td><input id="pe_c" type="number" value="0"></td><td id="pe_t">0</td></tr>
+<tr><td>PE+VG(280)</td><td><input id="vg_a" type="number" value="0"></td><td><input id="vg_c" type="number" value="0"></td><td id="vg_t">0</td></tr>
+<tr><td>PE+VG+NAM</td><td><input id="vgn_a" type="number" value="0"></td><td><input id="vgn_c" type="number" value="0"></td><td id="vgn_t">0</td></tr>
+<tr><td>PE+VG(2nd)</td><td><input id="vg2_a" type="number" value="0"></td><td><input id="vg2_c" type="number" value="0"></td><td id="vg2_t">0</td></tr>
+<tr><td>PE+VG+NAM+NAA</td><td><input id="vgnn_a" type="number" value="0"></td><td><input id="vgnn_c" type="number" value="0"></td><td id="vgnn_t">0</td></tr>
+<tr><td>PE+NAM</td><td><input id="pn_a" type="number" value="0"></td><td><input id="pn_c" type="number" value="0"></td><td id="pn_t">0</td></tr>
+<tr><td>PE+VG Express</td><td><input id="vge_a" type="number" value="0"></td><td><input id="vge_c" type="number" value="0"></td><td id="vge_t">0</td></tr>
 </table>
 </div>
 
-<div class="bar">TOTAL: <span id="ba">966</span> Adult + <span id="bc">124</span> Child = <span id="bt">1090</span> | MTD <span id="bmt">38143</span></div>
-
-<div class="manual">
-<div style="font-size:11px;font-weight:900;margin-bottom:5px">📝 Manual Entry (WhatsApp Report)</div>
-<div class="grid">
-<div><input type="number" id="nam" placeholder="NAM Form" value="1"></div>
-<div><input type="number" id="vgn" placeholder="VG NAA NAM Form" value="395"></div>
-<div><input type="number" id="loy" placeholder="Loyalty Card" value="60"></div>
-<div><input type="number" id="sch" placeholder="School Contact" value="6"></div>
-<div><input type="number" id="goo" placeholder="Google Review" value="2"></div>
-<div><input type="number" id="vid" placeholder="Video Feedback" value="0"></div>
-<div><input type="number" id="trip" placeholder="Trip Advisors" value="2"></div>
-</div>
+<div class="card orange">
+<h3>STEP 2: Upgrade Counter</h3>
+<table>
+<tr><th>Upgrade</th><th>Adult</th><th>Child</th><th>Total</th></tr>
+<tr><td>PARK -> VG</td><td><input id="up1_a" type="number" value="0"></td><td><input id="up1_c" type="number" value="0"></td><td id="up1_t">0</td></tr>
+<tr><td>VG -> NAM</td><td><input id="up2_a" type="number" value="0"></td><td><input id="up2_c" type="number" value="0"></td><td id="up2_t">0</td></tr>
+</table>
 </div>
 
-<div class="btns"><button class="g" onclick="gen()">✅ Generate</button><button class="c" onclick="copyR()">📋 Copy</button><button class="p" onclick="window.print()">🖨️ Print</button></div>
-
-<div class="report" id="rep"></div>
+<div class="card green">
+<h3>STEP 3: FINAL REPORT (Auto)</h3>
+<table>
+<tr><th>Ticket</th><th>Final Count</th></tr>
+<tr><td>PARK ENTRY</td><td id="f_pe" class="final">0</td></tr>
+<tr><td>PE+VG All Types</td><td id="f_vg" class="final">0</td></tr>
+<tr><td>PE+VG+NAM</td><td id="f_vgn" class="final">0</td></tr>
+<tr><td>Others (NAA + PN)</td><td id="f_oth" class="final">0</td></tr>
+<tr><th>GRAND TOTAL</th><th id="f_total" class="final">0</th></tr>
+</table>
+<br>
+<button onclick="calc()">Calculate / Refresh</button>
+<button onclick="window.print()" style="background:#0f5132;margin-top:8px">Print / Save as Photo</button>
+</div>
 
 <script>
-function v(id){return parseInt(document.getElementById(id).value)||0}
+function toInt(id){return parseInt(document.getElementById(id).value)||0}
 function calc(){
- let pe_a=v('pe_a'),pe_c=v('pe_c'),ft_a=v('ft_a'),ft_c=v('ft_c'),jal_a=v('jal_a'),jal_c=v('jal_c'),exp_a=v('exp_a'),exp_c=v('exp_c'),am_a=v('am_a'),am_c=v('am_c'),amft_a=v('amft_a'),amft_c=v('amft_c'),amj_a=v('amj_a'),amj_c=v('amj_c');
- let pe_t=pe_a+pe_c,ft_t=ft_a+ft_c,jal_t=jal_a+jal_c,exp_t=exp_a+exp_c,am_t=am_a+am_c,amft_t=amft_a+amft_c,amj_t=amj_a+amj_c;
- document.getElementById('pe_t').innerText=pe_t;document.getElementById('ft_t').innerText=ft_t;document.getElementById('jal_t').innerText=jal_t;document.getElementById('exp_t').innerText=exp_t;document.getElementById('am_t').innerText=am_t;document.getElementById('amft_t').innerText=amft_t;document.getElementById('amj_t').innerText=amj_t;
- let ta=pe_a+ft_a+jal_a+exp_a+am_a+amft_a+amj_a;
- let tc=pe_c+ft_c+jal_c+exp_c+am_c+amft_c+amj_c;
- let tt=ta+tc;
- let tm=v('pe_m')+v('ft_m')+v('jal_m')+v('exp_m')+v('am_m')+v('amft_m')+v('amj_m');
- document.getElementById('ta').innerText=ta;document.getElementById('tc').innerText=tc;document.getElementById('tt').innerText=tt;document.getElementById('tm').innerText=tm;
- document.getElementById('ba').innerText=ta;document.getElementById('bc').innerText=tc;document.getElementById('bt').innerText=tt;document.getElementById('bmt').innerText=tm;
- document.getElementById('collS').innerText=v('coll').toLocaleString('en-IN');
- let d=document.getElementById('dt').value; if(d){let dt=new Date(d);document.getElementById('dtShow').innerText=String(dt.getDate()).padStart(2,'0')+'/'+String(dt.getMonth()+1).padStart(2,'0')+'/'+dt.getFullYear();}
- return {pe_t,ft_t,jal_t,exp_t,am_t,amft_t,amj_t,ta,tc,tt,tm,coll:v('coll')}
+ let pe=toInt('pe_a')+toInt('pe_c');
+ let vg=toInt('vg_a')+toInt('vg_c');
+ let vgn=toInt('vgn_a')+toInt('vgn_c');
+ let vg2=toInt('vg2_a')+toInt('vg2_c');
+ let vgnn=toInt('vgnn_a')+toInt('vgnn_c');
+ let pn=toInt('pn_a')+toInt('pn_c');
+ let vge=toInt('vge_a')+toInt('vge_c');
+ let up1=toInt('up1_a')+toInt('up1_c');
+ let up2=toInt('up2_a')+toInt('up2_c');
+
+ document.getElementById('pe_t').innerText=pe;
+ document.getElementById('vg_t').innerText=vg;
+ document.getElementById('vgn_t').innerText=vgn;
+ document.getElementById('vg2_t').innerText=vg2;
+ document.getElementById('vgnn_t').innerText=vgnn;
+ document.getElementById('pn_t').innerText=pn;
+ document.getElementById('vge_t').innerText=vge;
+ document.getElementById('up1_t').innerText=up1;
+ document.getElementById('up2_t').innerText=up2;
+
+ let f_pe = pe - up1;
+ let f_vg = vg + vg2 + vge + up1 - up2;
+ let f_vgn = vgn + up2;
+ let f_oth = vgnn + pn;
+ let total = f_pe + f_vg + f_vgn + f_oth;
+
+ document.getElementById('f_pe').innerText=f_pe;
+ document.getElementById('f_vg').innerText=f_vg;
+ document.getElementById('f_vgn').innerText=f_vgn;
+ document.getElementById('f_oth').innerText=f_oth;
+ document.getElementById('f_total').innerText=total;
 }
-document.querySelectorAll('input').forEach(e=>e.addEventListener('input',()=>{calc();gen();}));
-function gen(){
- let d=calc();
- let now=document.getElementById('dt').value?new Date(document.getElementById('dt').value):new Date();
- let days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
- let dn=days[now.getDay()];
- let dd=String(now.getDate()).padStart(2,'0'),mm=String(now.getMonth()+1).padStart(2,'0'),yy=now.getFullYear();
- let txt=`*Today's Operations Summary for ${dn}  ${dd}/${mm}/${yy}*
-
-Park Entry( *PE* ) = *${d.pe_t}*
-
-Viewing Gallery ( *VG* ) = *${d.ft_t}*
-
-PE + Nij Aatma Manthan ( *NAM* ) = *${d.am_t}*
-
-PE + VG + NAM = *${d.amft_t}*
-
-VG + Nij Aatma Abhishek ( *NAA* ) = *${d.jal_t}*
-
-VG + NAM + NAA = *${d.amj_t}*
-
-VG Express = *${d.exp_t}*
-
-_Total Footfall = *${d.tt}*_
-
-* NAM Undertaking Form = *${v('nam')}* (Including below 4-year-old kids)
-
-* VG, NAA, NAM Undertaking form = *${v('vgn')}* (Including below 4-year-old kids)
-
-Total Loyalty Card = *${v('loy')}*
-
-(*Total School Contact* *${v('sch')}*
-
-Google Review = *${v('goo')}*
-
-Total Video Feedback = *${v('vid')}*
-
-Total Trip Advisors = *${v('trip')}*
-
-_Collection: Rs ${d.coll.toLocaleString('en-IN')}_`;
- document.getElementById('rep').innerText=txt;
-}
-function copyR(){navigator.clipboard.writeText(document.getElementById('rep').innerText).then(()=>alert('Copied! WhatsApp pe paste karo'));}
-calc();gen();
+document.querySelectorAll('input').forEach(i=>i.addEventListener('input',calc));
+calc();
 </script>
 </body>
 </html>
