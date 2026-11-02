@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOB Final Pattern</title>
+<title>SOB Final - No Extra</title>
 <style>
 body{font-family:Arial;padding:8px;background:#f5f7fb;margin:0}
 h3{text-align:center;color:#1a2a4a}
@@ -11,16 +11,14 @@ h3{text-align:center;color:#1a2a4a}
 table{width:100%;border-collapse:collapse}
 th{background:#1a2a4a;color:white;padding:5px;font-size:11px}
 td{padding:4px;border:1px solid #ddd;text-align:center}
-input{width:52px;padding:5px;text-align:center;border:1.5px solid #1a2a4a;border-radius:5px;font-size:13px;background:#fff}
-input::placeholder{color:transparent}
-.total{font-weight:bold;background:#fff9c4;min-width:30px}
+input{width:52px;padding:6px;text-align:center;border:1.5px solid #1a2a4a;border-radius:5px;font-size:13px;background:#fff}
+.total{font-weight:bold;background:#fff9c4;min-width:35px}
 select{font-size:10px;width:92px;padding:3px}
 button{padding:9px;border:none;border-radius:6px;cursor:pointer}
 .btn-main{width:100%;padding:12px;background:#1a2a4a;color:white;font-size:15px;margin-top:8px}
 .btn-add{width:100%;background:#ff9800;color:white;margin-top:6px}
 .btn-del{background:#d32f2f;color:white;padding:2px 6px;font-size:10px}
-textarea{width:100%;height:520px;font-size:14px;padding:10px;box-sizing:border-box}
-.extra{width:100%!important;padding:8px!important;margin:3px 0}
+textarea{width:100%;height:420px;font-size:14px;padding:10px;box-sizing:border-box}
 </style>
 </head>
 <body>
@@ -39,17 +37,6 @@ textarea{width:100%;height:520px;font-size:14px;padding:10px;box-sizing:border-b
 <tr><th>From -> To</th><th>A</th><th>C</th><th>Tot</th><th>X</th></tr>
 </table>
 <button class="btn-add" onclick="addUpRow()">+ Add More Upgrade</button>
-</div>
-
-<div class="card">
-<b>3. Extra Manual</b>
-<input id="loyalty" class="extra" placeholder="Total Loyalty Card">
-<input id="school" class="extra" placeholder="Total School Contact">
-<input id="google" class="extra" placeholder="Google Review">
-<input id="video" class="extra" placeholder="Total Video Feedback">
-<input id="trip" class="extra" placeholder="Total Trip Advisors">
-<input id="namForm" class="extra" placeholder="NAM Undertaking Form Count">
-<input id="vgForm" class="extra" placeholder="VG,NAA,NAM Form Count">
 </div>
 
 <button class="btn-main" onclick="makeReport()">Generate Final Report</button>
@@ -86,8 +73,7 @@ function vi(id){return parseInt(document.getElementById(id)?.value)||0}
 function calc(){
  plazaIds.forEach(pid=>{
   let a=vi(pid+'_a'), c=vi(pid+'_c');
-  let el=document.getElementById(pid+'_t');
-  if(el) el.innerText=a+c;
+  document.getElementById(pid+'_t').innerText=a+c;
  });
  for(let i=0;i<upCount;i++){
   let a=vi(`up_${i}_a`), c=vi(`up_${i}_c`);
@@ -109,7 +95,7 @@ function makeReport(){
  }
  let today=new Date().toLocaleDateString('en-GB');
  let total=finalVals.reduce((a,b)=>a+b,0);
- let text=`Today's Operations Summary for , ${today}.\n\nPark Entry( *PE* ) = *${finalVals[0]}*\n\nViewing Gallery ( *VG* ) = *${finalVals[1]}*\n\nPE + Nij Aatma Manthan ( *NAM* ) = *${finalVals[2]}*\n\nPE + VG + NAM = *${finalVals[3]}*\n\nVG + Nij Aatma Abhishek ( *NAA* ) = *${finalVals[4]}*\n\nVG + NAM + NAA = *${finalVals[5]}*\n\nVG Express = *${finalVals[6]}*\n\n_Total Footfall = *${total}*_\n\n* NAM Undertaking Form = ${document.getElementById('namForm').value||''}        (Including    below 4-year-old kids)\n\n* VG, NAA, NAM Undertaking form = ${document.getElementById('vgForm').value||''} (Including below 4-year-old kids)\n\nTotal Loyalty Card = *${document.getElementById('loyalty').value||'**'}*\n\n(*Total School Contact ${document.getElementById('school').value||'**'}\n\nGoogle Review = ${document.getElementById('google').value||''}\n\nTotal Video Feedback = *${document.getElementById('video').value||'0'}*\n\nTotal Trip Advisors = ${document.getElementById('trip').value||''}`;
+ let text=`Today's Operations Summary for , ${today}.\n\nPark Entry( *PE* ) = *${finalVals[0]}*\n\nViewing Gallery ( *VG* ) = *${finalVals[1]}*\n\nPE + Nij Aatma Manthan ( *NAM* ) = *${finalVals[2]}*\n\nPE + VG + NAM = *${finalVals[3]}*\n\nVG + Nij Aatma Abhishek ( *NAA* ) = *${finalVals[4]}*\n\nVG + NAM + NAA = *${finalVals[5]}*\n\nVG Express = *${finalVals[6]}*\n\n_Total Footfall = *${total}*_\n\n* NAM Undertaking Form =         (Including    below 4-year-old kids)\n\n* VG, NAA, NAM Undertaking form = (Including below 4-year-old kids)`;
  document.getElementById('finalText').value=text;
 }
 function share(){ makeReport(); let t=document.getElementById('finalText').value; navigator.clipboard.writeText(t); window.open("https://wa.me/?text="+encodeURIComponent(t),'_blank'); }
