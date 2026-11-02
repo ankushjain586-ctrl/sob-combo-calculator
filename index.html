@@ -3,22 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOB Final - No Extra</title>
+<title>SOB - Full Final</title>
 <style>
 body{font-family:Arial;padding:8px;background:#f5f7fb;margin:0}
 h3{text-align:center;color:#1a2a4a}
-.card{background:white;padding:10px;border-radius:10px;margin:8px 0;box-shadow:0 2px 5px #ccc}
+.card{background:#fff;padding:10px;border-radius:10px;margin:8px 0;box-shadow:0 2px 5px #ccc}
 table{width:100%;border-collapse:collapse}
-th{background:#1a2a4a;color:white;padding:5px;font-size:11px}
-td{padding:4px;border:1px solid #ddd;text-align:center}
-input{width:52px;padding:6px;text-align:center;border:1.5px solid #1a2a4a;border-radius:5px;font-size:13px;background:#fff}
+th{background:#1a2a4a;color:#fff;padding:5px;font-size:10px}
+td{padding:3px;border:1px solid #ddd;text-align:center}
+input{width:52px;padding:6px;text-align:center;border:1.5px solid #1a2a4a;border-radius:5px;background:#fff}
 .total{font-weight:bold;background:#fff9c4;min-width:35px}
-select{font-size:10px;width:92px;padding:3px}
+select{font-size:9px;width:85px;padding:2px}
 button{padding:9px;border:none;border-radius:6px;cursor:pointer}
-.btn-main{width:100%;padding:12px;background:#1a2a4a;color:white;font-size:15px;margin-top:8px}
-.btn-add{width:100%;background:#ff9800;color:white;margin-top:6px}
-.btn-del{background:#d32f2f;color:white;padding:2px 6px;font-size:10px}
-textarea{width:100%;height:420px;font-size:14px;padding:10px;box-sizing:border-box}
+.btn-main{width:100%;padding:12px;background:#1a2a4a;color:#fff;font-size:15px;margin-top:8px}
+.btn-add{width:100%;background:#ff9800;color:#fff;margin-top:6px}
+.btn-del{background:#d32f2f;color:#fff;padding:2px 6px;font-size:10px}
+textarea{width:100%;height:550px;font-size:14px;padding:10px;box-sizing:border-box}
+.extra{width:100%!important;padding:8px!important;margin:4px 0;box-sizing:border-box}
 </style>
 </head>
 <body>
@@ -27,35 +28,46 @@ textarea{width:100%;height:420px;font-size:14px;padding:10px;box-sizing:border-b
 <div class="card">
 <b>1. Ticket Plaza - Adult / Child (Blank)</b>
 <table id="plazaTable">
-<tr><th>Ticket</th><th>Adult</th><th>Child</th><th>Total</th></tr>
+<tr><th>Ticket</th><th>Adult</th><th>Child</th><th>Total Side</th></tr>
 </table>
 </div>
 
 <div class="card" style="background:#ffe0b2">
-<b>2. Upgrade - Adult / Child + Add Button</b>
+<b>2. Upgrade Counter - Adult / Child + Add Button</b>
 <table id="upTable">
-<tr><th>From -> To</th><th>A</th><th>C</th><th>Tot</th><th>X</th></tr>
+<tr><th>From -> To</th><th>A</th><th>C</th><th>Total</th><th>X</th></tr>
 </table>
 <button class="btn-add" onclick="addUpRow()">+ Add More Upgrade</button>
+</div>
+
+<div class="card">
+<b>3. Extra Fields - Aapke Pattern ke Liye</b>
+<input id="namForm" class="extra" placeholder="NAM Undertaking Form Count">
+<input id="vgForm" class="extra" placeholder="VG,NAA,NAM Undertaking Form Count">
+<input id="loyalty" class="extra" placeholder="Total Loyalty Card">
+<input id="school" class="extra" placeholder="Total School Contact">
+<input id="google" class="extra" placeholder="Google Review">
+<input id="video" class="extra" placeholder="Total Video Feedback" value="0">
+<input id="trip" class="extra" placeholder="Total Trip Advisors">
 </div>
 
 <button class="btn-main" onclick="makeReport()">Generate Final Report</button>
 
 <div class="card">
-<textarea id="finalText"></textarea>
+<textarea id="finalText" placeholder="Yahan aapka final report banega..."></textarea>
 <button class="btn-main" style="background:#0f7a3d" onclick="share()">Copy & WhatsApp Share</button>
-<button style="width:100%;background:#888;color:white;margin-top:6px;padding:10px" onclick="clearAll()">Clear All</button>
+<button style="width:100%;background:#888;color:#fff;margin-top:6px;padding:10px" onclick="clearAll()">Clear All</button>
 </div>
 
 <script>
-const tickets = ["Park Entry","Viewing Gallery","PE+NAM","PE+VG+NAM","VG+NAA","VG+NAM+NAA","VG Express"];
-const plazaIds = ["pe","vg","penam","pevgnam","vgnaa","vgnamnaa","vgexp"];
+const tickets = ["Park Entry","Viewing Gallery","VG 2nd","PE+NAM","PE+VG+NAM","VG+NAA","VG+NAM+NAA","VG Express"];
+const plazaIds = ["pe","vg","vg2","penam","pevgnam","vgnaa","vgnamnaa","vgexp"];
 let upCount=0;
 
 function initPlaza(){
  let html="";
  tickets.forEach((t,i)=>{
-  html+=`<tr><td style="text-align:left;font-size:11px">${t}</td><td><input id="${plazaIds[i]}_a" type="number" value="" oninput="calc()"></td><td><input id="${plazaIds[i]}_c" type="number" value="" oninput="calc()"></td><td id="${plazaIds[i]}_t" class="total">0</td></tr>`;
+  html+=`<tr><td style="text-align:left;font-size:11px">${t}</td><td><input id="${plazaIds[i]}_a" type="number" placeholder="" value="" oninput="calc()"></td><td><input id="${plazaIds[i]}_c" type="number" placeholder="" value="" oninput="calc()"></td><td id="${plazaIds[i]}_t" class="total">0</td></tr>`;
  });
  document.getElementById('plazaTable').innerHTML+=html;
 }
@@ -65,7 +77,7 @@ function addUpRow(from=0,to=1){
  let toOpts=tickets.map((t,i)=>`<option value="${i}" ${i==to?'selected':''}>${t}</option>`).join('');
  let tr=document.createElement('tr');
  tr.id='uprow_'+id;
- tr.innerHTML=`<td><select id="from_${id}">${fromOpts}</select>-><select id="to_${id}">${toOpts}</select></td><td><input id="up_${id}_a" type="number" value="" oninput="calc()"></td><td><input id="up_${id}_c" type="number" value="" oninput="calc()"></td><td id="up_${id}_t" class="total">0</td><td><button class="btn-del" onclick="document.getElementById('uprow_${id}').remove();calc()">X</button></td>`;
+ tr.innerHTML=`<td><select id="from_${id}">${fromOpts}</select> -> <select id="to_${id}">${toOpts}</select></td><td><input id="up_${id}_a" type="number" value="" oninput="calc()"></td><td><input id="up_${id}_c" type="number" value="" oninput="calc()"></td><td id="up_${id}_t" class="total">0</td><td><button class="btn-del" onclick="document.getElementById('uprow_${id}').remove();calc()">X</button></td>`;
  document.getElementById('upTable').appendChild(tr);
  upCount++;
 }
@@ -95,14 +107,14 @@ function makeReport(){
  }
  let today=new Date().toLocaleDateString('en-GB');
  let total=finalVals.reduce((a,b)=>a+b,0);
- let text=`Today's Operations Summary for , ${today}.\n\nPark Entry( *PE* ) = *${finalVals[0]}*\n\nViewing Gallery ( *VG* ) = *${finalVals[1]}*\n\nPE + Nij Aatma Manthan ( *NAM* ) = *${finalVals[2]}*\n\nPE + VG + NAM = *${finalVals[3]}*\n\nVG + Nij Aatma Abhishek ( *NAA* ) = *${finalVals[4]}*\n\nVG + NAM + NAA = *${finalVals[5]}*\n\nVG Express = *${finalVals[6]}*\n\n_Total Footfall = *${total}*_\n\n* NAM Undertaking Form =         (Including    below 4-year-old kids)\n\n* VG, NAA, NAM Undertaking form = (Including below 4-year-old kids)`;
+ let text=`Today's Operations Summary for , ${today}.\n\nPark Entry( *PE* ) = *${finalVals[0]}*\n\nViewing Gallery ( *VG* ) = *${finalVals[1]}*\n\nViewing Gallery ( *VG 2nd* ) = *${finalVals[2]}*\n\nPE + Nij Aatma Manthan ( *NAM* ) = *${finalVals[3]}*\n\nPE + VG + NAM = *${finalVals[4]}*\n\nVG + Nij Aatma Abhishek ( *NAA* ) = *${finalVals[5]}*\n\nVG + NAM + NAA = *${finalVals[6]}*\n\nVG Express = *${finalVals[7]}*\n\n_Total Footfall = *${total}*_\n\n* NAM Undertaking Form = ${document.getElementById('namForm').value||'        '} (Including    below 4-year-old kids)\n\n* VG, NAA, NAM Undertaking form = ${document.getElementById('vgForm').value||''} (Including below 4-year-old kids)\n\nTotal Loyalty Card = *${document.getElementById('loyalty').value||'**'}*\n\n(*Total School Contact ${document.getElementById('school').value||'**'}\n\nGoogle Review = ${document.getElementById('google').value||''}\n\nTotal Video Feedback = *${document.getElementById('video').value||'0'}*\n\nTotal Trip Advisors = ${document.getElementById('trip').value||''}`;
  document.getElementById('finalText').value=text;
 }
 function share(){ makeReport(); let t=document.getElementById('finalText').value; navigator.clipboard.writeText(t); window.open("https://wa.me/?text="+encodeURIComponent(t),'_blank'); }
-function clearAll(){ document.querySelectorAll('input').forEach(i=>i.value=''); document.querySelectorAll('.total').forEach(e=>e.innerText='0'); document.getElementById('finalText').value=''; }
+function clearAll(){ document.querySelectorAll('input[type=number]').forEach(i=>i.value=''); document.querySelectorAll('.total').forEach(e=>e.innerText='0'); document.getElementById('finalText').value=''; }
 
 initPlaza();
-addUpRow(0,1); addUpRow(1,3); addUpRow(0,2); addUpRow(2,5);
+addUpRow(0,1); addUpRow(1,4); addUpRow(0,3); addUpRow(3,6);
 </script>
 </body>
 </html>
