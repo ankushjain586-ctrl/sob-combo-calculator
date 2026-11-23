@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOB - V5 Paste Auto Fill</title>
+<title>SOB - V5.2 Fixed VG</title>
 <style>
 *{box-sizing:border-box}
 body{font-family:Arial;padding:8px;background:#eef2f7;margin:0}
@@ -38,10 +38,11 @@ textarea.big{height:520px}
 .row2{display:flex;gap:6px}.row2 button{flex:1}
 .actualBox{background:#fffde7!important;border:2px dashed #f57f17}
 .actualBox input{width:90px!important;font-size:16px;font-weight:bold}
+.debug{background:#f3e5f5;padding:8px;border-radius:6px;font-size:11px;white-space:pre-wrap}
 </style>
 </head>
 <body>
-<h3>SOB - V5 Paste Auto Fill</h3>
+<h3>SOB - V5.2 Fixed VG</h3>
 
 <div class="topbar">
 <input id="opName" placeholder="Naam (ex: Ankush)" oninput="saveData();calc()">
@@ -54,13 +55,14 @@ textarea.big{height:520px}
 
 <div class="card pasteBox">
 <b>🔥 STEP 1 - WebConsole se Copy karke Yahan Paste Karo</b><br>
-<span class="small">WebConsole me Footfall Summary khol ke pura Select All -> Copy karke yahan paste karo. Fir Auto Fill dabao.</span><br>
-<textarea id="pasteArea" placeholder="Yahan WebConsole ka data paste karo...&#10;Example:&#10;PARK ENTRY  441  94&#10;PE + VG(280 Ft)  253  85&#10;PE + VG(280 Ft) + NAM  88  14"></textarea>
+<span class="small">Ab VG / VG+NAA alag-alag sahi bharega.</span><br>
+<textarea id="pasteArea" placeholder="Yahan paste karo..."></textarea>
 <div class="row2">
 <button style="background:#ff9800;color:#fff;font-weight:bold" onclick="parsePaste()">✨ Auto Fill Karo</button>
-<button style="background:#888;color:#fff" onclick="document.getElementById('pasteArea').value=''">Paste Clear</button>
+<button style="background:#888;color:#fff" onclick="document.getElementById('pasteArea').value='';document.getElementById('parseMsg').innerText=''">Paste Clear</button>
 </div>
 <div id="parseMsg" class="small" style="margin-top:6px;color:#0f7a3d;font-weight:bold"></div>
+<div id="debugBox" class="debug" style="display:none"></div>
 </div>
 
 <div class="card">
@@ -83,7 +85,6 @@ textarea.big{height:520px}
 
 <div class="card actualBox">
 <b>4. Counter Check</b><br>
-<span class="small">WebConsole me GRAND TOTAL jo hai wo yahan likho:</span><br><br>
 Counter Actual Final Total: <input id="actualTotal" type="number" placeholder="0" oninput="calc();saveData()"> <span id="diffText" style="font-weight:bold"></span>
 </div>
 
@@ -131,89 +132,115 @@ function addUpRow(from=0,to=1,av="",cv=""){
  document.getElementById('upTable').appendChild(tr);
  upCount++; calc();
 }
-function clearUpRows(){
- document.querySelectorAll('[id^="uprow_"]').forEach(e=>e.remove());
- upCount=0;
-}
-// --- PASTE PARSER - TERE SCREENSHOT KE HISAB SE ---
+function clearUpRows(){ document.querySelectorAll('[id^="uprow_"]').forEach(e=>e.remove()); upCount=0; }
+
+// --- FIXED MAPPING V5.2 ---
 function mapPlazaName(name){
  name=name.toUpperCase().replace(/\s+/g,' ');
  if(name.includes('TOTAL')||name.includes('GRAND')) return -1;
- if(name.includes('PARK ENTRY') && !name.includes('VG') && !name.includes('NAM')) return 0; // PE
- if(name.includes('PE + VG') && name.includes('EXPRESS')) return 7; // VG Express
- if(name.includes('PE + VG') && name.includes('NAM') && name.includes('NAA')) return 6; // VG+NAM+NAA
- if(name.includes('PE + VG') && name.includes('NAM')) return 4; // PE+VG+NAM
- if(name.includes('PE + VG')) return 1; // VG
- if(name.includes('PE + NAM')) return 3; // PE+NAM
- if(name.includes('VG') && name.includes('NAA') && name.includes('NAM')) return 6;
- if(name.includes('VG') && name.includes('NAA')) return 5;
+ // SABSE PEHLE lambi wali check karo, nahi to PE+VG+NAA bhi PE+VG me chala jayega
+ if(name.includes('EXPRESS')) return 7; // VG Express
+ if(name.includes('NAM') && name.includes('NAA')) return 6; // VG+NAM+NAA
+ if(name.includes('PE') && name.includes('VG') && name.includes('NAM')) return 4; // PE+VG+NAM
+ if(name.includes('PE') && name.includes('VG') && name.includes('NAA')) return 5; // PE+VG+NAA -> VG+NAA  <-- YEHI FIX HAI
+ if(name.includes('PE') && name.includes('NAM')) return 3; // PE+NAM
+ if(name.includes('PARK ENTRY')) return 0; // PE
+ if(name.includes('VG') && name.includes('NAA')) return 5; // VG+NAA
  if(name.includes('VG') && name.includes('2ND')) return 2;
- if(name.includes('VG') && name.includes('EXPRESS')) return 7;
+ if(name.includes('VG')) return 1; // VG - sirf PE+VG
  return -1;
 }
-function mapUpgradeName(toPart, fromPart){
- let to = mapPlazaName(toPart);
- let from = mapPlazaName(fromPart);
- // Upgrade from PARK ENTRY -> From PE
- if(fromPart && fromPart.toUpperCase().includes('PARK ENTRY')) from=0;
- if(fromPart && fromPart.toUpperCase().includes('PE + VG')) from=1;
- if(to===-1 && toPart.toUpperCase().includes('PE + VG')) to=1;
- return {from,to};
+function mapFromName(name){
+ name=name.toUpperCase();
+ if(name.includes('PARK ENTRY')) return 0;
+ if(name.includes('PE') && name.includes('VG') && name.includes('NAM') && name.includes('NAA')) return 6;
+ if(name.includes('PE') && name.includes('VG') && name.includes('NAM')) return 4;
+ if(name.includes('PE') && name.includes('VG') && name.includes('NAA')) return 5;
+ if(name.includes('PE') && name.includes('VG')) return 1;
+ if(name.includes('PE') && name.includes('NAM')) return 3;
+ if(name.includes('PARK')) return 0;
+ return mapPlazaName(name);
+}
+function extractEndNumbers(line){
+ let m = line.match(/(\d+)\s+(\d+)\s+(\d+)\s*$/);
+ if(m) return [parseInt(m[1]), parseInt(m[2]), parseInt(m[3])];
+ let m2 = line.match(/(\d+)\s+(\d+)\s*$/);
+ if(m2) return [parseInt(m2[1]), parseInt(m2[2])];
+ let m1 = line.match(/(\d+)\s*$/);
+ if(m1) return [parseInt(m1[1])];
+ return [];
 }
 function parsePaste(){
  let txt=document.getElementById('pasteArea').value;
- if(!txt.trim()){ alert('Pehle WebConsole se copy karke paste karo'); return; }
- // Plaza clear
+ if(!txt.trim()){ alert('Pehle paste karo'); return; }
  plazaIds.forEach(pid=>{ document.getElementById(pid+'_a').value=''; document.getElementById(pid+'_c').value=''; });
  clearUpRows();
  let lines=txt.split('\n');
  let mode='plaza';
- let foundPlaza=0, foundUp=0;
+ let foundPlaza=0, foundUp=0, skipped=[];
  let grandTotal=null;
+ let seenVG=false;
  lines.forEach(raw=>{
   let line=raw.trim();
   if(!line) return;
-  if(line.toUpperCase().includes('UPGRADE')) mode='upgrade';
-  if(line.toUpperCase().includes('FOOTFALL AT UPGRADE')) mode='upgrade';
-  // Numbers nikaalo - last 2 numbers Adult, Child honge
-  let nums=line.match(/\d+/g);
-  if(!nums || nums.length<2) return;
-  let a=parseInt(nums[nums.length-2]), c=parseInt(nums[nums.length-1]);
-  // Name = numbers se pehle wala part
-  let namePart=line.replace(/\d+/g,' ').replace(/\s+/g,' ').trim();
-  // GRAND TOTAL skip - usko Actual me daalenge
-  if(line.toUpperCase().includes('GRAND TOTAL')){
-    grandTotal=a; // Grand total me 1 hi number hota hai, last number hi total hai
-    // Agar 2 numbers hai to last wala hi total hai
-    grandTotal=parseInt(nums[nums.length-1]);
+  let up=line.toUpperCase();
+  if(up.includes('FOOTFALL AT UPGRADE') || up.includes('UPGRADE COUNTER')){ mode='upgrade'; return; }
+  if(up.includes('FOOTFALL AT TICKET PLAZA')){ mode='plaza'; return; }
+  if(up.includes('TICKET TYPE') || (up.includes('ADULT') && up.includes('CHILD') && line.length<40)) return;
+  if(up.includes('GRAND TOTAL')){
+    let nums=extractEndNumbers(line);
+    if(nums.length>=1) grandTotal=nums[nums.length-1];
     return;
   }
-  if(line.toUpperCase().includes('TOTAL') && !line.toUpperCase().includes('UPGRADE')) return;
+  if(up.includes('TOTAL') && !up.includes('UPGRADE')) return;
+  let nums=extractEndNumbers(line);
+  if(nums.length<2) { if(line.length>5) skipped.push(line); return; }
+  let a=nums[0], c=nums[1];
+  let namePart=line.replace(/(\d+\s+){1,3}$/,'').trim();
   if(mode==='plaza'){
     let idx=mapPlazaName(namePart);
     if(idx>=0){
-      document.getElementById(plazaIds[idx]+'_a').value=a;
-      document.getElementById(plazaIds[idx]+'_c').value=c;
-      foundPlaza++;
+      // DUPLICATE FIX: Agar VG pehle se bhara hai aur fir se PE+VG aaya to wo VG 2nd me jayega
+      if(idx===1 && seenVG){
+        if(document.getElementById(plazaIds[2]+'_a').value===''){
+          document.getElementById(plazaIds[2]+'_a').value=a;
+          document.getElementById(plazaIds[2]+'_c').value=c;
+          foundPlaza++;
+        } else {
+          // Dono bhare hai to jod do
+          let oldA=parseInt(document.getElementById(plazaIds[1]+'_a').value)||0;
+          let oldC=parseInt(document.getElementById(plazaIds[1]+'_c').value)||0;
+          document.getElementById(plazaIds[1]+'_a').value=oldA+a;
+          document.getElementById(plazaIds[1]+'_c').value=oldC+c;
+          foundPlaza++;
+        }
+      } else {
+        document.getElementById(plazaIds[idx]+'_a').value=a;
+        document.getElementById(plazaIds[idx]+'_c').value=c;
+        if(idx===1) seenVG=true;
+        foundPlaza++;
+      }
     }
+    else skipped.push('PLAZA? '+line);
   } else {
-    // Upgrade: "PE + VG (UPGRADE from PARK ENTRY)" jaisa hoga
     let m=line.match(/(.+)\(UPGRADE from (.+)\)/i);
     if(m){
       let toPart=m[1].trim(), fromPart=m[2].trim();
-      let r=mapUpgradeName(toPart, fromPart);
-      if(r.from>=0 && r.to>=0 && r.from!==r.to){
-        addUpRow(r.from, r.to, a, c);
-        foundUp++;
-      }
+      let to=mapPlazaName(toPart), from=mapFromName(fromPart);
+      if(from>=0 && to>=0 && from!==to){ addUpRow(from,to,a,c); foundUp++; }
+      else skipped.push('UPGRADE? '+line+' => from:'+from+' to:'+to);
     } else {
-      // Agar UPGRADE likha hai par format alag hai, to skip
+      if(up.includes('UPGRADE')) skipped.push('UPGRADE FORMAT? '+line);
+      else skipped.push('UPGRADE? '+line);
     }
   }
  });
- if(grandTotal) document.getElementById('actualTotal').value=grandTotal;
+ if(grandTotal!==null) document.getElementById('actualTotal').value=grandTotal;
  calc(); saveData();
- document.getElementById('parseMsg').innerText=`✅ Ho gaya! Plaza: ${foundPlaza} row, Upgrade: ${foundUp} row, Grand Total: ${grandTotal||'-'} - Ab neeche Preview check karo`;
+ document.getElementById('parseMsg').innerText=`✅ Ho gaya! Plaza: ${foundPlaza} row, Upgrade: ${foundUp} row, Grand Total: ${grandTotal!==null?grandTotal:'-'}`;
+ let dbg=document.getElementById('debugBox');
+ if(skipped.length>0){ dbg.style.display='block'; dbg.innerText='Jo lines nahi samajh aayi:\n'+skipped.join('\n'); }
+ else { dbg.style.display='none'; }
 }
 function vi(id){let v=document.getElementById(id)?.value; if(v===""||v==null) return null; return parseInt(v)||0;}
 function vin(id){return vi(id)??0;}
@@ -239,8 +266,8 @@ function calc(){
   outFrom[fi]+=tot; inTo[ti]+=tot; outA[fi]+=a; outC[fi]+=c; inA[ti]+=a; inC[ti]+=c;
  }
  plazaIds.forEach((pid,i)=>{
-   if(outA[i] > vin(pid+'_a')){ errors.push(`❌ ${tickets[i]} Adult Plaza ${vin(pid+'_a')} par Upgrade Adult ${outA[i]} - ${outA[i]-vin(pid+'_a')} zyada`); document.getElementById(pid+'_t').classList.add('bad'); }
-   if(outC[i] > vin(pid+'_c')){ errors.push(`❌ ${tickets[i]} Child Plaza ${vin(pid+'_c')} par Upgrade Child ${outC[i]} - ${outC[i]-vin(pid+'_c')} zyada`); document.getElementById(pid+'_t').classList.add('bad'); }
+   if(outA[i] > vin(pid+'_a')){ errors.push(`❌ ${tickets[i]} Adult Plaza ${vin(pid+'_a')} par Upgrade Adult ${outA[i]}`); document.getElementById(pid+'_t').classList.add('bad'); }
+   if(outC[i] > vin(pid+'_c')){ errors.push(`❌ ${tickets[i]} Child Plaza ${vin(pid+'_c')} par Upgrade Child ${outC[i]}`); document.getElementById(pid+'_t').classList.add('bad'); }
  });
  let finalVals = plazaVals.map((v,i)=> v - outFrom[i] + inTo[i]);
  let finalA = plazaIds.map((pid,i)=> vin(pid+'_a')-outA[i]+inA[i]);
@@ -282,16 +309,16 @@ function saveData(){
  ['namForm','vgForm','loyalty','school','google','video','trip'].forEach(id=> data.extra[id]=document.getElementById(id).value);
  data.plaza={}; plazaIds.forEach(pid=> data.plaza[pid]={a:document.getElementById(pid+'_a').value, c:document.getElementById(pid+'_c').value});
  data.up=[]; for(let i=0;i<upCount;i++){ let f=document.getElementById(`from_${i}`); if(!f) continue; data.up.push({from:f.value,to:document.getElementById(`to_${i}`).value,a:document.getElementById(`up_${i}_a`).value,c:document.getElementById(`up_${i}_c`).value}); }
- localStorage.setItem('sob_v5', JSON.stringify(data));
+ localStorage.setItem('sob_v52', JSON.stringify(data));
 }
 function loadData(){
- try{ let s=localStorage.getItem('sob_v5'); if(!s) return false; let d=JSON.parse(s);
+ try{ let s=localStorage.getItem('sob_v52'); if(!s) return false; let d=JSON.parse(s);
   document.getElementById('opName').value=d.name||''; document.getElementById('opDate').value=d.date||''; document.getElementById('actualTotal').value=d.actual||''; document.getElementById('pasteArea').value=d.paste||'';
   if(d.extra) Object.keys(d.extra).forEach(id=>{ if(document.getElementById(id)) document.getElementById(id).value=d.extra[id]; });
   if(d.plaza) plazaIds.forEach(pid=>{ if(d.plaza[pid]){ document.getElementById(pid+'_a').value=d.plaza[pid].a||''; document.getElementById(pid+'_c').value=d.plaza[pid].c||''; } });
   return d; }catch(e){ return false; }
 }
-function clearAll(){ if(!confirm('Sab clear kar du?')) return; localStorage.removeItem('sob_v5'); document.querySelectorAll('input[type=number]').forEach(i=>i.value=''); document.querySelectorAll('.extra').forEach(i=>{ if(i.id!=='video') i.value=''; else i.value='0'; }); document.getElementById('actualTotal').value=''; document.getElementById('pasteArea').value=''; document.getElementById('finalText').value=''; document.getElementById('parseMsg').innerText=''; calc(); }
+function clearAll(){ if(!confirm('Sab clear kar du?')) return; localStorage.removeItem('sob_v52'); document.querySelectorAll('input[type=number]').forEach(i=>i.value=''); document.querySelectorAll('.extra').forEach(i=>{ if(i.id!=='video') i.value=''; else i.value='0'; }); document.getElementById('actualTotal').value=''; document.getElementById('pasteArea').value=''; document.getElementById('finalText').value=''; document.getElementById('parseMsg').innerText=''; calc(); }
 initPlaza();
 let saved=loadData();
 if(saved && saved.up && saved.up.length){ saved.up.forEach(u=> addUpRow(parseInt(u.from), parseInt(u.to), u.a, u.c)); } else { addUpRow(0,1); }
