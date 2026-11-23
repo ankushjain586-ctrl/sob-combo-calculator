@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOB - V5.2 Fixed VG</title>
+<title>SOB - V5.3 Full File</title>
 <style>
 *{box-sizing:border-box}
 body{font-family:Arial;padding:8px;background:#eef2f7;margin:0}
@@ -42,20 +42,16 @@ textarea.big{height:520px}
 </style>
 </head>
 <body>
-<h3>SOB - V5.2 Fixed VG</h3>
-
+<h3>SOB - V5.3 Full File</h3>
 <div class="topbar">
 <input id="opName" placeholder="Naam (ex: Ankush)" oninput="saveData();calc()">
 <input id="opDate" type="date" oninput="saveData();calc()">
 </div>
-
 <div id="warnBox"></div>
 <div id="okBox">✅ Sab Sahi Hai - Report Banane Ke Liye Ready Hai</div>
 <div id="matchBox"></div>
-
 <div class="card pasteBox">
 <b>🔥 STEP 1 - WebConsole se Copy karke Yahan Paste Karo</b><br>
-<span class="small">Ab VG / VG+NAA alag-alag sahi bharega.</span><br>
 <textarea id="pasteArea" placeholder="Yahan paste karo..."></textarea>
 <div class="row2">
 <button style="background:#ff9800;color:#fff;font-weight:bold" onclick="parsePaste()">✨ Auto Fill Karo</button>
@@ -64,30 +60,25 @@ textarea.big{height:520px}
 <div id="parseMsg" class="small" style="margin-top:6px;color:#0f7a3d;font-weight:bold"></div>
 <div id="debugBox" class="debug" style="display:none"></div>
 </div>
-
 <div class="card">
 <b>1. Ticket Plaza - Auto Filled</b>
 <table id="plazaTable"><tr><th>Ticket</th><th>Adult</th><th>Child</th><th>Total</th></tr></table>
 <div class="small" style="margin-top:6px">Plaza Adult: <b id="plazaAdult">0</b> | Plaza Child: <b id="plazaChild">0</b> | Plaza Total: <b id="plazaTotalTop">0</b></div>
 </div>
-
 <div class="card" style="background:#fff3e0">
 <b>2. Upgrade Counter - Auto Filled</b>
 <table id="upTable"><tr><th>From -> To</th><th>A</th><th>C</th><th>Total</th><th>X</th></tr></table>
 <button class="btn-add" onclick="addUpRow()">+ Add More Upgrade</button>
 </div>
-
 <div class="card" style="background:#e3f2fd">
 <b>3. LIVE FINAL PREVIEW</b>
 <table id="previewTable"></table>
 <div style="margin-top:8px;font-size:13px"><b>Plaza Total: <span id="plazaTotal">0</span> | Calc Final: <span id="finalTotal">0</span> | Final Adult: <span id="finalAdult">0</span> | Final Child: <span id="finalChild">0</span></b></div>
 </div>
-
 <div class="card actualBox">
 <b>4. Counter Check</b><br>
 Counter Actual Final Total: <input id="actualTotal" type="number" placeholder="0" oninput="calc();saveData()"> <span id="diffText" style="font-weight:bold"></span>
 </div>
-
 <div class="card">
 <b>5. Extra Fields</b>
 <input id="namForm" class="extra" placeholder="NAM Undertaking Form Count" oninput="saveData()">
@@ -98,9 +89,7 @@ Counter Actual Final Total: <input id="actualTotal" type="number" placeholder="0
 <input id="video" class="extra" placeholder="Total Video Feedback" value="0" oninput="saveData()">
 <input id="trip" class="extra" placeholder="Total Trip Advisors" oninput="saveData()">
 </div>
-
 <button class="btn-main" id="genBtn" onclick="makeReport()">Generate Final Report</button>
-
 <div class="card">
 <textarea id="finalText" class="big" placeholder="Yahan final report banega..."></textarea>
 <div class="row2">
@@ -109,12 +98,10 @@ Counter Actual Final Total: <input id="actualTotal" type="number" placeholder="0
 </div>
 <button style="width:100%;background:#888;color:#fff;margin-top:6px;padding:10px" onclick="clearAll()">Clear All</button>
 </div>
-
 <script>
 const tickets = ["PE","VG","VG 2nd","PE+NAM","PE+VG+NAM","VG+NAA","VG+NAM+NAA","VG Express"];
 const plazaIds = ["pe","vg","vg2","penam","pevgnam","vgnaa","vgnamnaa","vgexp"];
 let upCount=0;
-
 function initPlaza(){
  let html="";
  tickets.forEach((t,i)=>{
@@ -133,25 +120,35 @@ function addUpRow(from=0,to=1,av="",cv=""){
  upCount++; calc();
 }
 function clearUpRows(){ document.querySelectorAll('[id^="uprow_"]').forEach(e=>e.remove()); upCount=0; }
-
-// --- FIXED MAPPING V5.2 ---
+// --- FIXED MAPPING V5.3 ---
+function normalizeName(name){
+  let n = name.toUpperCase();
+  n = n.replace(/NIJ\s*AATMA\s*MANTHAN/g, 'NAM');
+  n = n.replace(/NIJ\s*AATMA\s*ABHISHEK/g, 'NAA');
+  n = n.replace(/MANTHAN/g, 'NAM');
+  n = n.replace(/ABHISHEK/g, 'NAA');
+  n = n.replace(/AATMA\s*MANTHAN/g, 'NAM');
+  n = n.replace(/AATMA\s*ABHISHEK/g, 'NAA');
+  return n;
+}
 function mapPlazaName(name){
- name=name.toUpperCase().replace(/\s+/g,' ');
+ name = normalizeName(name).replace(/\s+/g,' ');
  if(name.includes('TOTAL')||name.includes('GRAND')) return -1;
- // SABSE PEHLE lambi wali check karo, nahi to PE+VG+NAA bhi PE+VG me chala jayega
- if(name.includes('EXPRESS')) return 7; // VG Express
- if(name.includes('NAM') && name.includes('NAA')) return 6; // VG+NAM+NAA
- if(name.includes('PE') && name.includes('VG') && name.includes('NAM')) return 4; // PE+VG+NAM
- if(name.includes('PE') && name.includes('VG') && name.includes('NAA')) return 5; // PE+VG+NAA -> VG+NAA  <-- YEHI FIX HAI
- if(name.includes('PE') && name.includes('NAM')) return 3; // PE+NAM
- if(name.includes('PARK ENTRY')) return 0; // PE
- if(name.includes('VG') && name.includes('NAA')) return 5; // VG+NAA
+ if(name.includes('EXPRESS')) return 7;
+ if(name.includes('NAM') && name.includes('NAA')) return 6;
+ if(name.includes('PE') && name.includes('VG') && name.includes('NAM')) return 4;
+ if(name.includes('PE') && name.includes('VG') && name.includes('NAA')) return 5;
+ if(name.includes('PE') && name.includes('NAM')) return 3;
+ if(name.includes('PARK ENTRY')) return 0;
+ if(name.includes('VG') && name.includes('NAA')) return 5;
  if(name.includes('VG') && name.includes('2ND')) return 2;
- if(name.includes('VG')) return 1; // VG - sirf PE+VG
+ if(name.includes('VG')) return 1;
+ if(name.includes('NAM')) return 3;
+ if(name.includes('NAA')) return 5;
  return -1;
 }
 function mapFromName(name){
- name=name.toUpperCase();
+ name = normalizeName(name);
  if(name.includes('PARK ENTRY')) return 0;
  if(name.includes('PE') && name.includes('VG') && name.includes('NAM') && name.includes('NAA')) return 6;
  if(name.includes('PE') && name.includes('VG') && name.includes('NAM')) return 4;
@@ -200,14 +197,12 @@ function parsePaste(){
   if(mode==='plaza'){
     let idx=mapPlazaName(namePart);
     if(idx>=0){
-      // DUPLICATE FIX: Agar VG pehle se bhara hai aur fir se PE+VG aaya to wo VG 2nd me jayega
       if(idx===1 && seenVG){
         if(document.getElementById(plazaIds[2]+'_a').value===''){
           document.getElementById(plazaIds[2]+'_a').value=a;
           document.getElementById(plazaIds[2]+'_c').value=c;
           foundPlaza++;
         } else {
-          // Dono bhare hai to jod do
           let oldA=parseInt(document.getElementById(plazaIds[1]+'_a').value)||0;
           let oldC=parseInt(document.getElementById(plazaIds[1]+'_c').value)||0;
           document.getElementById(plazaIds[1]+'_a').value=oldA+a;
@@ -309,16 +304,16 @@ function saveData(){
  ['namForm','vgForm','loyalty','school','google','video','trip'].forEach(id=> data.extra[id]=document.getElementById(id).value);
  data.plaza={}; plazaIds.forEach(pid=> data.plaza[pid]={a:document.getElementById(pid+'_a').value, c:document.getElementById(pid+'_c').value});
  data.up=[]; for(let i=0;i<upCount;i++){ let f=document.getElementById(`from_${i}`); if(!f) continue; data.up.push({from:f.value,to:document.getElementById(`to_${i}`).value,a:document.getElementById(`up_${i}_a`).value,c:document.getElementById(`up_${i}_c`).value}); }
- localStorage.setItem('sob_v52', JSON.stringify(data));
+ localStorage.setItem('sob_v53', JSON.stringify(data));
 }
 function loadData(){
- try{ let s=localStorage.getItem('sob_v52'); if(!s) return false; let d=JSON.parse(s);
+ try{ let s=localStorage.getItem('sob_v53'); if(!s) return false; let d=JSON.parse(s);
   document.getElementById('opName').value=d.name||''; document.getElementById('opDate').value=d.date||''; document.getElementById('actualTotal').value=d.actual||''; document.getElementById('pasteArea').value=d.paste||'';
   if(d.extra) Object.keys(d.extra).forEach(id=>{ if(document.getElementById(id)) document.getElementById(id).value=d.extra[id]; });
   if(d.plaza) plazaIds.forEach(pid=>{ if(d.plaza[pid]){ document.getElementById(pid+'_a').value=d.plaza[pid].a||''; document.getElementById(pid+'_c').value=d.plaza[pid].c||''; } });
   return d; }catch(e){ return false; }
 }
-function clearAll(){ if(!confirm('Sab clear kar du?')) return; localStorage.removeItem('sob_v52'); document.querySelectorAll('input[type=number]').forEach(i=>i.value=''); document.querySelectorAll('.extra').forEach(i=>{ if(i.id!=='video') i.value=''; else i.value='0'; }); document.getElementById('actualTotal').value=''; document.getElementById('pasteArea').value=''; document.getElementById('finalText').value=''; document.getElementById('parseMsg').innerText=''; calc(); }
+function clearAll(){ if(!confirm('Sab clear kar du?')) return; localStorage.removeItem('sob_v53'); document.querySelectorAll('input[type=number]').forEach(i=>i.value=''); document.querySelectorAll('.extra').forEach(i=>{ if(i.id!=='video') i.value=''; else i.value='0'; }); document.getElementById('actualTotal').value=''; document.getElementById('pasteArea').value=''; document.getElementById('finalText').value=''; document.getElementById('parseMsg').innerText=''; calc(); }
 initPlaza();
 let saved=loadData();
 if(saved && saved.up && saved.up.length){ saved.up.forEach(u=> addUpRow(parseInt(u.from), parseInt(u.to), u.a, u.c)); } else { addUpRow(0,1); }
