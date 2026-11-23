@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOB - V4 Final Check</title>
+<title>SOB - V5 Paste Auto Fill</title>
 <style>
 *{box-sizing:border-box}
 body{font-family:Arial;padding:8px;background:#eef2f7;margin:0}
@@ -11,6 +11,7 @@ h3{text-align:center;color:#1a2a4a;margin:6px 0}
 .topbar{background:#1a2a4a;color:#fff;padding:10px;border-radius:10px;display:flex;gap:6px;flex-wrap:wrap}
 .topbar input{flex:1;min-width:120px;padding:9px;border:none;border-radius:6px;font-size:13px}
 .card{background:#fff;padding:10px;border-radius:10px;margin:8px 0;box-shadow:0 2px 5px #ccc}
+.pasteBox{background:#fff8e1!important;border:2px dashed #ff9800}
 table{width:100%;border-collapse:collapse}
 th{background:#1a2a4a;color:#fff;padding:5px;font-size:10px}
 td{padding:3px;border:1px solid #ddd;text-align:center}
@@ -24,7 +25,8 @@ button{padding:9px;border:none;border-radius:6px;cursor:pointer}
 .btn-main:disabled{background:#999!important}
 .btn-add{width:100%;background:#ff9800;color:#fff;margin-top:6px}
 .btn-del{background:#d32f2f;color:#fff;padding:2px 6px;font-size:10px}
-textarea{width:100%;height:520px;font-size:14px;padding:10px;box-sizing:border-box}
+textarea{width:100%;height:180px;font-size:13px;padding:10px;box-sizing:border-box}
+textarea.big{height:520px}
 .extra{width:100%!important;padding:8px!important;margin:4px 0;box-sizing:border-box}
 #warnBox{display:none;background:#ffebee;border:2px solid #d32f2f;color:#d32f2f;padding:10px;border-radius:8px;font-size:13px;font-weight:bold;margin:8px 0}
 #okBox{display:none;background:#e8f5e9;border:2px solid #0f7a3d;color:#0f7a3d;padding:10px;border-radius:8px;font-size:13px;font-weight:bold;margin:8px 0}
@@ -39,10 +41,10 @@ textarea{width:100%;height:520px;font-size:14px;padding:10px;box-sizing:border-b
 </style>
 </head>
 <body>
-<h3>Today's Operations Summary - V4</h3>
+<h3>SOB - V5 Paste Auto Fill</h3>
 
 <div class="topbar">
-<input id="opName" placeholder="Apna Naam likho (ex: Ankush)" oninput="saveData();calc()">
+<input id="opName" placeholder="Naam (ex: Ankush)" oninput="saveData();calc()">
 <input id="opDate" type="date" oninput="saveData();calc()">
 </div>
 
@@ -50,17 +52,27 @@ textarea{width:100%;height:520px;font-size:14px;padding:10px;box-sizing:border-b
 <div id="okBox">✅ Sab Sahi Hai - Report Banane Ke Liye Ready Hai</div>
 <div id="matchBox"></div>
 
+<div class="card pasteBox">
+<b>🔥 STEP 1 - WebConsole se Copy karke Yahan Paste Karo</b><br>
+<span class="small">WebConsole me Footfall Summary khol ke pura Select All -> Copy karke yahan paste karo. Fir Auto Fill dabao.</span><br>
+<textarea id="pasteArea" placeholder="Yahan WebConsole ka data paste karo...&#10;Example:&#10;PARK ENTRY  441  94&#10;PE + VG(280 Ft)  253  85&#10;PE + VG(280 Ft) + NAM  88  14"></textarea>
+<div class="row2">
+<button style="background:#ff9800;color:#fff;font-weight:bold" onclick="parsePaste()">✨ Auto Fill Karo</button>
+<button style="background:#888;color:#fff" onclick="document.getElementById('pasteArea').value=''">Paste Clear</button>
+</div>
+<div id="parseMsg" class="small" style="margin-top:6px;color:#0f7a3d;font-weight:bold"></div>
+</div>
+
 <div class="card">
-<b>1. Ticket Plaza - Adult / Child</b>
+<b>1. Ticket Plaza - Auto Filled</b>
 <table id="plazaTable"><tr><th>Ticket</th><th>Adult</th><th>Child</th><th>Total</th></tr></table>
 <div class="small" style="margin-top:6px">Plaza Adult: <b id="plazaAdult">0</b> | Plaza Child: <b id="plazaChild">0</b> | Plaza Total: <b id="plazaTotalTop">0</b></div>
 </div>
 
 <div class="card" style="background:#fff3e0">
-<b>2. Upgrade Counter - Adult / Child alag se check hoga</b>
+<b>2. Upgrade Counter - Auto Filled</b>
 <table id="upTable"><tr><th>From -> To</th><th>A</th><th>C</th><th>Total</th><th>X</th></tr></table>
 <button class="btn-add" onclick="addUpRow()">+ Add More Upgrade</button>
-<p class="small">⚠️ Agar Upgrade ka Adult, Plaza ke Adult se zyada hua to Final NOT MATCHED aayega.</p>
 </div>
 
 <div class="card" style="background:#e3f2fd">
@@ -70,10 +82,9 @@ textarea{width:100%;height:520px;font-size:14px;padding:10px;box-sizing:border-b
 </div>
 
 <div class="card actualBox">
-<b>4. ✅ Counter Check - Yahan Actual Total Dalo</b><br>
-<span class="small">Counter / Machine me jo Final Total aaya hai wo yahan likho, Calculator khud match karega:</span><br><br>
-Counter ka Actual Final Total: <input id="actualTotal" type="number" placeholder="0" oninput="calc();saveData()"> 
-<span id="diffText" style="font-weight:bold"></span>
+<b>4. Counter Check</b><br>
+<span class="small">WebConsole me GRAND TOTAL jo hai wo yahan likho:</span><br><br>
+Counter Actual Final Total: <input id="actualTotal" type="number" placeholder="0" oninput="calc();saveData()"> <span id="diffText" style="font-weight:bold"></span>
 </div>
 
 <div class="card">
@@ -90,13 +101,12 @@ Counter ka Actual Final Total: <input id="actualTotal" type="number" placeholder
 <button class="btn-main" id="genBtn" onclick="makeReport()">Generate Final Report</button>
 
 <div class="card">
-<textarea id="finalText" placeholder="Yahan aapka final report banega..."></textarea>
+<textarea id="finalText" class="big" placeholder="Yahan final report banega..."></textarea>
 <div class="row2">
 <button style="background:#0f7a3d;color:#fff" onclick="share()">Copy & WhatsApp Share</button>
 <button style="background:#1976d2;color:#fff" onclick="copyOnly()">Sirf Copy</button>
 </div>
 <button style="width:100%;background:#888;color:#fff;margin-top:6px;padding:10px" onclick="clearAll()">Clear All</button>
-<p class="small" style="text-align:center">Auto-Save ON hai</p>
 </div>
 
 <script>
@@ -121,6 +131,90 @@ function addUpRow(from=0,to=1,av="",cv=""){
  document.getElementById('upTable').appendChild(tr);
  upCount++; calc();
 }
+function clearUpRows(){
+ document.querySelectorAll('[id^="uprow_"]').forEach(e=>e.remove());
+ upCount=0;
+}
+// --- PASTE PARSER - TERE SCREENSHOT KE HISAB SE ---
+function mapPlazaName(name){
+ name=name.toUpperCase().replace(/\s+/g,' ');
+ if(name.includes('TOTAL')||name.includes('GRAND')) return -1;
+ if(name.includes('PARK ENTRY') && !name.includes('VG') && !name.includes('NAM')) return 0; // PE
+ if(name.includes('PE + VG') && name.includes('EXPRESS')) return 7; // VG Express
+ if(name.includes('PE + VG') && name.includes('NAM') && name.includes('NAA')) return 6; // VG+NAM+NAA
+ if(name.includes('PE + VG') && name.includes('NAM')) return 4; // PE+VG+NAM
+ if(name.includes('PE + VG')) return 1; // VG
+ if(name.includes('PE + NAM')) return 3; // PE+NAM
+ if(name.includes('VG') && name.includes('NAA') && name.includes('NAM')) return 6;
+ if(name.includes('VG') && name.includes('NAA')) return 5;
+ if(name.includes('VG') && name.includes('2ND')) return 2;
+ if(name.includes('VG') && name.includes('EXPRESS')) return 7;
+ return -1;
+}
+function mapUpgradeName(toPart, fromPart){
+ let to = mapPlazaName(toPart);
+ let from = mapPlazaName(fromPart);
+ // Upgrade from PARK ENTRY -> From PE
+ if(fromPart && fromPart.toUpperCase().includes('PARK ENTRY')) from=0;
+ if(fromPart && fromPart.toUpperCase().includes('PE + VG')) from=1;
+ if(to===-1 && toPart.toUpperCase().includes('PE + VG')) to=1;
+ return {from,to};
+}
+function parsePaste(){
+ let txt=document.getElementById('pasteArea').value;
+ if(!txt.trim()){ alert('Pehle WebConsole se copy karke paste karo'); return; }
+ // Plaza clear
+ plazaIds.forEach(pid=>{ document.getElementById(pid+'_a').value=''; document.getElementById(pid+'_c').value=''; });
+ clearUpRows();
+ let lines=txt.split('\n');
+ let mode='plaza';
+ let foundPlaza=0, foundUp=0;
+ let grandTotal=null;
+ lines.forEach(raw=>{
+  let line=raw.trim();
+  if(!line) return;
+  if(line.toUpperCase().includes('UPGRADE')) mode='upgrade';
+  if(line.toUpperCase().includes('FOOTFALL AT UPGRADE')) mode='upgrade';
+  // Numbers nikaalo - last 2 numbers Adult, Child honge
+  let nums=line.match(/\d+/g);
+  if(!nums || nums.length<2) return;
+  let a=parseInt(nums[nums.length-2]), c=parseInt(nums[nums.length-1]);
+  // Name = numbers se pehle wala part
+  let namePart=line.replace(/\d+/g,' ').replace(/\s+/g,' ').trim();
+  // GRAND TOTAL skip - usko Actual me daalenge
+  if(line.toUpperCase().includes('GRAND TOTAL')){
+    grandTotal=a; // Grand total me 1 hi number hota hai, last number hi total hai
+    // Agar 2 numbers hai to last wala hi total hai
+    grandTotal=parseInt(nums[nums.length-1]);
+    return;
+  }
+  if(line.toUpperCase().includes('TOTAL') && !line.toUpperCase().includes('UPGRADE')) return;
+  if(mode==='plaza'){
+    let idx=mapPlazaName(namePart);
+    if(idx>=0){
+      document.getElementById(plazaIds[idx]+'_a').value=a;
+      document.getElementById(plazaIds[idx]+'_c').value=c;
+      foundPlaza++;
+    }
+  } else {
+    // Upgrade: "PE + VG (UPGRADE from PARK ENTRY)" jaisa hoga
+    let m=line.match(/(.+)\(UPGRADE from (.+)\)/i);
+    if(m){
+      let toPart=m[1].trim(), fromPart=m[2].trim();
+      let r=mapUpgradeName(toPart, fromPart);
+      if(r.from>=0 && r.to>=0 && r.from!==r.to){
+        addUpRow(r.from, r.to, a, c);
+        foundUp++;
+      }
+    } else {
+      // Agar UPGRADE likha hai par format alag hai, to skip
+    }
+  }
+ });
+ if(grandTotal) document.getElementById('actualTotal').value=grandTotal;
+ calc(); saveData();
+ document.getElementById('parseMsg').innerText=`✅ Ho gaya! Plaza: ${foundPlaza} row, Upgrade: ${foundUp} row, Grand Total: ${grandTotal||'-'} - Ab neeche Preview check karo`;
+}
 function vi(id){let v=document.getElementById(id)?.value; if(v===""||v==null) return null; return parseInt(v)||0;}
 function vin(id){return vi(id)??0;}
 function calc(){
@@ -128,10 +222,7 @@ function calc(){
  let plazaVals = plazaIds.map(pid=> vin(pid+'_a')+vin(pid+'_c'));
  let plazaA = plazaIds.map(pid=> vin(pid+'_a')).reduce((a,b)=>a+b,0);
  let plazaC = plazaIds.map(pid=> vin(pid+'_c')).reduce((a,b)=>a+b,0);
- plazaIds.forEach((pid,i)=>{
-  document.getElementById(pid+'_t').innerText=plazaVals[i];
-  document.getElementById(pid+'_t').classList.remove('bad');
- });
+ plazaIds.forEach((pid,i)=>{ document.getElementById(pid+'_t').innerText=plazaVals[i]; document.getElementById(pid+'_t').classList.remove('bad'); });
  let outFrom = new Array(8).fill(0), inTo = new Array(8).fill(0);
  let outA = new Array(8).fill(0), outC = new Array(8).fill(0), inA = new Array(8).fill(0), inC = new Array(8).fill(0);
  for(let i=0;i<upCount;i++){
@@ -142,33 +233,14 @@ function calc(){
   let tot=a+c;
   let el=document.getElementById(`up_${i}_t`);
   if(el) el.innerText=tot;
-  if(aEl) aEl.classList.remove('error');
-  if(cEl) cEl.classList.remove('error');
-  if(el) el.classList.remove('bad');
+  if(aEl) aEl.classList.remove('error'); if(cEl) cEl.classList.remove('error'); if(el) el.classList.remove('bad');
   let fi=parseInt(f.value), ti=parseInt(t.value);
-  if(fi===ti && tot>0){
-    errors.push(`Row ${i+1}: From aur To same hai - ${tickets[fi]}`);
-    if(aEl) aEl.classList.add('error'); if(cEl) cEl.classList.add('error');
-  }
-  outFrom[fi]+=tot; inTo[ti]+=tot;
-  outA[fi]+=a; outC[fi]+=c; inA[ti]+=a; inC[ti]+=c;
+  if(fi===ti && tot>0){ errors.push(`Row ${i+1}: From aur To same hai - ${tickets[fi]}`); if(aEl) aEl.classList.add('error'); if(cEl) cEl.classList.add('error'); }
+  outFrom[fi]+=tot; inTo[ti]+=tot; outA[fi]+=a; outC[fi]+=c; inA[ti]+=a; inC[ti]+=c;
  }
- // --- NAYA CHECK 1: Adult / Child alag se ---
  plazaIds.forEach((pid,i)=>{
-   if(outA[i] > vin(pid+'_a')){
-     errors.push(`❌ ${tickets[i]} me Adult Plaza me ${vin(pid+'_a')} hai, par Upgrade Adult ${outA[i]} kar diya! ${outA[i]-vin(pid+'_a')} zyada hai.`);
-     document.getElementById(pid+'_t').classList.add('bad');
-   }
-   if(outC[i] > vin(pid+'_c')){
-     errors.push(`❌ ${tickets[i]} me Child Plaza me ${vin(pid+'_c')} hai, par Upgrade Child ${outC[i]} kar diya! ${outC[i]-vin(pid+'_c')} zyada hai.`);
-     document.getElementById(pid+'_t').classList.add('bad');
-   }
- });
- outFrom.forEach((out,i)=>{
-  if(out > plazaVals[i]){
-    errors.push(`❌ ${tickets[i]} me Plaza me ${plazaVals[i]} hai, par Upgrade Total ${out} kar diya!`);
-    document.getElementById(plazaIds[i]+'_t').classList.add('bad');
-  }
+   if(outA[i] > vin(pid+'_a')){ errors.push(`❌ ${tickets[i]} Adult Plaza ${vin(pid+'_a')} par Upgrade Adult ${outA[i]} - ${outA[i]-vin(pid+'_a')} zyada`); document.getElementById(pid+'_t').classList.add('bad'); }
+   if(outC[i] > vin(pid+'_c')){ errors.push(`❌ ${tickets[i]} Child Plaza ${vin(pid+'_c')} par Upgrade Child ${outC[i]} - ${outC[i]-vin(pid+'_c')} zyada`); document.getElementById(pid+'_t').classList.add('bad'); }
  });
  let finalVals = plazaVals.map((v,i)=> v - outFrom[i] + inTo[i]);
  let finalA = plazaIds.map((pid,i)=> vin(pid+'_a')-outA[i]+inA[i]);
@@ -177,95 +249,52 @@ function calc(){
  let finalTotal = finalVals.reduce((a,b)=>a+b,0);
  let fA = finalA.reduce((a,b)=>a+b,0), fC = finalC.reduce((a,b)=>a+b,0);
  let pHtml=`<tr><th>Ticket</th><th>Plaza</th><th>- Up</th><th>+ Up</th><th>Final A/C</th><th>= Final</th></tr>`;
- tickets.forEach((t,i)=>{
-   let badCls = (finalVals[i] < 0 || finalA[i] < 0 || finalC[i] < 0) ? 'preview-row bad' : 'preview-row';
-   pHtml+=`<tr class="${badCls}"><td style="text-align:left;font-size:11px">${t}</td><td>${plazaVals[i]}</td><td>-${outFrom[i]}</td><td>+${inTo[i]}</td><td>${finalA[i]} / ${finalC[i]}</td><td><b>${finalVals[i]}</b></td></tr>`;
- });
+ tickets.forEach((t,i)=>{ let badCls=(finalVals[i]<0||finalA[i]<0||finalC[i]<0)?'preview-row bad':'preview-row'; pHtml+=`<tr class="${badCls}"><td style="text-align:left;font-size:11px">${t}</td><td>${plazaVals[i]}</td><td>-${outFrom[i]}</td><td>+${inTo[i]}</td><td>${finalA[i]} / ${finalC[i]}</td><td><b>${finalVals[i]}</b></td></tr>`; });
  document.getElementById('previewTable').innerHTML=pHtml;
  document.getElementById('plazaTotal').innerText=plazaTotal;
  document.getElementById('finalTotal').innerText=finalTotal;
- document.getElementById('finalAdult').innerText=fA;
- document.getElementById('finalChild').innerText=fC;
- document.getElementById('plazaAdult').innerText=plazaA;
- document.getElementById('plazaChild').innerText=plazaC;
- document.getElementById('plazaTotalTop').innerText=plazaTotal;
-
- // --- NAYA CHECK 2: Actual Total se Match ---
- let actualVal = vi('actualTotal');
- let diffEl=document.getElementById('diffText');
- let matchBox=document.getElementById('matchBox');
- let isMismatch = false;
+ document.getElementById('finalAdult').innerText=fA; document.getElementById('finalChild').innerText=fC;
+ document.getElementById('plazaAdult').innerText=plazaA; document.getElementById('plazaChild').innerText=plazaC; document.getElementById('plazaTotalTop').innerText=plazaTotal;
+ let actualVal=vi('actualTotal'); let diffEl=document.getElementById('diffText'); let matchBox=document.getElementById('matchBox');
  if(actualVal!==null && plazaTotal>0){
-   if(actualVal!==finalTotal){
-     isMismatch=true;
-     errors.push(`❌ FINAL TOTAL NOT MATCHED! Calculator Final = ${finalTotal}, Counter Actual = ${actualVal}, Fark = ${finalTotal-actualVal}`);
-     diffEl.innerText=`❌ Fark: ${finalTotal-actualVal}`;
-     diffEl.style.color='red';
-     matchBox.style.display='block'; matchBox.className='bad'; matchBox.id='matchBox';
-     matchBox.innerHTML=`❌ FINAL TOTAL NOT MATCHED<br><span style="font-size:12px">Calc: ${finalTotal} | Counter: ${actualVal} | Fark: ${finalTotal-actualVal} - Upgrade galat bhara hai, dobara check karo!</span>`;
-   } else {
-     diffEl.innerText=`✅ Match Hai`;
-     diffEl.style.color='green';
-     matchBox.style.display='block'; matchBox.className='good'; matchBox.id='matchBox';
-     matchBox.innerHTML=`✅ FINAL TOTAL MATCHED - ${finalTotal}`;
-   }
- } else {
-   diffEl.innerText=''; matchBox.style.display='none';
- }
- // Agar Adult/Child me bhi galti hai to bhi NOT MATCHED dikhao
- if(errors.length>0 && actualVal===null && plazaTotal>0){
-   matchBox.style.display='block'; matchBox.className='bad'; matchBox.id='matchBox';
-   matchBox.innerHTML=`❌ FINAL TOTAL NOT MATCHED - Upgrade me galti hai, upar red wali line dekho!`;
- }
-
- finalVals.forEach((v,i)=>{ if(v<0) errors.push(`❌ ${tickets[i]} Final MINUS me ja raha hai (${v})`); });
- finalA.forEach((v,i)=>{ if(v<0) errors.push(`❌ ${tickets[i]} Adult Final MINUS me hai (${v})`); });
- finalC.forEach((v,i)=>{ if(v<0) errors.push(`❌ ${tickets[i]} Child Final MINUS me hai (${v})`); });
-
+   if(actualVal!==finalTotal){ errors.push(`❌ FINAL TOTAL NOT MATCHED! Calc=${finalTotal}, Counter=${actualVal}, Fark=${finalTotal-actualVal}`); diffEl.innerText=`❌ Fark: ${finalTotal-actualVal}`; diffEl.style.color='red'; matchBox.style.display='block'; matchBox.className='bad'; matchBox.id='matchBox'; matchBox.innerHTML=`❌ FINAL TOTAL NOT MATCHED<br><span style="font-size:12px">Calc: ${finalTotal} | Counter: ${actualVal} | Fark: ${finalTotal-actualVal}</span>`; }
+   else { diffEl.innerText=`✅ Match Hai`; diffEl.style.color='green'; matchBox.style.display='block'; matchBox.className='good'; matchBox.id='matchBox'; matchBox.innerHTML=`✅ FINAL TOTAL MATCHED - ${finalTotal}`; }
+ } else { diffEl.innerText=''; matchBox.style.display='none'; }
+ if(errors.length>0 && actualVal===null && plazaTotal>0){ matchBox.style.display='block'; matchBox.className='bad'; matchBox.id='matchBox'; matchBox.innerHTML=`❌ FINAL TOTAL NOT MATCHED - Upgrade me galti hai!`; }
+ finalVals.forEach((v,i)=>{ if(v<0) errors.push(`❌ ${tickets[i]} Final MINUS (${v})`); });
  let warn=document.getElementById('warnBox'), ok=document.getElementById('okBox'), btn=document.getElementById('genBtn');
- if(errors.length>0){
-   warn.style.display='block';
-   warn.innerHTML='⚠️ GALAT REPORT BANEGI! Pehle ye sahi karo:<br>• '+errors.join('<br>• ');
-   ok.style.display='none'; btn.disabled=true; btn.innerText='⚠️ Pehle Galti Sahi Karo - Report Block Hai';
- } else {
-   warn.style.display='none';
-   if(plazaTotal>0 && actualVal!==null){ ok.style.display='block'; } else if(plazaTotal>0){ ok.style.display='block'; }
-   else { ok.style.display='none'; }
-   btn.disabled=false; btn.innerText='Generate Final Report';
- }
+ if(errors.length>0){ warn.style.display='block'; warn.innerHTML='⚠️ GALAT REPORT BANEGI!<br>• '+errors.join('<br>• '); ok.style.display='none'; btn.disabled=true; btn.innerText='⚠️ Pehle Galti Sahi Karo - Report Block Hai'; }
+ else { warn.style.display='none'; if(plazaTotal>0) ok.style.display='block'; else ok.style.display='none'; btn.disabled=false; btn.innerText='Generate Final Report'; }
  return {plazaVals, finalVals, finalA, finalC, plazaTotal, finalTotal, errors};
 }
 function fmtDate(){ let d=document.getElementById('opDate').value; if(!d) return new Date().toLocaleDateString('en-GB'); let p=d.split('-'); return p[2]+'/'+p[1]+'/'+p[0]; }
 function makeReport(){
  let res=calc();
  if(res.errors.length>0){ alert('Pehle galti sahi karo:\n'+res.errors.join('\n')); return; }
- let finalVals=res.finalVals;
- let name=document.getElementById('opName').value||'';
- let total=res.finalTotal;
+ let finalVals=res.finalVals; let name=document.getElementById('opName').value||''; let total=res.finalTotal;
  let text=`Today's Operations Summary for ${name}, ${fmtDate()}.\n\nPark Entry( *PE* ) = *${finalVals[0]}*\n\nViewing Gallery ( *VG* ) = *${finalVals[1]}*\n\nViewing Gallery ( *VG 2nd* ) = *${finalVals[2]}*\n\nPE + Nij Aatma Manthan ( *NAM* ) = *${finalVals[3]}*\n\nPE + VG + NAM = *${finalVals[4]}*\n\nVG + Nij Aatma Abhishek ( *NAA* ) = *${finalVals[5]}*\n\nVG + NAM + NAA = *${finalVals[6]}*\n\nVG Express = *${finalVals[7]}*\n\n_Total Footfall = *${total}*_\n\n* NAM Undertaking Form = ${document.getElementById('namForm').value||'        '} (Including below 4-year-old kids)\n\n* VG, NAA, NAM Undertaking form = ${document.getElementById('vgForm').value||''} (Including below 4-year-old kids)\n\nTotal Loyalty Card = *${document.getElementById('loyalty').value||'**'}*\n\nTotal School Contact = *${document.getElementById('school').value||'**'}*\n\nGoogle Review = ${document.getElementById('google').value||''}\n\nTotal Video Feedback = *${document.getElementById('video').value||'0'}*\n\nTotal Trip Advisors = ${document.getElementById('trip').value||''}`;
  document.getElementById('finalText').value=text;
 }
 function copyOnly(){ makeReport(); let t=document.getElementById('finalText').value; if(!t) return; navigator.clipboard.writeText(t); alert('Copied!'); }
 function share(){ makeReport(); let t=document.getElementById('finalText').value; if(!t) return; navigator.clipboard.writeText(t); window.open("https://wa.me/?text="+encodeURIComponent(t),'_blank'); }
 function saveData(){
- let data={name:document.getElementById('opName').value, date:document.getElementById('opDate').value, actual:document.getElementById('actualTotal').value, extra:{}};
+ let data={name:document.getElementById('opName').value, date:document.getElementById('opDate').value, actual:document.getElementById('actualTotal').value, extra:{}, paste:document.getElementById('pasteArea').value};
  ['namForm','vgForm','loyalty','school','google','video','trip'].forEach(id=> data.extra[id]=document.getElementById(id).value);
  data.plaza={}; plazaIds.forEach(pid=> data.plaza[pid]={a:document.getElementById(pid+'_a').value, c:document.getElementById(pid+'_c').value});
- data.up=[];
- for(let i=0;i<upCount;i++){ let f=document.getElementById(`from_${i}`); if(!f) continue; data.up.push({from:f.value,to:document.getElementById(`to_${i}`).value,a:document.getElementById(`up_${i}_a`).value,c:document.getElementById(`up_${i}_c`).value}); }
- localStorage.setItem('sob_v4', JSON.stringify(data));
+ data.up=[]; for(let i=0;i<upCount;i++){ let f=document.getElementById(`from_${i}`); if(!f) continue; data.up.push({from:f.value,to:document.getElementById(`to_${i}`).value,a:document.getElementById(`up_${i}_a`).value,c:document.getElementById(`up_${i}_c`).value}); }
+ localStorage.setItem('sob_v5', JSON.stringify(data));
 }
 function loadData(){
- try{ let s=localStorage.getItem('sob_v4'); if(!s) return false; let d=JSON.parse(s);
-  document.getElementById('opName').value=d.name||''; document.getElementById('opDate').value=d.date||''; document.getElementById('actualTotal').value=d.actual||'';
+ try{ let s=localStorage.getItem('sob_v5'); if(!s) return false; let d=JSON.parse(s);
+  document.getElementById('opName').value=d.name||''; document.getElementById('opDate').value=d.date||''; document.getElementById('actualTotal').value=d.actual||''; document.getElementById('pasteArea').value=d.paste||'';
   if(d.extra) Object.keys(d.extra).forEach(id=>{ if(document.getElementById(id)) document.getElementById(id).value=d.extra[id]; });
   if(d.plaza) plazaIds.forEach(pid=>{ if(d.plaza[pid]){ document.getElementById(pid+'_a').value=d.plaza[pid].a||''; document.getElementById(pid+'_c').value=d.plaza[pid].c||''; } });
   return d; }catch(e){ return false; }
 }
-function clearAll(){ if(!confirm('Sab clear kar du?')) return; localStorage.removeItem('sob_v4'); document.querySelectorAll('input[type=number]').forEach(i=>i.value=''); document.querySelectorAll('.extra').forEach(i=>{ if(i.id!=='video') i.value=''; else i.value='0'; }); document.getElementById('actualTotal').value=''; document.getElementById('finalText').value=''; calc(); }
+function clearAll(){ if(!confirm('Sab clear kar du?')) return; localStorage.removeItem('sob_v5'); document.querySelectorAll('input[type=number]').forEach(i=>i.value=''); document.querySelectorAll('.extra').forEach(i=>{ if(i.id!=='video') i.value=''; else i.value='0'; }); document.getElementById('actualTotal').value=''; document.getElementById('pasteArea').value=''; document.getElementById('finalText').value=''; document.getElementById('parseMsg').innerText=''; calc(); }
 initPlaza();
 let saved=loadData();
-if(saved && saved.up && saved.up.length){ saved.up.forEach(u=> addUpRow(parseInt(u.from), parseInt(u.to), u.a, u.c)); } else { addUpRow(0,1); addUpRow(1,4); addUpRow(0,3); addUpRow(3,6); }
+if(saved && saved.up && saved.up.length){ saved.up.forEach(u=> addUpRow(parseInt(u.from), parseInt(u.to), u.a, u.c)); } else { addUpRow(0,1); }
 if(!document.getElementById('opDate').value){ let n=new Date(); document.getElementById('opDate').value=n.toISOString().slice(0,10); }
 calc();
 </script>
