@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOB - V5.3 Full File</title>
+<title>SOB - V5.4 Full File</title>
 <style>
 *{box-sizing:border-box}
 body{font-family:Arial;padding:8px;background:#eef2f7;margin:0}
@@ -42,7 +42,7 @@ textarea.big{height:520px}
 </style>
 </head>
 <body>
-<h3>SOB - V5.3 Full File</h3>
+<h3>SOB - V5.4 Full File</h3>
 <div class="topbar">
 <input id="opName" placeholder="Naam (ex: Ankush)" oninput="saveData();calc()">
 <input id="opDate" type="date" oninput="saveData();calc()">
@@ -120,7 +120,6 @@ function addUpRow(from=0,to=1,av="",cv=""){
  upCount++; calc();
 }
 function clearUpRows(){ document.querySelectorAll('[id^="uprow_"]').forEach(e=>e.remove()); upCount=0; }
-// --- FIXED MAPPING V5.3 ---
 function normalizeName(name){
   let n = name.toUpperCase();
   n = n.replace(/NIJ\s*AATMA\s*MANTHAN/g, 'NAM');
@@ -167,6 +166,19 @@ function extractEndNumbers(line){
  if(m1) return [parseInt(m1[1])];
  return [];
 }
+// --- V5.4 FIX: Duplicate line ko JODO, overwrite mat karo ---
+function setPlaza(idx, a, c){
+ let aEl = document.getElementById(plazaIds[idx]+'_a');
+ let cEl = document.getElementById(plazaIds[idx]+'_c');
+ // Agar pehle se bhara hai to JOD DO - yehi 34 wala fix hai
+ if(aEl.value !== '' && aEl.value !== null){
+   aEl.value = (parseInt(aEl.value)||0) + a;
+   cEl.value = (parseInt(cEl.value)||0) + c;
+ } else {
+   aEl.value = a;
+   cEl.value = c;
+ }
+}
 function parsePaste(){
  let txt=document.getElementById('pasteArea').value;
  if(!txt.trim()){ alert('Pehle paste karo'); return; }
@@ -176,7 +188,6 @@ function parsePaste(){
  let mode='plaza';
  let foundPlaza=0, foundUp=0, skipped=[];
  let grandTotal=null;
- let seenVG=false;
  lines.forEach(raw=>{
   let line=raw.trim();
   if(!line) return;
@@ -196,26 +207,7 @@ function parsePaste(){
   let namePart=line.replace(/(\d+\s+){1,3}$/,'').trim();
   if(mode==='plaza'){
     let idx=mapPlazaName(namePart);
-    if(idx>=0){
-      if(idx===1 && seenVG){
-        if(document.getElementById(plazaIds[2]+'_a').value===''){
-          document.getElementById(plazaIds[2]+'_a').value=a;
-          document.getElementById(plazaIds[2]+'_c').value=c;
-          foundPlaza++;
-        } else {
-          let oldA=parseInt(document.getElementById(plazaIds[1]+'_a').value)||0;
-          let oldC=parseInt(document.getElementById(plazaIds[1]+'_c').value)||0;
-          document.getElementById(plazaIds[1]+'_a').value=oldA+a;
-          document.getElementById(plazaIds[1]+'_c').value=oldC+c;
-          foundPlaza++;
-        }
-      } else {
-        document.getElementById(plazaIds[idx]+'_a').value=a;
-        document.getElementById(plazaIds[idx]+'_c').value=c;
-        if(idx===1) seenVG=true;
-        foundPlaza++;
-      }
-    }
+    if(idx>=0){ setPlaza(idx, a, c); foundPlaza++; }
     else skipped.push('PLAZA? '+line);
   } else {
     let m=line.match(/(.+)\(UPGRADE from (.+)\)/i);
@@ -304,16 +296,16 @@ function saveData(){
  ['namForm','vgForm','loyalty','school','google','video','trip'].forEach(id=> data.extra[id]=document.getElementById(id).value);
  data.plaza={}; plazaIds.forEach(pid=> data.plaza[pid]={a:document.getElementById(pid+'_a').value, c:document.getElementById(pid+'_c').value});
  data.up=[]; for(let i=0;i<upCount;i++){ let f=document.getElementById(`from_${i}`); if(!f) continue; data.up.push({from:f.value,to:document.getElementById(`to_${i}`).value,a:document.getElementById(`up_${i}_a`).value,c:document.getElementById(`up_${i}_c`).value}); }
- localStorage.setItem('sob_v53', JSON.stringify(data));
+ localStorage.setItem('sob_v54', JSON.stringify(data));
 }
 function loadData(){
- try{ let s=localStorage.getItem('sob_v53'); if(!s) return false; let d=JSON.parse(s);
+ try{ let s=localStorage.getItem('sob_v54'); if(!s) return false; let d=JSON.parse(s);
   document.getElementById('opName').value=d.name||''; document.getElementById('opDate').value=d.date||''; document.getElementById('actualTotal').value=d.actual||''; document.getElementById('pasteArea').value=d.paste||'';
   if(d.extra) Object.keys(d.extra).forEach(id=>{ if(document.getElementById(id)) document.getElementById(id).value=d.extra[id]; });
   if(d.plaza) plazaIds.forEach(pid=>{ if(d.plaza[pid]){ document.getElementById(pid+'_a').value=d.plaza[pid].a||''; document.getElementById(pid+'_c').value=d.plaza[pid].c||''; } });
   return d; }catch(e){ return false; }
 }
-function clearAll(){ if(!confirm('Sab clear kar du?')) return; localStorage.removeItem('sob_v53'); document.querySelectorAll('input[type=number]').forEach(i=>i.value=''); document.querySelectorAll('.extra').forEach(i=>{ if(i.id!=='video') i.value=''; else i.value='0'; }); document.getElementById('actualTotal').value=''; document.getElementById('pasteArea').value=''; document.getElementById('finalText').value=''; document.getElementById('parseMsg').innerText=''; calc(); }
+function clearAll(){ if(!confirm('Sab clear kar du?')) return; localStorage.removeItem('sob_v54'); document.querySelectorAll('input[type=number]').forEach(i=>i.value=''); document.querySelectorAll('.extra').forEach(i=>{ if(i.id!=='video') i.value=''; else i.value='0'; }); document.getElementById('actualTotal').value=''; document.getElementById('pasteArea').value=''; document.getElementById('finalText').value=''; document.getElementById('parseMsg').innerText=''; calc(); }
 initPlaza();
 let saved=loadData();
 if(saved && saved.up && saved.up.length){ saved.up.forEach(u=> addUpRow(parseInt(u.from), parseInt(u.to), u.a, u.c)); } else { addUpRow(0,1); }
