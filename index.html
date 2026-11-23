@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOB - Full Final + Error Check</title>
+<title>SOB - Final Report V2</title>
 <style>
 body{font-family:Arial;padding:8px;background:#f5f7fb;margin:0}
-h3{text-align:center;color:#1a2a4a}
+h3{text-align:center;color:#1a2a4a;margin:6px 0}
 .card{background:#fff;padding:10px;border-radius:10px;margin:8px 0;box-shadow:0 2px 5px #ccc}
 table{width:100%;border-collapse:collapse}
 th{background:#1a2a4a;color:#fff;padding:5px;font-size:10px}
@@ -15,7 +15,7 @@ input{width:52px;padding:6px;text-align:center;border:1.5px solid #1a2a4a;border
 input.error{border:2px solid red!important;background:#ffe0e0!important}
 .total{font-weight:bold;background:#fff9c4;min-width:35px}
 .total.bad{background:#ffcdd2!important;color:#d32f2f}
-select{font-size:9px;width:85px;padding:2px}
+select{font-size:10px;width:90px;padding:3px}
 button{padding:9px;border:none;border-radius:6px;cursor:pointer}
 .btn-main{width:100%;padding:12px;background:#1a2a4a;color:#fff;font-size:15px;margin-top:8px}
 .btn-main:disabled{background:#999!important}
@@ -26,6 +26,7 @@ textarea{width:100%;height:550px;font-size:14px;padding:10px;box-sizing:border-b
 #warnBox{display:none;background:#ffebee;border:2px solid #d32f2f;color:#d32f2f;padding:10px;border-radius:8px;font-size:13px;font-weight:bold;margin:8px 0}
 #okBox{display:none;background:#e8f5e9;border:2px solid #0f7a3d;color:#0f7a3d;padding:10px;border-radius:8px;font-size:13px;font-weight:bold;margin:8px 0}
 .preview-row.bad{color:#d32f2f;font-weight:bold}
+.small{font-size:11px;color:#666}
 </style>
 </head>
 <body>
@@ -35,26 +36,25 @@ textarea{width:100%;height:550px;font-size:14px;padding:10px;box-sizing:border-b
 <div id="okBox">✅ Sab Sahi Hai - Report Banane Ke Liye Ready Hai</div>
 
 <div class="card">
-<b>1. Ticket Plaza - Adult / Child (Blank)</b>
+<b>1. Ticket Plaza - Adult / Child</b>
 <table id="plazaTable">
-<tr><th>Ticket</th><th>Adult</th><th>Child</th><th>Total Side</th></tr>
+<tr><th>Ticket</th><th>Adult</th><th>Child</th><th>Total</th></tr>
 </table>
+<div class="small" style="margin-top:6px">Plaza Adult: <b id="plazaAdult">0</b> | Plaza Child: <b id="plazaChild">0</b> | Plaza Total: <b id="plazaTotalTop">0</b></div>
 </div>
 
 <div class="card" style="background:#ffe0b2">
-<b>2. Upgrade Counter - Adult / Child + Add Button</b>
+<b>2. Upgrade Counter - Adult / Child</b>
 <table id="upTable">
 <tr><th>From -> To</th><th>A</th><th>C</th><th>Total</th><th>X</th></tr>
 </table>
 <button class="btn-add" onclick="addUpRow()">+ Add More Upgrade</button>
-<p style="font-size:11px;color:#666;margin:5px 0">⚠️ Note: Upgrade us Ticket se zyada nahi ho sakta jitna Plaza me hai.</p>
+<p class="small">⚠️ Note: Upgrade us Ticket se zyada nahi ho sakta jitna Plaza me hai.</p>
 </div>
 
 <div class="card" style="background:#e3f2fd">
-<b>3. LIVE FINAL PREVIEW - Report Banane Se Pehle Yahan Check Karo</b>
-<table id="previewTable">
-<tr><th>Ticket</th><th>Plaza</th><th>- Upgrade</th><th>+ Upgrade</th><th>= Final</th></tr>
-</table>
+<b>3. LIVE FINAL PREVIEW</b>
+<table id="previewTable"></table>
 <div style="margin-top:8px;font-size:13px"><b>Plaza Total: <span id="plazaTotal">0</span> | Final Total: <span id="finalTotal">0</span> | <span id="matchText"></span></b></div>
 </div>
 
@@ -78,14 +78,14 @@ textarea{width:100%;height:550px;font-size:14px;padding:10px;box-sizing:border-b
 </div>
 
 <script>
-const tickets = ["VG","Viewing Gallery",,"PE+NAM","PE+VG+NAA","VG+NAA","VG+NAM+NAA","VG Express"];
-const plazaIds = ["pe","vg",,"penam","pevgnam","vgnaa","vgnamnaa","vgexp"];
+const tickets = ["PE","VG","VG 2nd","PE+NAM","PE+VG+NAM","VG+NAA","VG+NAM+NAA","VG Express"];
+const plazaIds = ["pe","vg","vg2","penam","pevgnam","vgnaa","vgnamnaa","vgexp"];
 let upCount=0;
 
 function initPlaza(){
  let html="";
  tickets.forEach((t,i)=>{
-  html+=`<tr><td style="text-align:left;font-size:11px">${t}</td><td><input id="${plazaIds[i]}_a" type="number" placeholder="" value="" oninput="calc()"></td><td><input id="${plazaIds[i]}_c" type="number" placeholder="" value="" oninput="calc()"></td><td id="${plazaIds[i]}_t" class="total">0</td></tr>`;
+  html+=`<tr><td style="text-align:left;font-size:11px">${t}</td><td><input id="${plazaIds[i]}_a" type="number" placeholder="0" value="" oninput="calc()"></td><td><input id="${plazaIds[i]}_c" type="number" placeholder="0" value="" oninput="calc()"></td><td id="${plazaIds[i]}_t" class="total">0</td></tr>`;
  });
  document.getElementById('plazaTable').innerHTML+=html;
 }
@@ -104,12 +104,15 @@ function vi(id){return parseInt(document.getElementById(id)?.value)||0}
 function calc(){
  let errors=[];
  let plazaVals = plazaIds.map(pid=> vi(pid+'_a')+vi(pid+'_c'));
+ let plazaA = plazaIds.map(pid=> vi(pid+'_a')).reduce((a,b)=>a+b,0);
+ let plazaC = plazaIds.map(pid=> vi(pid+'_c')).reduce((a,b)=>a+b,0);
  plazaIds.forEach((pid,i)=>{
   document.getElementById(pid+'_t').innerText=plazaVals[i];
   document.getElementById(pid+'_t').classList.remove('bad');
  });
  let outFrom = new Array(8).fill(0);
  let inTo = new Array(8).fill(0);
+ let outA = new Array(8).fill(0), outC = new Array(8).fill(0);
  for(let i=0;i<upCount;i++){
   let f=document.getElementById(`from_${i}`), t=document.getElementById(`to_${i}`);
   if(!f||!t) continue;
@@ -121,13 +124,18 @@ function calc(){
   if(aEl) aEl.classList.remove('error');
   if(cEl) cEl.classList.remove('error');
   if(el) el.classList.remove('bad');
-  if(parseInt(f.value)===parseInt(t.value) && tot>0){
-    errors.push(`Row ${i+1}: From aur To same hai - ${tickets[f.value]}`);
+  let fi=parseInt(f.value), ti=parseInt(t.value);
+  if(fi===ti && tot>0){
+    errors.push(`Row ${i+1}: From aur To same hai - ${tickets[fi]}`);
     if(aEl) aEl.classList.add('error');
     if(cEl) cEl.classList.add('error');
   }
-  outFrom[parseInt(f.value)]+=tot;
-  inTo[parseInt(t.value)]+=tot;
+  outFrom[fi]+=tot; inTo[ti]+=tot;
+  outA[fi]+=a; outC[fi]+=c;
+  // Adult / Child alag se check
+  if(a > vi(plazaIds[fi]+'_a') && a>0){
+    // sirf warning, total check main hai
+  }
  }
  outFrom.forEach((out,i)=>{
   if(out > plazaVals[i]){
@@ -146,6 +154,9 @@ function calc(){
  document.getElementById('previewTable').innerHTML=pHtml;
  document.getElementById('plazaTotal').innerText=plazaTotal;
  document.getElementById('finalTotal').innerText=finalTotal;
+ document.getElementById('plazaAdult').innerText=plazaA;
+ document.getElementById('plazaChild').innerText=plazaC;
+ document.getElementById('plazaTotalTop').innerText=plazaTotal;
  let matchEl=document.getElementById('matchText');
  if(plazaTotal===finalTotal){ matchEl.innerText='✅ Total Match'; matchEl.style.color='green'; }
  else { matchEl.innerText='❌ Total MISMATCH!'; matchEl.style.color='red'; errors.push(`Total Mismatch: Plaza ${plazaTotal} != Final ${finalTotal}`); }
@@ -171,11 +182,17 @@ function makeReport(){
  let finalVals=res.finalVals;
  let today=new Date().toLocaleDateString('en-GB');
  let total=res.finalTotal;
- let text=`Today's Operations Summary for , ${today}.\n\nPark Entry( *PE* ) = *${finalVals[0]}*\n\nViewing Gallery ( *VG* ) = *${finalVals[1]}*\n\nViewing Gallery ( *VG 2nd* ) = *${finalVals[2]}*\n\nPE + Nij Aatma Manthan ( *NAM* ) = *${finalVals[3]}*\n\nPE + VG + NAM = *${finalVals[4]}*\n\nVG + Nij Aatma Abhishek ( *NAA* ) = *${finalVals[5]}*\n\nVG + NAM + NAA = *${finalVals[6]}*\n\nVG Express = *${finalVals[7]}*\n\n_Total Footfall = *${total}*_\n\n* NAM Undertaking Form = ${document.getElementById('namForm').value||'        '} (Including    below 4-year-old kids)\n\n* VG, NAA, NAM Undertaking form = ${document.getElementById('vgForm').value||''} (Including below 4-year-old kids)\n\nTotal Loyalty Card = *${document.getElementById('loyalty').value||'**'}*\n\n(*Total School Contact ${document.getElementById('school').value||'**'}\n\nGoogle Review = ${document.getElementById('google').value||''}\n\nTotal Video Feedback = *${document.getElementById('video').value||'0'}*\n\nTotal Trip Advisors = ${document.getElementById('trip').value||''}`;
+ let text=`Today's Operations Summary for , ${today}.\n\nPark Entry( *PE* ) = *${finalVals[0]}*\n\nViewing Gallery ( *VG* ) = *${finalVals[1]}*\n\nViewing Gallery ( *VG 2nd* ) = *${finalVals[2]}*\n\nPE + Nij Aatma Manthan ( *NAM* ) = *${finalVals[3]}*\n\nPE + VG + NAM = *${finalVals[4]}*\n\nVG + Nij Aatma Abhishek ( *NAA* ) = *${finalVals[5]}*\n\nVG + NAM + NAA = *${finalVals[6]}*\n\nVG Express = *${finalVals[7]}*\n\n_Total Footfall = *${total}*_\n\n* NAM Undertaking Form = ${document.getElementById('namForm').value||'        '} (Including below 4-year-old kids)\n\n* VG, NAA, NAM Undertaking form = ${document.getElementById('vgForm').value||''} (Including below 4-year-old kids)\n\nTotal Loyalty Card = *${document.getElementById('loyalty').value||'**'}*\n\nTotal School Contact = *${document.getElementById('school').value||'**'}*\n\nGoogle Review = ${document.getElementById('google').value||''}\n\nTotal Video Feedback = *${document.getElementById('video').value||'0'}*\n\nTotal Trip Advisors = ${document.getElementById('trip').value||''}`;
  document.getElementById('finalText').value=text;
 }
 function share(){ makeReport(); let t=document.getElementById('finalText').value; if(!t) return; navigator.clipboard.writeText(t); window.open("https://wa.me/?text="+encodeURIComponent(t),'_blank'); }
-function clearAll(){ document.querySelectorAll('input[type=number]').forEach(i=>i.value=''); document.querySelectorAll('.total').forEach(e=>e.innerText='0'); document.getElementById('finalText').value=''; calc(); }
+function clearAll(){
+ document.querySelectorAll('input[type=number]').forEach(i=>i.value='');
+ document.querySelectorAll('.extra').forEach(i=>{ if(i.id!=='video') i.value=''; else i.value='0'; });
+ document.querySelectorAll('.total').forEach(e=>e.innerText='0');
+ document.getElementById('finalText').value='';
+ calc();
+}
 initPlaza();
 addUpRow(0,1); addUpRow(1,4); addUpRow(0,3); addUpRow(3,6);
 calc();
